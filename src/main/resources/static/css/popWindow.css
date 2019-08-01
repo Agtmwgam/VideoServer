@@ -1,0 +1,88 @@
+@charset "utf-8";
+/* CSS Document */
+html,body{padding:0;margin:0}
+/*创建用户按钮*/
+.checkbox{width:100%;height:100px; margin:100px auto; text-align:center}
+.checkbox a{ display:inline-block;width:100px; height:40px; border:solid 1px #f00; color:#f00;font-size: 16px; text-align:center; line-height:40px; text-decoration:none}
+
+/*弹框样式*/
+.cd-popup {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: opacity 0.3s 0s, visibility 0s 0.3s;
+    -moz-transition: opacity 0.3s 0s, visibility 0s 0.3s;
+    transition: opacity 0.3s 0s, visibility 0s 0.3s;
+    z-index:9999;
+}
+.cd-popup.is-visible {
+    opacity: 1;
+    visibility: visible;
+    -webkit-transition: opacity 0.3s 0s, visibility 0s 0s;
+    -moz-transition: opacity 0.3s 0s, visibility 0s 0s;
+    transition: opacity 0.3s 0s, visibility 0s 0s;
+}
+.cd-popup-container {
+    position: relative;
+    width:400px;
+    margin:250px auto;
+    height:250px;
+    background: #FFF;
+    border-radius: .4rem .4rem .4rem .4rem;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    -webkit-transform:scale(1.2);
+    -moz-transform:scale(1.2);
+    -ms-transform:scale(1.2);
+    -o-transform:scale(1.2);
+    transform:scale(1.2);
+    -webkit-backface-visibility: hidden;
+    -webkit-transition-property: -webkit-transform;
+    -moz-transition-property: -moz-transform;
+    transition-property: transform;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -ms-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+.cd-popup-close{ position: absolute;right:10px;top:10px; z-index: 10;width:auto;height:1.25rem; display: block;font-size:14px;}
+.is-visible .cd-popup-container {-webkit-transform:scale(1); -moz-transform:scale(1); -ms-transform:scale(1); -o-transform:scale(1); transform:scale(1);}
+
+/*按钮样式*/
+.login-button { /* 按钮美化 */
+	width: 170px; /* 宽度 */
+	height: 40px; /* 高度 */
+	border-width: 0px; /* 边框宽度 */
+	border-radius: 3px; /* 边框半径 */
+	background: #1E90FF; /* 背景颜色 */
+	cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+	outline: none; /* 不显示轮廓线 */
+	font-family: Microsoft YaHei; /* 设置字体 */
+	color: white; /* 字体颜色 */
+	font-size: 17px; /* 字体大小 */
+}
+.login-button:hover { /* 鼠标移入按钮范围时改变颜色 */
+	background: #5599FF;
+}
+
+/*.demo {
+    text-align-last:justify;
+    text-align:justify;
+    text-justify:distribute-all-lines; // 这行必加，兼容ie浏览器
+    border: 1px solid red;
+    width: 150px;
+}*/
+
+/*创建用户table*/
+#creatUser{margin: auto;}
+.inputInformation{text-align: right;}
+.link:after { width: 100%; height: 0px; font-size: 16px; display: inline-block; overflow: hidden; content: ''; vertical-align: top; }
+
+ /*.registerForm {font-size: 16px;width: 349px;text-align: justify; text-align-last: justify; text-justify: inter-ideograph; }*/
+

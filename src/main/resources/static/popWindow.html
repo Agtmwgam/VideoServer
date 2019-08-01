@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>弹窗</title>
+
+<script type="text/javascript" src="../jq/jquery-1.8.3.min.js"></script>
+<link rel="stylesheet" href="../css/popWindow.css">
+
+</head>
+
+<body>
+	<div class="checkbox">
+		<a href="javascript:0;" class="cd-popup-trigger0">创建用户</a>
+	</div>
+	<!--弹框-->
+	<form id="userForm"
+		action="www.baidu.com" method="post">
+		<div class="cd-popup">
+			<div class="cd-popup-container">
+				<h2 align="center">创建用户</h2>
+				<div class="registerForm">
+					<table id="creatUser">
+						<tr>
+							<td width="100px">用户名</td>
+							<td class="inputInformation">*<input type="text"
+								name="username" placeholder="用户名" /></td>
+						</tr>
+						<tr>
+							<td width="100px">密码</td>
+							<td class="inputInformation">*<input type="text"
+								name="password" placeholder="密码" /></td>
+						</tr>
+						<tr>
+							<td width="100px">确认密码</td>
+							<td class="inputInformation">*<input type="text"
+								name="password2" placeholder="确认密码" /></td>
+						</tr>
+						<tr>
+							<td width="100px">邮箱</td>
+							<td class="inputInformation"><input type="text"
+								name="EmailAddress" placeholder="邮箱用于找回密码" /></td>
+						</tr>
+						<tr>
+							<td width="100px">手机</td>
+							<td class="inputInformation"><input type="text"
+								name="phoneNumer" placeholder="手机号用于找回密码" /></td>
+						</tr>
+					</table>
+				</div>
+				<a href="#0" class="cd-popup-close">close</a> <br /> <input
+					class="login-button" type="submit" name="sub" value="确认" />
+			</div>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		/*弹框JS内容*/
+		jQuery(document).ready(
+				function($) {
+					//打开窗口
+					$('.cd-popup-trigger0').on('click', function(event) {
+						event.preventDefault();
+						$('.cd-popup').addClass('is-visible');
+						//$(".dialog-addquxiao").hide()
+					});
+					//关闭窗口
+					$('.cd-popup').on(
+							'click',
+							function(event) {
+								if ($(event.target).is('.cd-popup-close')
+										|| $(event.target).is('.cd-popup')) {
+									event.preventDefault();
+									$(this).removeClass('is-visible');
+								}
+							});
+					//ESC关闭
+					$(document).keyup(function(event) {
+						if (event.which == '27') {
+							$('.cd-popup').removeClass('is-visible');
+						}
+					});
+
+				});
+	</script>
+
+</body>
+
+</html>
