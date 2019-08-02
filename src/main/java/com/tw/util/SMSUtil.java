@@ -24,25 +24,26 @@ public class SMSUtil {
 
 
 
-    public void sendOneMessage() {
+    public void sendOneMessage(String[] phoneNumbers) {
         //短信验证码
         String RANDOM_INT = String.valueOf((int)((Math.random()*9+1)*10000));
+
         //短信间隔时间
-        String SMS_TIME = "5";
+        String smsTime = configProperties.getSmsTime();
 
         // 短信应用 SDK AppID
-        int appid = 1400237*70; // SDK AppID 以1400开头
+        int appid = configProperties.getAppid();
         // 短信应用 SDK AppKey
-        String appkey = "a0cd360671cc379c5bb0bc779cd6eeb*";
-        // 需要发送短信的手机号码
-        String[] phoneNumbers = {"1881437383*"};
+        String appkey = configProperties.getAppkey();
+
         // 短信模板 ID，需要在短信应用中申请
-        int templateId = 38*349; // NOTE: 真实的模板 ID 需要在短信控制台中申请
+        int templateId = configProperties.getTemplateId();
         // 签名
-        String smsSign = "熵康科技"; // NOTE: 签名参数使用的是`签名内容`，而不是`签名ID`。真实的签名需要在短信控制台申请
+        String smsSign = configProperties.getSmsSign();
 
         try {
-            String[] params = {RANDOM_INT, SMS_TIME};//参数，验证码为5678，30秒内填写
+            //参数，例如 验证码为5678，3分钟内填写
+            String[] params = {RANDOM_INT, smsTime};
             SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
             System.out.println("========参数为：phoneNum:"+phoneNumbers[0]);
             SmsSingleSenderResult result = ssender.sendWithParam("86",  phoneNumbers[0], templateId, params, smsSign, "", "");

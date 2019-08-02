@@ -20,19 +20,23 @@ public class ConfigProperties {
 
     // 短信应用 SDK AppID
     @Value("${sms.appid}")
-    private static int appid;
+    private int appid;
 
     // 短信应用 SDK AppKey
     @Value("${sms.appkey}")
-    private static String appkey;
+    private String appkey;
 
     // 短信模板 ID，需要在短信应用中申请
     @Value("${sms.templateId}")
-    private static int templateId;
+    private int templateId;
 
     // 签名
     @Value("${sms.smsSign}")
     private String smsSign;
+
+    //时间间隔?分钟
+    @Value("${sms.time}")
+    private String smsTime;
 
 
     public int getAppid() {
@@ -67,6 +71,15 @@ public class ConfigProperties {
         this.smsSign = smsSign;
     }
 
+    public String getSmsTime() {
+        return smsTime;
+    }
+
+    public void setSmsTime(String smsTime) {
+        this.smsTime = smsTime;
+    }
+
+
     @Override
     public String toString() {
         return "ConfigProperties{" +
@@ -74,6 +87,7 @@ public class ConfigProperties {
                 ", appkey='" + appkey + '\'' +
                 ", templateId=" + templateId +
                 ", smsSign='" + smsSign + '\'' +
+                ", smsTime='" + smsTime + '\'' +
                 '}';
     }
 }

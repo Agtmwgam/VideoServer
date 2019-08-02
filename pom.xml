@@ -132,6 +132,13 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+		<!-- 短信需要用到的jar -->
+		<dependency>
+			<groupId>com.github.qcloudsms</groupId>
+			<artifactId>qcloudsms</artifactId>
+			<version>1.0.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>
