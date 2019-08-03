@@ -13,28 +13,34 @@ import org.springframework.context.annotation.PropertySource;
  * @return:
  */
 @Configuration
-@ConfigurationProperties(prefix = "ftpCfg")
+@ConfigurationProperties(prefix = "ftp")
 @PropertySource("classpath:application.properties")
 public  class FtpConfig {
 
 
-    @Value("${ftpCfg.host}")
+    @Value("${ftp.host}")
     private String host;
 
-    @Value("${ftpCfg.port}")
+    @Value("${ftp.port}")
     private int port;
 
-    @Value("${ftpCfg.username}")
+    @Value("${ftp.username}")
     private String username;
 
-    @Value("${ftpCfg.password}")
+    @Value("${ftp.password}")
     private String password;
 
-    @Value("${ftpCfg.basePath}")
+    @Value("${ftp.basePath}")
     private String basePath;
 
-    @Value("${ftpCfg.filePath}")
-    private String filePath;
+    @Value("${ftp.logsPath}")
+    private String logsPath;
+
+    @Value("${ftp.picturePath}")
+    private String picturePath;
+
+    @Value("${ftp.videoPath}")
+    private String videoPath;
 
     public String getHost() {
         return host;
@@ -78,11 +84,29 @@ public  class FtpConfig {
         this.basePath = basePath;
     }
 
-    public String getFilePath() {
-        return filePath;
+
+    public String getLogsPath() {
+        return logsPath;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public String getPicturePath() {
+        return picturePath;
     }
+
+    public String getVideoPath() {
+        return videoPath;
+    }
+
+    public void setLogsPath(String logsPath) {
+        this.logsPath = logsPath;
+    }
+
+    public void setPicturePath(String picturePath) {
+        this.picturePath = picturePath;
+    }
+
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
+    }
+
 }

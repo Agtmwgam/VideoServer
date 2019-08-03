@@ -1,10 +1,13 @@
 package com.tw.controller;
 
+import com.tw.api.UserApi;
 import com.tw.entity.AttachBean;
 import com.tw.entity.ResultBean;
 import com.tw.config.FtpConfig;
 import com.tw.service.AttachService;
 import com.tw.util.FtpUtil;
+import com.tw.util.ResponseInfo;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +33,9 @@ import java.util.*;
 
 @Controller
 @RequestMapping(value = "/attach")
-public class AttachController  extends BaseController {
+public class AttachController  {
+
+    private static Logger log = Logger.getLogger(AttachController.class);
 
     @Autowired
     private AttachService attachService;
@@ -38,16 +43,13 @@ public class AttachController  extends BaseController {
     @Autowired
     private FtpConfig ftpConfig;
 
-    @RequestMapping(value = "person", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-    public String attach(@RequestBody AttachBean attach, HttpServletRequest request, HttpServletResponse response) {
 
-        //attachService.update(attach);
-        return renderString(response, attach);
-    }
 
     @RequestMapping(value = "upload", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-    public String upload(@RequestParam(name = "fileType", required = false) String fileType, HttpServletRequest request,
+    public ResponseInfo<String>  upload(@RequestParam(name = "fileType", required = false) String fileType, HttpServletRequest request,
                          HttpServletResponse response, Model model) {
+
+        ResponseInfo<String> uploadInfo = null;
 
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
                 request.getSession().getServletContext());
@@ -73,7 +75,7 @@ public class AttachController  extends BaseController {
                         try {
                             boolean result = FtpUtil.uploadFile(ftpConfig.getHost(), ftpConfig.getPort(),
                                     ftpConfig.getUsername(), ftpConfig.getPassword(), ftpConfig.getBasePath(),
-                                    ftpConfig.getFilePath(), myFileName, file.getInputStream());
+                                    ftpConfig.getBasePath(), myFileName, file.getInputStream());
                             //result = true;
                             // boolean result = true;
                             if (result) {
@@ -85,7 +87,7 @@ public class AttachController  extends BaseController {
                                 ResultBean rb = new ResultBean();
                                 rb.setResult("false");
                                 rb.setMsg("附件" + myFileName + "上传失败,请重试！");
-                                return renderString(response, rb);
+                                return uploadInfo;
                             }
 
                             // boolean result = true;
@@ -123,12 +125,12 @@ public class AttachController  extends BaseController {
                 rb.setResult("true");
                 rb.setMsg("上传成功");
                 rb.setId(nm);
-                return renderString(response, rb);
+                return uploadInfo ;
             } else {
                 ResultBean rb = new ResultBean();
                 rb.setResult("false");
                 rb.setMsg("上传失败");
-                return renderString(response, rb);
+                return uploadInfo;
             }
 
         }
@@ -136,23 +138,35 @@ public class AttachController  extends BaseController {
         rb.setResult("false");
         rb.setMsg("未检测到附件.请上传对应格式附件.");
 
-        return renderString(response, rb);
+        return uploadInfo;
     }
 
+    /***
+     *
+     * @param fileId   文件名称
+     * @param fileLocalPath  文件本地存放路径
+     * @return
+     */
     @GetMapping("/download")
-    public String download(@RequestParam(name = "fileId", required = false) String fileId) {
-        String fileName = "welcome.txt";
-        String fileLocalPath = "";
-        String fileRemotePath = "";
-        /*boolean result = FtpUtil.downloadFile(ftpConfig.getHost(), ftpConfig.getPort(),
-                ftpConfig.getUsername(), ftpConfig.getPassword(), ftpConfig.getBasePath(),
-                ftpConfig.getFilePath(),  );
+    public ResponseInfo<String> download(@RequestParam(name = "fileId", required = false) String fileId
+            , @RequestParam(name = "fileType", required = false) String fileType
+            , @RequestParam(name = "fileLocalPath", required = false) String fileLocalPath) {
+        //根据前端传递过来的fileId，在数据库中查询文件名称、文件远端路径
+        fileLocalPath = "d:/";
+        String fileName = "sn123456_20190803150322.png";
+        //根据文件类型判断传递过来的是图片还是视频，选择远程ftp服务器中的存放路径
+        boolean result = FtpUtil.downloadFile(ftpConfig.getHost(), ftpConfig.getPort(),
+                ftpConfig.getUsername(), ftpConfig.getPassword(), ftpConfig.getBasePath()+ftpConfig.getPicturePath(),
+                fileName,fileLocalPath );
+
+        ResponseInfo<String> response = null;
+
         if (result) {
             log.info("=======下载文件"+ fileName +"成功=======");
         } else {
             log.info("=======下载文件"+ fileName +"失败=======");
-        }*/
-        return null;
+        }
+        return response;
     }
 
 
