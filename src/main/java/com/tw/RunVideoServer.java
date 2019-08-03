@@ -14,4 +14,8 @@ public class RunVideoServer {
 		SpringApplication.run(RunVideoServer.class, args);
 	}
 
+
+	/**
+	 * test
+	 */
 }
