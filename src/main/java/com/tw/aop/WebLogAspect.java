@@ -15,12 +15,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
- * 
-* @author liutianwen   
+* @author liutianwen
 * @Description: AOP日志
-* @date 2018年8月28日
-* @demandNO	1080  
-* @branch
+* @date 2019年8月3日
  */
 @Aspect
 @Component

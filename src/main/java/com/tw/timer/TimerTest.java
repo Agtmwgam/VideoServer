@@ -4,12 +4,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * 
-* @author liutianwen   
-* @Description: 定时任务--------->系统计时器
-* @date 2018年8月29日
-* @demandNO	1080  
-* @branch
+ * @author liutianwen
+ * @Description: 系统计时器
+ * @date 2019年8月3日
  */
 @Component
 public class TimerTest {

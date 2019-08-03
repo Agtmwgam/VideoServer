@@ -7,12 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tw.service.SendMsgService;
 
 /**
- * 
-* @author liutianwen   
-* @Description: 异步发送短信
-* @date 2018年8月28日
-* @demandNO	1080  
-* @branch
+ * @author liutianwen
+ * @Description:
+ * @date 2019年8月3日
  */
 @RestController
 public class SendMsgController {

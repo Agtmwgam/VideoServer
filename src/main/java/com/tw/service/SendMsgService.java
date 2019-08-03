@@ -3,6 +3,11 @@ package com.tw.service;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author liutianwen
+ * @Description:
+ * @date 2019年8月3日
+ */
 @Service
 public class SendMsgService {
 	

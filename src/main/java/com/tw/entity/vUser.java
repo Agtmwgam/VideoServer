@@ -2,6 +2,11 @@ package com.tw.entity;
 
 import lombok.Data;
 
+/**
+ * @author liutianwen
+ * @Description: 用户详情
+ * @date 2019年8月3日
+ */
 @Data
 public class vUser extends BaseEntity {
     //    用户ID

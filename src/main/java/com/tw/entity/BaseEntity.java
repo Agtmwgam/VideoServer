@@ -6,7 +6,11 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.Data;
 
-
+/**
+ * @author liutianwen
+ * @Description: 实体类基类
+ * @date 2019年8月3日
+ */
 @Data
 public class BaseEntity {
     //	创建时间

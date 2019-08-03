@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tw.entity.User;
 
+/**
+ * @author liutianwen
+ * @Description:
+ * @date 2019年8月3日
+ */
 @Controller
 public class WelcomeController {
 	

@@ -16,6 +16,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
+/**
+ * @author liutianwen
+ * @Description: 数据库连接
+ * @date 2019年8月3日
+ */
 @Configuration	
 @MapperScan(basePackages = "com.tw.dao", sqlSessionTemplateRef  = "test1SqlSessionTemplate")
 public class DataSource1Config {
