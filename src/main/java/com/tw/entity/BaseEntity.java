@@ -6,25 +6,26 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.Data;
 
+
 @Data
 public class BaseEntity {
-	private String createdBy;
-	private Date createdDate;
-	private String updatedBy;
-	private Date updatedDate;
-	@Value("${userName}")
-	private String systemName;
-	public BaseEntity(){
-		if(!StringUtils.isEmpty(systemName)){
-			this.createdBy="SYSTEM";
-			this.updatedBy="SYSTEM";
-		}else{
-			this.createdBy=systemName;
-			this.updatedBy=systemName;
-		}
-		Date date=new Date(System.currentTimeMillis());
-		this.createdDate=date;
-		this.updatedDate=date;
-	}
-	
+    //	创建时间
+    private Date createTime;
+    //	是否可用（1可用0不可用）
+    private char isValid;
+    @Value("'1'")
+    private char usable;
+
+    //	默认该类可用，创建时间为当前时间
+    public BaseEntity() {
+        String sIsValid=String.valueOf(isValid);
+        if (!StringUtils.isEmpty(sIsValid)) {
+            this.isValid = isValid;
+        } else {
+            this.isValid = usable;
+        }
+        Date date = new Date(System.currentTimeMillis());
+        this.createTime = date;
+    }
+
 }

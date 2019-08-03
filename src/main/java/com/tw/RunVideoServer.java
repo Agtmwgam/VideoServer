@@ -14,4 +14,16 @@ public class RunVideoServer {
 		SpringApplication.run(RunVideoServer.class, args);
 	}
 
+	/**
+	 * request过滤器,校验token是否正确
+	 * @return
+	 */
+//	@Bean
+//	public FilterRegistrationBean jwtFilter() {
+//		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+//		JwtAuthenticationFilter filter = new JwtAuthenticationFilter();
+//		registrationBean.setFilter(filter);
+//		return registrationBean;
+//	}
+
 }

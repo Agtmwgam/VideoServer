@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONException;
 import com.github.qcloudsms.SmsSingleSender;
 import com.github.qcloudsms.SmsSingleSenderResult;
 import com.tw.config.ConfigProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.ws.http.HTTPException;
@@ -21,7 +23,8 @@ public class SMSUtil {
     @Autowired
     private static ConfigProperties configProperties;
 
-
+    //声明一个Logger，这个是static的方式，我比较习惯这么写。
+    private final static Logger logger = LoggerFactory.getLogger(SMSUtil.class);
 
 
     public void sendOneMessage(String[] phoneNumbers) {
@@ -45,9 +48,9 @@ public class SMSUtil {
             //参数，例如 验证码为5678，3分钟内填写
             String[] params = {RANDOM_INT, smsTime};
             SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
-            System.out.println("========参数为：phoneNum:"+phoneNumbers[0]);
+            logger.info("========参数为：phoneNum:"+phoneNumbers[0]);
             SmsSingleSenderResult result = ssender.sendWithParam("86",  phoneNumbers[0], templateId, params, smsSign, "", "");
-            System.out.println("========发送短信的结果为:"+result);
+            logger.info("========发送短信的结果为:"+result);
         } catch (HTTPException e) {
             // HTTP 响应码错误
             e.printStackTrace();
@@ -60,10 +63,5 @@ public class SMSUtil {
         } catch (com.github.qcloudsms.httpclient.HTTPException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println("=============");
-        System.out.println(configProperties.getAppid());
     }
 }

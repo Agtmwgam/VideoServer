@@ -139,6 +139,20 @@
 			<artifactId>qcloudsms</artifactId>
 			<version>1.0.6</version>
 		</dependency>
+
+		<!--jwt相关包-->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
