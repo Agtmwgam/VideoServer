@@ -17,7 +17,6 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:application.properties")
 public  class FtpConfig {
 
-
     @Value("${ftp.host}")
     private String host;
 
@@ -42,6 +41,7 @@ public  class FtpConfig {
     @Value("${ftp.videoPath}")
     private String videoPath;
 
+
     public String getHost() {
         return host;
     }
@@ -49,8 +49,6 @@ public  class FtpConfig {
     public void setHost(String host) {
         this.host = host;
     }
-
-
 
     public int getPort() {
         return port;
@@ -84,7 +82,6 @@ public  class FtpConfig {
         this.basePath = basePath;
     }
 
-
     public String getLogsPath() {
         return logsPath;
     }
@@ -108,5 +105,4 @@ public  class FtpConfig {
     public void setVideoPath(String videoPath) {
         this.videoPath = videoPath;
     }
-
 }

@@ -20,6 +20,7 @@ import java.io.IOException;
  */
 public class SMSUtil {
 
+
     @Autowired
     private static ConfigProperties configProperties;
 
@@ -27,9 +28,9 @@ public class SMSUtil {
     private final static Logger logger = LoggerFactory.getLogger(SMSUtil.class);
 
 
-    public void sendOneMessage(String[] phoneNumbers) {
+    public static Boolean sendOneMessage(String[] phoneNumbers) {
         //短信验证码
-        String RANDOM_INT = String.valueOf((int)((Math.random()*9+1)*10000));
+        String RANDOM_INT = MathUtil.randomStr(6);
 
         //短信间隔时间
         String smsTime = configProperties.getSmsTime();
@@ -63,5 +64,6 @@ public class SMSUtil {
         } catch (com.github.qcloudsms.httpclient.HTTPException e) {
             e.printStackTrace();
         }
+        return true;
     }
 }
