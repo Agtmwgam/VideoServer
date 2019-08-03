@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
+/**
+ * 暂时不用
+ */
 @Data
 @EqualsAndHashCode(callSuper=true)
 public class User extends BaseEntity{
