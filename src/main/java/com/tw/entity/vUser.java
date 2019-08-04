@@ -12,9 +12,7 @@ public class vUser extends BaseEntity {
     //    用户ID
     private String userID;
     //    用户昵称
-    private String name;
-    //    用户账号
-    private String account;
+    private String nickName;
     //    账户密码
     private String password;
     //    手机号
@@ -24,11 +22,10 @@ public class vUser extends BaseEntity {
         super();
     }
 
-    public vUser(String userID, String name, String account, String password, String phone) {
+    public vUser(String userID, String nickName, String account, String password, String phone) {
         super();
         this.userID = userID;
-        this.name = name;
-        this.account = account;
+        this.nickName = nickName;
         this.password = password;
         this.phone = phone;
     }
