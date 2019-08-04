@@ -1,0 +1,76 @@
+【全局】
+敏感操作之后做刷新
+
+注意点：
+1.注册账号
+手机号格式验证-前后端
+密码格式校验-前后端
+用户协议，隐私政策，选中才可注册-前端
+【注意】默认添加分组
+2.密码登陆
+下次自动登陆-保留开发
+登陆携带 type 参数：password, message
+3.找回密码
+同注册页面。
+前端校验密码一致
+
+4、数据库将user表的phone改成phoneNumber，实体类同步修改
+
+5、添加设备
+	serial			//序列号
+	identyCode		//验证码
+
+接口：
+	addDevice
+
+6、添加设备的分组：
+	默认有个分组叫：我的分组
+
+7、添加设备：
+	用户设备组列表（dto）+嵌入设备列表
+
+9、登录接口：在data里面加["returnCode":"0000"/"9999"] 前面是管理员
+
+10、增加group：
+	groupName+jwt中取userId，之后刷新页面调List接口
+
+11、修改分组名称：
+	modifyDeviceGroupName
+	groupId		int
+	groupName	String
+
+12、修改设备名称：
+	modifyDeviceName：
+	deviceId
+	deviceName
+	
+13、获得我的所有的group列表：
+	getMyAllGroup  userId从jwt获得
+
+14、getDeviceGroup 移动分组
+	devideId
+	groupId
+
+15、deleteDevice 删除
+	deviceId	：设备ID
+
+16、告警信息:
+	需要建一个表
+
+17、拿图片，看虚拟路径
+
+18、上传固件到服务器路径
+	前端使用上传文件的控件
+
+19、拿日志列表：
+	从文件中解析存到数据库中，注意返回的格式
+
+20、设备列表要加多几个字段，详细看接口文档
+	分页返回
+
+21、管理员页面，添加设备？？？
+
+22、
+
+	
+	
