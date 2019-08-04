@@ -1,41 +1,55 @@
-package com.tw.util;
+package com.tw.service;
 
 import com.alibaba.fastjson.JSONException;
 import com.github.qcloudsms.SmsSingleSender;
 import com.github.qcloudsms.SmsSingleSenderResult;
 import com.tw.config.ConfigProperties;
+import com.tw.util.MathUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import javax.xml.ws.http.HTTPException;
 import java.io.IOException;
 
 /**
- * @Author: John
- * @Description:    短信工具类
- * @Date:  2019/8/2 7:40
- * @param: null
- * @return:
+ * @author liutianwen
+ * @Description: 处理短信的service
+ * @date 2019年8月3日
  */
-public class SMSUtil {
+@Service
+public class MessageService {
 
     @Autowired
-    private static ConfigProperties configProperties;
+    private ConfigProperties configProperties;
 
-    //声明一个Logger，这个是static的方式，我比较习惯这么写。
-    private final static Logger logger = LoggerFactory.getLogger(SMSUtil.class);
+	//声明一个Logger，这个是static的方式
+	private final static Logger logger = LoggerFactory.getLogger(MessageService.class);
 
 
-    /**
-     * @Author: John
-     * @Description:       发送单条短信
-     * @Date:  2019/8/3 23:12
-     * @param: null
-     * @return:
-     */
-    public static Boolean sendOneMessage(String phoneNumber) {
+    @Async //异步注解
+    public void sendMsg() {
+        System.out.println("开始发送短信2");
+        for (int i = 0; i < 3; i++) {
+            System.out.println(i);
+            if (i == 2) {
+                System.out.println("短信发送完毕3");
+            }
+        }
+    }
+
+
+	/**
+	 * @Author: John
+	 * @Description: 发送单条短信
+	 * @Date:  2019/8/5 1:26
+	 * @param: phoneNumber	手机号码
+	 * @return:
+	 */
+    public Boolean sendMessage(String phoneNumber) {
         //短信验证码
         String RANDOM_INT = MathUtil.randomStr(6);
 

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tw.service.SendMsgService;
+import com.tw.service.MessageService;
 
 /**
  * @author liutianwen
@@ -15,7 +15,7 @@ import com.tw.service.SendMsgService;
 public class SendMsgController {
 	
 	@Autowired
-	private SendMsgService sendMsgService;
+	private MessageService sendMsgService;
 		
 	@RequestMapping(value="/sendMsg")
 	public String sendMsg(){

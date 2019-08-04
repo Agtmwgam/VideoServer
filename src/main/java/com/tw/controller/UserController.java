@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.tw.entity.User;
 import com.tw.service.UserService;
@@ -25,17 +22,38 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * @Author: John
+	 * @Description: 创建用户
+	 * @Date:  2019/8/4 13:38
+	 * @param: null
+	 * @return:
+	 */
 	@RequestMapping(value = "createUser")
-	// public String createUser(@RequestParam String userName,@RequestParam
-	// String password,User user){
 	public String createUser(User user) {
 		System.out.println("--------------开始创建用户----------------");
-		// System.out.println(userName+" "+password);
 		System.out.println(user);
-		// userService.creatUser(user);
+		userService.creatUser(user);
 
 		return "redirect:/user/userCenter";
 	}
+
+
+	/** 
+	 * @Author: John
+	 * @Description: 删除用户
+	 * @Date:  2019/8/4 13:46
+	 * @param: null
+	 * @return: 
+	 */
+	@PostMapping("/deleteUser")
+	public ResponseInfo<String> deleteUser(@RequestParam(value = "userId") String userId) {
+		ResponseInfo responseInfo = new ResponseInfo();
+		User user = new User();
+		user.setId(userId);
+		return userService.delUser(user);
+	}
+
 
 	@RequestMapping(value = "userCenter")
 	public String userCenter(Model model) {

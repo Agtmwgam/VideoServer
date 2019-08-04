@@ -1,9 +1,9 @@
 package com.tw.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.tw.service.MessageService;
 import com.tw.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -22,9 +22,21 @@ import static com.tw.util.ResponseInfo.CODE_SUCCESS;
  * @return:
  */
 @Controller
+@RequestMapping("/login")
 public class LoginController {
 
+    @Autowired
+    MessageService messageService;
+
     private static final String KEY = "abc123"; // KEY为自定义秘钥
+
+
+    @GetMapping("/sendMessage")
+    public String sendMessage() {
+        Boolean isSend = messageService.sendMessage("18210081211");
+        System.out.println("=========发送短信结果:"+isSend);
+        return "发送成功";
+    }
 
 
     /**
@@ -51,7 +63,7 @@ public class LoginController {
             String currentTime = sf.format(calendar.getTime());
 
             //此处执行发送短信验证码方法
-            Boolean isSend = SMSUtil.sendOneMessage(phoneNumber);
+            Boolean isSend = messageService.sendMessage(phoneNumber);
             if (isSend) {
                 //生成MD5值
                 String hash =  MD5Util.toMD5(KEY + "@" + currentTime + "@" + randomNum);
