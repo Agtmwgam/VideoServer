@@ -1,0 +1,527 @@
+接口文档
+
+注册发送短信接口
+POST 112.74.77.11:1010/shungkon/sendSMS
+
+
+参数
+phoneNumber: "12345678901"
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": []
+}
+
+
+
+注册保存用户信息接口
+POST 112.74.77.11:1010/shungkon/validateSMS
+
+
+参数
+phoneNumber: "12345678901"
+code: "8972"
+password: "123456"
+
+
+返回
+{
+    "code": "0000",
+    "message": "用户注册成功",
+    "data": []
+}
+
+
+
+登陆接口
+POST 112.74.77.11/shungkon/login
+
+
+参数
+loginType: "password"
+phoneNumber: "12345678901"
+pwd: "123456"
+
+
+返回
+{
+    "code": "0000",
+    "message": "登陆成功",
+    "data": [
+        "returnCode": "0000"
+    ]
+}
+
+
+
+忘记密码接口
+POST 112.74.77.11:1010/shungkon/forgetPwd
+
+
+参数
+phoneNumber: "12345678901"
+messageCode: "876845"
+newPassword: "123456"
+
+
+返回
+{
+    "code": "0000",
+    "message": "修改成功",
+    "data": []
+}
+
+
+
+修改密码接口
+POST 112.74.77.11:1010/shungkon/modifyPwd
+
+
+参数
+phoneNumber: "12345678901"
+oldPassword: ""
+newPassword: ""
+verifyPassword: "123456"
+
+
+返回
+{
+    "code": "0000",
+    "message": "修改成功",
+    "data": []
+}
+
+
+
+客户端添加设备接口
+POST 112.74.77.11:1010/shungkon/addDevice
+
+
+参数
+serial: "12345678901"
+groupId: 123
+devicePassword: "123456"
+
+
+返回
+{
+    "code": "0000",
+    "message": "添加成功",
+    "data": []
+}
+
+
+
+客户端显示设备接口
+POST 112.74.77.11:1010/shungkon/getDeviceGroup
+
+
+参数
+
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": [
+        {
+            "groupId": "123",
+            "groupName": "坂田分店",
+            "childs":[
+                {
+                    "deviceId": "123",
+                    "deviceName": "设备1",
+                    "isOnline": "1"
+                },
+                {
+                    "deviceId": "123",
+                    "deviceName": "设备1",
+                    "isOnline": "0"
+                }
+            ]
+         }
+     ]
+}
+
+
+
+客户端添加分组接口
+POST 112.74.77.11:1010/shungkon/addGroup
+
+
+参数
+groupName: "12345678901"
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": []
+}
+
+
+
+修改设备分组名称接口
+POST 112.74.77.11:1010/shungkon/modifyDeviceGroupName
+
+
+参数
+groupId: 12345678901
+groupName: "123456"
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": []
+}
+
+
+
+删除设备分组接口
+POST 112.74.77.11:1010/shungkon/deleteDeviceGroup
+
+
+参数
+groupId: 12345678901
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": []
+}
+
+
+
+
+修改设备名称接口
+POST 112.74.77.11:1010/shungkon/modifyDeviceName
+
+
+参数
+deviceId: 123
+deviceName: ""
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": []
+}
+
+
+
+查询分组列表接口
+POST 112.74.77.11:1010/shungkon/getMyAllGroup
+
+
+参数
+
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": [
+        {
+            "groupId": 786,
+            "groupName": "龙华分店"
+         },
+         {
+            "groupId": 123,
+            "groupName": "南山分店"
+         },
+         {
+            "groupId": 234,
+            "groupName": "福田分店"
+         }
+     ]
+}
+
+
+
+移动分组接口
+POST 112.74.77.11:1010/shungkon/moveDeviceGroup
+
+
+参数
+deviceId: 786
+groupId: 324
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": []
+}
+
+
+
+删除设备接口
+POST 112.74.77.11:1010/shungkon/deleteDevice
+
+
+参数
+deviceId: 12345678901
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": []
+}
+
+
+
+告警信息列表接口
+POST 112.74.77.11:1010/shungkon/getWarningInfoList
+
+
+参数
+deviceId: 123
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": [
+        {
+            "eventId": 123,
+            "deviceName": "",
+            "warningTime": "2019-07-30 00:00:00",
+            "warningPictureLittle": "",
+            "warningMessage": ""
+
+         },
+         {
+            "eventId": 124,
+            "deviceName": "",
+            "warningTime": "2019-07-29 00:00:00",
+            "warningPictureLittle": "",
+            "warningMessage": ""
+
+         },
+         {
+            "eventId": 125,
+            "deviceName": "",
+            "warningTime": "2019-07-28 00:00:00",
+            "warningPictureLittle": "",
+            "warningMessage": ""
+
+         }
+     ]
+}
+
+
+
+告警信息详情接口
+POST 112.74.77.11:1010/shungkon/getWarningInfoDesc
+
+
+参数
+deviceId: 123,
+eventId: 123
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": [
+        writeStream
+     ]
+}
+
+
+
+密度分析详情接口
+POST 112.74.77.11:1010/shungkon/devicePicture
+
+
+参数
+deviceId: 123
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": [
+        {
+            "devicePictureName": "",
+            "devicePictureStream": ""
+        }
+     ]
+}
+
+
+
+日志列表接口
+POST 112.74.77.11:1010/shungkon/logList
+
+
+参数
+deviceId: 123,
+startTime: "",
+endTime: "",
+pageNo: 0,
+pageSize: 15
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": [
+        {
+            "logNum": "123124",
+            "ipAddress": "",
+            "logName": "",
+            "logTime": ""
+        },
+        {
+            "logNum": "1231213",
+            "ipAddress": "",
+            "logName": "",
+            "logTime": ""
+        },
+        {
+            "logNum": "12311232",
+            "ipAddress": "",
+            "logName": "",
+            "logTime": ""
+        }
+     ],
+     "pageNo": 0,
+     "pageSize": 15,
+     "total": 3214
+}
+
+
+
+管理员设备管理接口
+POST 112.74.77.11:1010/shungkon/deviceMessage
+
+
+参数
+serial: "312312",
+deviceType: "",
+productDate: ""
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": [
+        {
+            "no": 1,
+            "serial": "",
+            "deviceType": "",
+            "productDate": "",
+            "deviceStatus": "",
+            "belongUser": "",
+            "deviceVerifyCode": "",
+            "softVersion": ""
+        }
+     ]
+}
+
+
+
+管理员设备管理接口
+POST 112.74.77.11:1010/shungkon/addNewDevice
+
+
+参数
+serial: "312312",
+deviceVerifyCode: ""
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": []
+}
+
+
+
+管理员用户管理查询接口
+POST 112.74.77.11:1010/shungkon/getUserMessage
+
+
+参数
+phoneNumber: "12345678901"
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": [
+        {
+            "no": 1,
+            "phoneNumber": "",
+            "password": "",
+            "deviceList": ""
+         },
+         {
+            "no": 2,
+            "phoneNumber": "",
+            "password": "",
+            "deviceList": ""
+         }
+     ]
+}
+
+
+
+管理员用户详情接口
+POST 112.74.77.11:1010/shungkon/getUserAndDeviceInfo
+
+
+参数
+
+
+
+返回
+{
+    "code": "0000",
+    "message": "成功",
+    "data": {
+        "userName": "",
+        "phoneNumber": "",
+        "password": "",
+        "deviceList": [
+            {
+                "deviceId": 123,
+                "serial": ""
+            },
+            {
+                "deviceId": 142,
+                "serial": ""
+            },
+            {
+                "deviceId": 334,
+                "serial": ""
+            }
+        ]
+     }
+}
+
+
+

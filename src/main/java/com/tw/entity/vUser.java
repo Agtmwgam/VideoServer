@@ -16,7 +16,7 @@ public class vUser extends BaseEntity {
     //    账户密码
     private String password;
     //    手机号
-    private String phone;
+    private String phoneNumber;
 
     public vUser() {
         super();
@@ -27,7 +27,7 @@ public class vUser extends BaseEntity {
         this.userID = userID;
         this.nickName = nickName;
         this.password = password;
-        this.phone = phone;
+        this.phoneNumber = phone;
     }
 }
 
