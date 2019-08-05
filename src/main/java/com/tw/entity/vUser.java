@@ -10,24 +10,24 @@ import lombok.Data;
 @Data
 public class vUser extends BaseEntity {
     //    用户ID
-    private String userID;
+    private Integer userID;
     //    用户昵称
     private String nickName;
     //    账户密码
     private String password;
     //    手机号
-    private String phone;
+    private String phoneNumber;
 
     public vUser() {
         super();
     }
 
-    public vUser(String userID, String nickName, String account, String password, String phone) {
+    public vUser(Integer userID, String nickName, String account, String password, String phone) {
         super();
         this.userID = userID;
         this.nickName = nickName;
         this.password = password;
-        this.phone = phone;
+        this.phoneNumber = phone;
     }
 }
 
