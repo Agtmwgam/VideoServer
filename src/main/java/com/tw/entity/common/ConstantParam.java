@@ -9,4 +9,10 @@ package com.tw.entity.common;
  */
 public class ConstantParam {
 
+    //是否可用的标记
+    public static final char IS_VALID_ALL = ' ';
+    public static final char IS_VALID_YES = '1';
+    public static final char IS_VALID_NO = '0';
+
+
 }

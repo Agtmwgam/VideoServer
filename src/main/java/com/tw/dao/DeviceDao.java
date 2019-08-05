@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.beans.Transient;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,5 +18,13 @@ import java.util.Map;
 public interface DeviceDao {
 
     @Transient
-    int addDevice(Device device);
+    Integer addDevice(Device device);
+
+    Integer deleteDevice(Map<String, Object> param);
+
+    Integer updateDevice(Device device);
+
+    Device getDeviceById(Map<String, Object> param);
+
+    List<Device> getDeviceByCodition(Device device);
 }

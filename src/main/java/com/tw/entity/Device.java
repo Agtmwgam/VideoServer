@@ -19,11 +19,12 @@ public class Device extends BaseEntity {
     private String deviceType;             //设备型号
     private String softVersion;            //软件版本
     private String productDate;            //设备生产日期
-    private char deviceStatus;            //设备状态
-    private char isOnline;                //设备是否在线
-    private String ipAddress;            //消息来自哪个ip
-    private Date newBeatTime;            //最新接到一个心跳的时间
-    private Date oldBeatTime;            //上一次接到心跳的时间
+    private char deviceStatus;              //设备状态
+    private char isOnline;                  //设备是否在线
+    private String ipAddress;               //消息来自哪个ip
+    private Date newBeatTime;               //最新接到一个心跳的时间
+    private Date oldBeatTime;               //上一次接到心跳的时间
+    private char isValid;                   //是否可用
 
     public Device() {
         super();
@@ -124,5 +125,31 @@ public class Device extends BaseEntity {
     public void setOldBeatTime(Date oldBeatTime) {
         this.oldBeatTime = oldBeatTime;
     }
-}
 
+    public char getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(char isValid) {
+        this.isValid = isValid;
+    }
+
+    @Override
+    public String toString() {
+        return "Device{" +
+                "deviceId=" + deviceId +
+                ", deviceName='" + deviceName + '\'' +
+                ", serial='" + serial + '\'' +
+                ", deviceVerifyCode='" + deviceVerifyCode + '\'' +
+                ", deviceType='" + deviceType + '\'' +
+                ", softVersion='" + softVersion + '\'' +
+                ", productDate='" + productDate + '\'' +
+                ", deviceStatus=" + deviceStatus +
+                ", isOnline=" + isOnline +
+                ", ipAddress='" + ipAddress + '\'' +
+                ", newBeatTime=" + newBeatTime +
+                ", oldBeatTime=" + oldBeatTime +
+                ", isValid=" + isValid +
+                '}';
+    }
+}

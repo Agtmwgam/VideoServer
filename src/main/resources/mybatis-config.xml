@@ -9,6 +9,5 @@
 		<typeAlias alias="LinkedList" type="java.util.LinkedList" />
 		<typeAlias alias="User" type="com.tw.entity.User" />
 		<typeAlias alias="Device" type="com.tw.entity.Device" />
-
 	</typeAliases>
 </configuration>

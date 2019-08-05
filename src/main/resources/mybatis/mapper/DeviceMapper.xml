@@ -11,4 +11,93 @@
         VALUES
             (#{deviceName}, #{serial}, #{deviceVerifyCode}, #{deviceType}, #{softVersion}, #{productDate})
     </insert>
+
+
+    <!-- 删除device -->
+    <delete id="deleteDevice" parameterType="map">
+        UPDATE
+            device
+        SET
+            isValid = #{isValid}
+        WHERE
+            deviceId = #{deviceId}
+
+    </delete>
+
+
+    <!-- 修改device -->
+    <update id="updateDevice" parameterType="com.tw.entity.Device">
+        UPDATE
+            device
+        SET
+            deviceName = #{deviceName},
+            serial = #{serial},
+            deviceVerifyCode = #{deviceVerifyCode},
+            deviceType = #{deviceType},
+            softVersion =  #{softVersion},
+            productDate = #{productDate},
+            deviceStatus = #{deviceStatus},
+            isOnline = #{isOnline},
+            ipAddress = #{ipAddress},
+            newBeatTime = #{newBeatTime},
+            oldBeatTime = #{oldBeatTime}
+        WHERE
+            deviceId = #{deviceId}
+    </update>
+
+
+    <select id="getDeviceById" parameterType="java.util.Map" resultType="com.tw.entity.Device">
+        SELECT
+            *
+        FROM
+            device
+        WHERE
+            deviceId = #{deviceId}
+        AND
+            isValid = #{isValid}
+    </select>
+
+    
+    <!-- 根据条件查询device -->
+    <select id="getDeviceByCodition" parameterType="com.tw.entity.Device" resultType="com.tw.entity.Device">
+        SELECT
+            *
+        FROM
+            device
+        WHERE
+            1=1
+        <if test="deviceId != 0">
+            AND deviceId = #{deviceId}
+        </if>
+        <if test="deviceName != null ">
+            AND deviceName = #{deviceName}
+        </if>
+        <if test="serial != null ">
+            AND serial = #{serial}
+        </if>
+        <if test="deviceVerifyCode != null ">
+            AND deviceVerifyCode = #{deviceVerifyCode}
+        </if>
+        <if test="deviceType != null ">
+            AND deviceType = #{deviceType}
+        </if>
+        <if test="softVersion != null ">
+            AND softVersion = #{softVersion}
+        </if>
+        <if test="productDate != null ">
+            AND productDate = #{productDate}
+        </if>
+        <if test="deviceStatus != '\0' ">
+            AND deviceStatus = #{deviceStatus}
+        </if>
+        <if test="isOnline != '\0' ">
+            AND isOnline = #{isOnline}
+        </if>
+        <if test="ipAddress != null ">
+            AND ipAddress = #{ipAddress}
+        </if>
+        <if test="isValid != '\0' ">
+            AND isValid = #{isValid}
+        </if>
+    </select>
 </mapper>
