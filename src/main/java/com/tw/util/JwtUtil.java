@@ -50,7 +50,7 @@ public class JwtUtil {
                 .withIssuer("SERVICE")  // 签名是由谁生成,例如 服务器
 //                .withSubject("this is test token")  // 签名的主题
 //                .withNotBefore(new Date())  // 定义在什么时间之前,该jwt都是不可用的
-                .withAudience(vUser.getUserID())  // 签名的观众(谁接受的签名)
+                .withAudience(vUser.getNickName())  // 签名的观众(谁接受的签名)
                 .withIssuedAt(nowDate)  // 生成签名的时间
 //                .withExpiresAt(expireDate)  // 签名过期的时间
                 /* 签名 Signature */
@@ -76,7 +76,6 @@ public class JwtUtil {
         Map<String, Claim> claims = jwt.getClaims();  // 获取token的内容
 
         List<String> audience = jwt.getAudience();
-//        System.out.println(audience.get(0));
 
         return claims;
     }
