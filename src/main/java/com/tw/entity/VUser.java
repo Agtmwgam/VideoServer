@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2019年8月3日
  */
 @Data
-public class vUser extends BaseEntity {
+public class VUser extends BaseEntity {
     //    用户ID
     private Integer userID;
     //    用户昵称
@@ -18,11 +18,11 @@ public class vUser extends BaseEntity {
     //    手机号
     private String phoneNumber;
 
-    public vUser() {
+    public VUser() {
         super();
     }
 
-    public vUser(Integer userID, String nickName, String account, String password, String phone) {
+    public VUser(Integer userID, String nickName, String account, String password, String phone) {
         super();
         this.userID = userID;
         this.nickName = nickName;

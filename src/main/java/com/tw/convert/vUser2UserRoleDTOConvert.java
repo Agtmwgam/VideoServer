@@ -1,7 +1,7 @@
 package com.tw.convert;
 
 import com.tw.dto.UserRoleDTO;
-import com.tw.entity.vUser;
+import com.tw.entity.VUser;
 
 /**
  * 功能: 将 vUser 类转换为 UserRoleDTO 类.
@@ -10,7 +10,7 @@ import com.tw.entity.vUser;
  */
 public class vUser2UserRoleDTOConvert {
 
-    public static UserRoleDTO convert(vUser user){
+    public static UserRoleDTO convert(VUser user){
 
         UserRoleDTO userRoleDTO = new UserRoleDTO();
         userRoleDTO.setUserID(user.getUserID());
