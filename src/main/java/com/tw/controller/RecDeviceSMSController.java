@@ -4,9 +4,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@RequestMapping("recDeviceSMS")
 @Controller
+@RequestMapping("/recMessage")
 public class RecDeviceSMSController {
+
+
+    /**
+     * @Author: John
+     * @Description:
+     * @Date:  2019/8/6 23:01
+     * @param: message
+     * @return:
+     */
+    @RequestMapping("/recDeviceLogin")
+    public String recDeviceLogin(@RequestParam("message") String message) {
+        System.out.println("======从设备端接收到的消息为："+message);
+        return message;
+    }
+
 
     /**
      * @Author: John
@@ -15,7 +30,7 @@ public class RecDeviceSMSController {
      * @param: message 报文消息
      * @return:
      */
-    @RequestMapping("recDeviceSMS")
+    @RequestMapping("/recDeviceBeat")
     public String recDeviceBeat(@RequestParam("message") String message) {
         System.out.println("======从设备端接收到的消息为：" + message);
         return "======" + message;
@@ -29,7 +44,7 @@ public class RecDeviceSMSController {
      * @param: message 报文消息
      * @return:
      */
-    @RequestMapping("recDeviceWarn")
+    @RequestMapping("/recDeviceWarn")
     public String recDeviceWarn(@RequestParam("message") String message) {
         System.out.println("======从设备端接收到的消息为："+message);
         return "======"+message;

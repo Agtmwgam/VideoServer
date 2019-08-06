@@ -1,6 +1,7 @@
 package com.tw.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -10,6 +11,7 @@ import java.util.Date;
  * @date 2019年8月3日
  */
 @Data
+@EqualsAndHashCode(callSuper=true)
 public class Device extends BaseEntity {
 
     private int deviceId;                 //设备的id
