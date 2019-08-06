@@ -285,7 +285,7 @@ deviceId: 12345678901
 
 
 
-告警信息列表接口
+告警视频列表接口
 POST 112.74.77.11:1010/shungkon/getWarningInfoList
 
 
@@ -327,7 +327,7 @@ deviceId: 123
 
 
 
-告警信息详情接口
+告警视频详情接口
 POST 112.74.77.11:1010/shungkon/getWarningInfoDesc
 
 
@@ -341,14 +341,14 @@ eventId: 123
     "code": "0000",
     "message": "成功",
     "data": [
-        writeStream
+        "warningVideoPath":""
      ]
 }
 
 
 
-密度分析详情接口
-POST 112.74.77.11:1010/shungkon/devicePicture
+密度分析图片详情接口
+POST 112.74.77.11:1010/shungkon/getDensityPicture
 
 
 参数
@@ -361,8 +361,8 @@ deviceId: 123
     "message": "成功",
     "data": [
         {
-            "devicePictureName": "",
-            "devicePictureStream": ""
+            "densityPictureName": "",
+            "densityPicturePath": ""
         }
      ]
 }

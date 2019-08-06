@@ -48,7 +48,7 @@
 
 	<!-- 根据传入条件查询客户总数 -->
 	<select id="countUser" parameterType="com.tw.entity.User"
-		resultType="java.lang.Integer">
+			resultType="java.lang.Integer">
 		select count(*) from user_info
 		<where>
 			<if test="id !=null and id!=''">
@@ -82,7 +82,7 @@
 
 	<!-- 根据传入的信息查找对应的用户信息 -->
 	<select id="queryUsers" parameterType="com.tw.entity.User"
-		resultType="com.tw.entity.User">
+			resultType="com.tw.entity.User">
 		select * from user_info
 		<where>
 			<if test="id !=null and id!=''">
@@ -108,7 +108,7 @@
 
 	<!-- 根据用户ID查找对应的用户信息 -->
 	<select id="queryUserById" parameterType="java.lang.String"
-		resultType="com.tw.entity.User">
+			resultType="com.tw.entity.User">
 		select * from user_info
 		<where>
 			<if test="id!=null and id!=''">
