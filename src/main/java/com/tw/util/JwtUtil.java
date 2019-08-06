@@ -5,7 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.tw.entity.vUser;
+import com.tw.entity.VUser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -26,7 +26,7 @@ public class JwtUtil {
      * @param vUser 用户信息
      * @return
      */
-    public static String encode(vUser vUser){
+    public static String encode(VUser vUser){
 
         Algorithm algorithm = Algorithm.HMAC256(SECRET);
         // 头部信息
