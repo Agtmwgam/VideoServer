@@ -341,7 +341,7 @@ eventId: 123
     "code": "0000",
     "message": "成功",
     "data": [
-        writeStream
+        "warningVideoPath":""
      ]
 }
 
@@ -362,7 +362,7 @@ deviceId: 123
     "data": [
         {
             "devicePictureName": "",
-            "devicePictureStream": ""
+            "devicePicturePath": ""
         }
      ]
 }
