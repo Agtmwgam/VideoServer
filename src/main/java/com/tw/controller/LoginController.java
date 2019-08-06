@@ -1,5 +1,7 @@
 package com.tw.controller;
 
+import com.tw.entity.common.ConstantParam;
+import com.tw.service.LoginService;
 import com.tw.service.MessageService;
 import com.tw.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +30,8 @@ public class LoginController {
     @Autowired
     MessageService messageService;
 
-    private static final String KEY = "abc123"; // KEY为自定义秘钥
-
+    @Autowired
+    private LoginService loginService;
 
     @GetMapping("/sendMessage")
     public String sendMessage() {
@@ -54,30 +56,11 @@ public class LoginController {
         //校验前端传过来的手机号码是否是正确的，如果正确就继续，否则就返回格式错误
         Boolean isValidPhoneNumber = PhoneUtil.isNotValidChinesePhone(phoneNumber);
         if (isValidPhoneNumber) {
-            //生成随机数
-            String randomNum = String.valueOf(MathUtil.random(6));
-            SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MINUTE, 5);
-            //生成5分钟后时间，用户校验是否过期
-            String currentTime = sf.format(calendar.getTime());
-
-            //此处执行发送短信验证码方法
-            Boolean isSend = messageService.sendMessage(phoneNumber);
-            if (isSend) {
-                //生成MD5值
-                String hash =  MD5Util.toMD5(KEY + "@" + currentTime + "@" + randomNum);
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("hash", hash);
-                resultMap.put("tamp", currentTime);
-                response.setCode(CODE_SUCCESS);
-                response.setMessage("send message success!");
-                //将hash值和tamp时间返回给前端
-                response.setData(resultMap);
-            } else {
-                response.setCode(CODE_ERROR);
-                response.setMessage("send message failed!");
-            }
+            Map<String, Object> resultMap = loginService.sendMessage(phoneNumber);
+            response.setCode(CODE_SUCCESS);
+            response.setMessage("send message success!");
+            //将hash值和tamp时间返回给前端
+            response.setData(resultMap);
         } else {
             response.setCode(CODE_ERROR);
             response.setMessage("it's not correct phoneNumber!");
@@ -95,27 +78,7 @@ public class LoginController {
      */
     @RequestMapping(value = "/smsValidate", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseInfo validateNum(@RequestBody Map<String,Object> requestMap) {
-        ResponseInfo response = new ResponseInfo();
-        //从前端传过来的数据
-        String requestHash = requestMap.get("hash").toString();
-        String tamp = requestMap.get("tamp").toString();
-        String msgNum = requestMap.get("msgNum").toString();
-        String hash = MD5Util.toMD5(KEY + "@" + tamp + "@" + msgNum);
-        if (tamp.compareTo(DateUtils.getDateTime()) > 0) {
-            if (hash.equalsIgnoreCase(requestHash)){
-                //校验成功
-                response.setCode(CODE_SUCCESS);
-                response.setMessage("message validate success!");
-            }else {
-                //验证码不正确，校验失败
-                response.setCode(CODE_ERROR);
-                response.setMessage("message validate failed!");
-            }
-        } else {
-            // 超时
-            response.setCode(CODE_ERROR);
-            response.setMessage("code is out of time, please send again!");
-        }
+        ResponseInfo response = loginService.validateNum(requestMap);
         return response;
     }
 }
