@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class DevicePicture extends BaseEntity{
     //    设备ID
-    private String deviceId;
+    private String serial;
     //    密度分析图片名称
     private String densityPictureName;
     //    密度分析图片存放路径
@@ -21,9 +21,9 @@ public class DevicePicture extends BaseEntity{
         super();
     }
 
-    public DevicePicture(String deviceId, String densityPictureName, String densityPicturePath) {
+    public DevicePicture(String serial, String densityPictureName, String densityPicturePath) {
         super();
-        this.deviceId = deviceId;
+        this.serial = serial;
         this.densityPictureName = densityPictureName;
         this.densityPicturePath = densityPicturePath;
     }
