@@ -4,6 +4,12 @@
 <mapper namespace="com.tw.dao.VUserDao">
 
 
+	<!-- 新建一个用户 -->
+	<insert id="creatUser" parameterType="com.tw.entity.VUser">
+		insert into vUser
+		(phoneNumber,password)
+		values(#{phoneNumber},#{password})
+	</insert>
 
 
 

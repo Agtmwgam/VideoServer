@@ -1,6 +1,7 @@
 package com.tw.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author liutianwen
@@ -8,6 +9,7 @@ import lombok.Data;
  * @date 2019年8月3日
  */
 @Data
+@EqualsAndHashCode(callSuper=true)
 public class Role extends BaseEntity{
 
     //  角色ID
