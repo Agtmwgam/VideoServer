@@ -77,7 +77,7 @@ public class MessageService {
             //TODO
             //如果短信结果是成功的，就需要将短信和手机号码和加密密钥变成MD5码
             if (StringUtils.isNotEmpty(resultStr)) {
-                if (resultStr.contains("success")) {
+                if (resultStr.contains("ok")) {
                     return true;
                 } else {
                     return false;

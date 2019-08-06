@@ -32,7 +32,7 @@
 9、登录接口：在data里面加["returnCode":"0000"/"9999"] 前面是管理员
 
 10、增加group：
-	groupName+jwt中取userId，之后刷新页面调List接口
+	groupName+jwt中取response，之后刷新页面调List接口
 
 11、修改分组名称：
 	modifyDeviceGroupName
@@ -45,7 +45,7 @@
 	deviceName
 	
 13、获得我的所有的group列表：
-	getMyAllGroup  userId从jwt获得
+	getMyAllGroup  response从jwt获得
 
 14、getDeviceGroup 移动分组
 	devideId
