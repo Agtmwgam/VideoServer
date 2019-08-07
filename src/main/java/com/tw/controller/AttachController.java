@@ -1,10 +1,6 @@
 package com.tw.controller;
 
-import com.tw.api.UserApi;
-import com.tw.entity.AttachBean;
-import com.tw.entity.ResultBean;
 import com.tw.config.FtpConfig;
-import com.tw.service.AttachService;
 import com.tw.util.FtpUtil;
 import com.tw.util.ResponseInfo;
 import org.apache.log4j.Logger;
@@ -20,45 +16,40 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.*;
 
 /**
  * @Author: lushiqin
- * @Description:
+ * @Description:  上传固件至ftp服务器
  * @Date: 2019/8/3
  * @param: null
  * @return:
  */
 
 @Controller
-@RequestMapping(value = "/attach")
 public class AttachController  {
 
     private static Logger log = Logger.getLogger(AttachController.class);
 
     @Autowired
-    private AttachService attachService;
-
-    @Autowired
     private FtpConfig ftpConfig;
 
 
-
+    /***
+     * @Description:上传固件至ftp服务器
+     * @return
+     */
     @RequestMapping(value = "upload", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-    public ResponseInfo<String>  upload(@RequestParam(name = "fileType", required = false) String fileType, HttpServletRequest request,
+    public ResponseInfo<String>  upload( HttpServletRequest request,
                          HttpServletResponse response, Model model) {
 
-        ResponseInfo<String> uploadInfo = null;
+        ResponseInfo  responseInfo = new ResponseInfo();
 
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
                 request.getSession().getServletContext());
 
         // 判断 request 是否有文件上传,即多部分请求
         if (multipartResolver.isMultipart(request)) {
-
-            // 结果文件
-            ArrayList<AttachBean> afiles = new ArrayList();
 
             // 转换成多部分request
             MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
@@ -69,31 +60,24 @@ public class AttachController  {
                 for (MultipartFile file : files) {
                     if (file != null && !file.isEmpty()) {
                         String myFileName = file.getOriginalFilename();
+                        String fileType=myFileName.substring(myFileName.lastIndexOf(".")+1,myFileName.length());
+                        //给文件一个唯一的名字，上传过程采用覆盖的形式。
+                        String fileNewName="firmware."+fileType;
                         // 记录上传开始时间
                         int pre = (int) System.currentTimeMillis();
                         // 开始传输到ftp
                         try {
                             boolean result = FtpUtil.uploadFile(ftpConfig.getHost(), ftpConfig.getPort(),
                                     ftpConfig.getUsername(), ftpConfig.getPassword(), ftpConfig.getBasePath(),
-                                    ftpConfig.getBasePath(), myFileName, file.getInputStream());
-                            //result = true;
-                            // boolean result = true;
+                                    ftpConfig.getFirmwarePath(), fileNewName, file.getInputStream());
                             if (result) {
-                                AttachBean atb = new AttachBean();
-                                atb.setaName(myFileName);
-                                atb.setaType(fileType);
-                                afiles.add(atb);
+                                responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+                                responseInfo.setMessage("附件" + myFileName + "上传成功");
                             } else {
-                                ResultBean rb = new ResultBean();
-                                rb.setResult("false");
-                                rb.setMsg("附件" + myFileName + "上传失败,请重试！");
-                                return uploadInfo;
+                                responseInfo.setCode(ResponseInfo.CODE_ERROR);
+                                responseInfo.setMessage("附件" + myFileName + "上传失败,请重试！");
+                                return responseInfo;
                             }
-
-                            // boolean result = true;
-                            int finaltime = (int) System.currentTimeMillis();
-                            System.out.println("文件【" + myFileName + "】传输的结果是：" + result + ",文件大小是：" + file.getSize()
-                                    + ",传输用时:" + (finaltime - pre));
 
                         } catch (IOException e) {
                             // TODO Auto-generated catch block
@@ -105,40 +89,11 @@ public class AttachController  {
 
             }
 
-            // debug
-            for (AttachBean ab : afiles) {
-                System.out.println("ab.before=" + ab.toString());
-            }
-
-            // 入库处理
-            String nm = null;
-            if (afiles != null && afiles.size() > 0)
-                nm = attachService.uploadFile(afiles);
-
-            // debug
-            for (AttachBean ab : afiles) {
-                System.out.println("ab=" + ab.toString());
-            }
-
-            if (nm != null) {
-                ResultBean rb = new ResultBean();
-                rb.setResult("true");
-                rb.setMsg("上传成功");
-                rb.setId(nm);
-                return uploadInfo ;
-            } else {
-                ResultBean rb = new ResultBean();
-                rb.setResult("false");
-                rb.setMsg("上传失败");
-                return uploadInfo;
-            }
-
         }
-        ResultBean rb = new ResultBean();
-        rb.setResult("false");
-        rb.setMsg("未检测到附件.请上传对应格式附件.");
+        responseInfo.setCode(ResponseInfo.CODE_ERROR);
+        responseInfo.setMessage("未检测到附件.请上传对应格式附件.");
 
-        return uploadInfo;
+        return responseInfo;
     }
 
     /***
@@ -168,6 +123,8 @@ public class AttachController  {
         }
         return response;
     }
+
+
 
 
 }

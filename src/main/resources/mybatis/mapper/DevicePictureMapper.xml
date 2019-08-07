@@ -4,9 +4,15 @@
 <mapper namespace="com.tw.dao.DevicePictureDao">
 
 
+    <select id="getDensityPicture"  resultType="com.tw.entity.DevicePicture" >
+        SELECT
+        *
+        FROM
+        devicePicture
+        WHERE
+        serial = #{serial}
 
-
-
+    </select>
 
 
 </mapper>

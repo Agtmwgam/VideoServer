@@ -8,14 +8,14 @@ import com.tw.entity.VUser;
  *
  * Created by zhuoshouyi on 2019/8/5.
  */
-public class vUser2UserRoleDTOConvert {
+public class VUser2UserRoleDTOConvert {
 
-    public static UserRoleDTO convert(VUser user){
+    public static UserRoleDTO convert(VUser vUser){
 
         UserRoleDTO userRoleDTO = new UserRoleDTO();
-        userRoleDTO.setUserID(user.getUserID());
-        userRoleDTO.setNickName(user.getNickName());
-        userRoleDTO.setPhoneNumber(user.getPhoneNumber());
+        userRoleDTO.setUserID(vUser.getUserID());
+        userRoleDTO.setNickName(vUser.getNickName());
+        userRoleDTO.setPhoneNumber(vUser.getPhoneNumber());
 
         return userRoleDTO;
     }

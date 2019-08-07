@@ -1,9 +1,7 @@
 package com.tw.dao;
 
-import com.tw.entity.AttachBean;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.ArrayList;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author: lushiqin
@@ -12,9 +10,9 @@ import java.util.ArrayList;
  * @param: null
  * @return:
  */
+@Component
 @Mapper
 public interface AttachDao {
-    public Integer uploadFile(ArrayList<AttachBean> afiles);
 
     public String qryGuid();
 
