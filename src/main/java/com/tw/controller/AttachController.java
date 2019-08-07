@@ -2,6 +2,7 @@ package com.tw.controller;
 
 import com.tw.api.UserApi;
 import com.tw.entity.AttachBean;
+import com.tw.entity.DeviceVideo;
 import com.tw.entity.ResultBean;
 import com.tw.config.FtpConfig;
 import com.tw.service.AttachService;
@@ -32,7 +33,6 @@ import java.util.*;
  */
 
 @Controller
-@RequestMapping(value = "/attach")
 public class AttachController  {
 
     private static Logger log = Logger.getLogger(AttachController.class);
@@ -168,6 +168,8 @@ public class AttachController  {
         }
         return response;
     }
+
+
 
 
 }
