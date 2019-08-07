@@ -41,6 +41,8 @@ public  class FtpConfig {
     @Value("${ftp.videoPath}")
     private String videoPath;
 
+    @Value("${ftp.firmwarePath}")
+    private String firmwarePath;
 
     public String getHost() {
         return host;
@@ -105,4 +107,15 @@ public  class FtpConfig {
     public void setVideoPath(String videoPath) {
         this.videoPath = videoPath;
     }
+
+
+    public String getFirmwarePath() {
+        return firmwarePath;
+    }
+
+    public void setFirmwarePath(String firmwarePath) {
+        this.firmwarePath = firmwarePath;
+    }
+
+
 }
