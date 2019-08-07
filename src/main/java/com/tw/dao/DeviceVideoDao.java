@@ -2,6 +2,7 @@ package com.tw.dao;
 
 import com.tw.entity.DeviceVideo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 @Mapper
 public interface DeviceVideoDao {
 
-    String getWarningInfoDesc(String serial,String eventId);
+    String getWarningInfoDesc(@Param("serial")String serial,@Param("eventId")String eventId);
 
     List<DeviceVideo> getWarningInfoList(String serial);
 }

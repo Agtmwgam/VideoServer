@@ -1,11 +1,13 @@
 package com.tw.controller;
 
+import com.tw.common.JsonMapper;
 import com.tw.entity.DevicePicture;
 import com.tw.service.DevicePictureService;
 import com.tw.util.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,8 +34,8 @@ public class DevicePictureController {
      * @param serial
      * @return
      */
-    @RequestMapping("/getDensityPicture")
-    public ResponseInfo getWarningInfoDesc(@RequestParam(value = "serial") String serial) {
+    @GetMapping("/getDensityPicture")
+    public String getDensityPicture(@RequestParam(value = "serial") String serial) {
         ResponseInfo response = new ResponseInfo();
         Map<String, Object> resultMap = new HashMap<>();
         List<DevicePicture> list = devicePictureService.getDensityPicture(serial);
@@ -53,7 +55,7 @@ public class DevicePictureController {
             response.setMessage("getDensityPicture failed!");
 
         }
-        return response;
+        return JsonMapper.toJsonString(response);
     }
 
 }
