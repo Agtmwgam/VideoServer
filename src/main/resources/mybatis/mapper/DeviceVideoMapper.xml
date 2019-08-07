@@ -4,6 +4,35 @@
 <mapper namespace="com.tw.dao.DeviceVideoDao">
 
 
+    <!-- 根据条件查询serial eventId -->
+    <select id="getWarningInfoDesc"  resultType="String">
+        SELECT
+        warningVideoPath
+        FROM
+        deviceVideo
+        WHERE
+        1=1
+        <if test="serial != null">
+            AND serial = #{serial}
+        </if>
+        <if test="eventId != null ">
+            AND eventId = #{eventId}
+        </if>
+
+
+    </select>
+
+
+
+    <select id="getWarningInfoList"  resultType="com.tw.entity.DeviceVideo" >
+        SELECT
+        *
+        FROM
+        deviceVideo
+        WHERE
+         serial = #{serial}
+
+    </select>
 
 
 
