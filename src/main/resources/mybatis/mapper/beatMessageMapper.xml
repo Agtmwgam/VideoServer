@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tw.dao.BeatMessageDao">
+
+
+    <!-- 心跳数据入库 -->
+    <insert id="saveBeatMessage" parameterType="com.tw.entity.BeatMessage">
+        insert into warningMessage
+        (frame,mesNo,mesDate,groupName,deviceName,deviceModel,serial,exeStatus,ip)
+        values(#{frame},#{mesNo},#{mesDate},#{groupName},#{deviceName},#{deviceModel},#{serial},#{exeStatus},#{ip})
+    </insert>
+
+
+
+</mapper>
