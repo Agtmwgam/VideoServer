@@ -12,7 +12,7 @@
         deviceVideo
         WHERE
         1=1
-        <if test="serial != 0">
+        <if test="serial != null">
             AND serial = #{serial}
         </if>
         <if test="eventId != null ">

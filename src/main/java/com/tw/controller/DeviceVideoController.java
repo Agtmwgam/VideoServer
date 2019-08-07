@@ -1,5 +1,6 @@
 package com.tw.controller;
 
+import com.tw.common.JsonMapper;
 import com.tw.entity.DeviceVideo;
 import com.tw.service.DeviceVideoService;
 import com.tw.util.ResponseInfo;
@@ -32,8 +33,8 @@ public class DeviceVideoController {
      * @param serial
      * @return
      */
-    @RequestMapping("/getWarningInfoDesc")
-    public ResponseInfo getWarningInfoDesc(@RequestParam(value = "serial") String serial
+    @GetMapping("/getWarningInfoDesc")
+    public String getWarningInfoDesc(@RequestParam(value = "serial") String serial
                                             ,@RequestParam(value = "eventId") String eventId) {
         ResponseInfo response = new ResponseInfo();
         Map<String, Object> resultMap = new HashMap<>();
@@ -48,7 +49,7 @@ public class DeviceVideoController {
             response.setCode(ResponseInfo.CODE_ERROR);
             response.setMessage("warningVideoPath error!");
         }
-        return response;
+        return JsonMapper.toJsonString(response);
     }
 
 
@@ -57,8 +58,8 @@ public class DeviceVideoController {
      * @param serial
      * @return
      */
-    @RequestMapping("/getWarningInfoList")
-    public ResponseInfo getWarningInfoList(@RequestParam(value = "serial") String serial) {
+    @GetMapping("/getWarningInfoList")
+    public String getWarningInfoList(@RequestParam(value = "serial") String serial) {
         ResponseInfo response = new ResponseInfo();
         Map<String, Object> resultMap = new HashMap<>();
         List<DeviceVideo> list = deviceVideoService.getWarningInfoList(serial);
@@ -78,7 +79,7 @@ public class DeviceVideoController {
             response.setMessage("getWarningInfoList failed!");
 
         }
-        return response;
+        return JsonMapper.toJsonString(response);
     }
 
 
