@@ -23,8 +23,8 @@ import static com.tw.util.ResponseInfo.CODE_SUCCESS;
  * @Created by liutianwen
  */
 @Controller
-@RequestMapping("/register/")
-public class RegisterController {
+@RequestMapping("/forget/")
+public class ForgetPasswordController {
 
     @Autowired
     private VUserService userService;
@@ -36,10 +36,10 @@ public class RegisterController {
      * @return
      * @Date 2019/8/5 22:21
      * @Created liutianwen
-     * @Description 用户注册
+     * @Description 忘记密码
      */
-    @RequestMapping(value = "toRegister")
-    public ResponseInfo createUser(@RequestBody Map<String, Object> requestMap) {
+    @RequestMapping(value = "findPwd")
+    public ResponseInfo findPassword(@RequestBody Map<String, Object> requestMap) {
 
 //        String verifyCode = requestMap.get("verifyCode").toString();
         VUser user = (VUser) requestMap.get("VUser");
@@ -48,12 +48,8 @@ public class RegisterController {
         String msgNum = requestMap.get("msgNum").toString();
 
         user.setPhoneNumber("18210081211");
-        user.setPassword("123$%^qwe");
-        requestMap.put("hash","");
-        requestMap.put("tamp","");
-        requestMap.put("msgNum","");
 
-//       检查用户注册信息(手机号，密码，验证码)是否正常
+//       检查用户注册信息(手机号，新密码，验证码)是否正常
         ResponseInfo response = checkUserInfo(requestMap);
         if (response.getCode() == CODE_ERROR) {
             return response;
@@ -136,7 +132,7 @@ public class RegisterController {
         VUser returnUser = userService.queryUser(user2);
         if (!StringUtils.isBlank(returnUser.getPhoneNumber())) {
             response.setCode(CODE_ERROR);
-            response.setMessage("The user is exist!");
+            response.setMessage("The user is not exist!");
             return response;
         }
 

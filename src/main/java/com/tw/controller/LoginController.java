@@ -1,16 +1,11 @@
 package com.tw.controller;
 
-import com.tw.entity.common.ConstantParam;
-import com.tw.service.LoginService;
 import com.tw.service.MessageService;
 import com.tw.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.tw.util.ResponseInfo.CODE_ERROR;
@@ -30,8 +25,6 @@ public class LoginController {
     @Autowired
     MessageService messageService;
 
-    @Autowired
-    private LoginService loginService;
 
     @GetMapping("/sendMessage")
     public String sendMessage() {
@@ -56,7 +49,7 @@ public class LoginController {
         //校验前端传过来的手机号码是否是正确的，如果正确就继续，否则就返回格式错误
         Boolean isValidPhoneNumber = PhoneUtil.isNotValidChinesePhone(phoneNumber);
         if (isValidPhoneNumber) {
-            Map<String, Object> resultMap = loginService.sendMessage(phoneNumber);
+            Map<String, Object> resultMap = messageService.publicSendMessage(phoneNumber);
             response.setCode(CODE_SUCCESS);
             response.setMessage("send message success!");
             //将hash值和tamp时间返回给前端
@@ -78,7 +71,7 @@ public class LoginController {
      */
     @RequestMapping(value = "/smsValidate", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseInfo validateNum(@RequestBody Map<String,Object> requestMap) {
-        ResponseInfo response = loginService.validateNum(requestMap);
+        ResponseInfo response = messageService.validateNum(requestMap);
         return response;
     }
 }
