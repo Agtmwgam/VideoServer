@@ -19,6 +19,6 @@ public interface VUserDao {
     void creatUser(VUser user);
 
     //查找用户
-    void queryUser(VUser user);
+    VUser queryUser(VUser user);
 
 }
