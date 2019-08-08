@@ -36,5 +36,11 @@ public class VUserService {
 		return user;
 	}
 
+	//更新客户
+	@Transactional
+	public Integer modifyUser(VUser user) {
+		Integer num=vUserDao.modifyUser(user);
+		return num;
+	}
 
 }
