@@ -4,6 +4,7 @@ import com.tw.common.JsonMapper;
 import com.tw.entity.DeviceVideo;
 import com.tw.service.DeviceVideoService;
 import com.tw.util.ResponseInfo;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +23,10 @@ import java.util.Map;
  * @return:
  */
 @Controller
-@RequestMapping(value = "/video")
 public class DeviceVideoController {
+
+    private static Logger log = Logger.getLogger(DeviceVideoController.class);
+
 
     @Autowired
     private DeviceVideoService  deviceVideoService;
@@ -36,6 +39,7 @@ public class DeviceVideoController {
     @GetMapping("/getWarningInfoDesc")
     public String getWarningInfoDesc(@RequestParam(value = "serial") String serial
                                             ,@RequestParam(value = "eventId") String eventId) {
+        log.info("=====/getWarningInfoDesc获取到的参数是=====serial:"+serial+"  eventId:"+eventId);
         ResponseInfo response = new ResponseInfo();
         Map<String, Object> resultMap = new HashMap<>();
         String warningVideoPath = deviceVideoService.getWarningInfoDesc(serial,eventId);
@@ -45,6 +49,7 @@ public class DeviceVideoController {
             response.setMessage("getDeviceByserial success!");
             response.setData(resultMap);
             System.out.println("=====warningVideoPath====="+warningVideoPath);
+            log.info("=====getWarningInfoDesc:warningVideoPath====="+warningVideoPath);
         } else {
             response.setCode(ResponseInfo.CODE_ERROR);
             response.setMessage("warningVideoPath error!");
@@ -60,6 +65,7 @@ public class DeviceVideoController {
      */
     @GetMapping("/getWarningInfoList")
     public String getWarningInfoList(@RequestParam(value = "serial") String serial) {
+        log.info("=====/getWarningInfoList获取到的参数是=====serial:"+serial);
         ResponseInfo response = new ResponseInfo();
         Map<String, Object> resultMap = new HashMap<>();
         List<DeviceVideo> list = deviceVideoService.getWarningInfoList(serial);

@@ -15,14 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class VUserService {
 
+//	@Resource
 	@Autowired
-	private VUserDao userDao;
+	private VUserDao vUserDao;
 
 	// 新建一个用户
 	@Transactional
 	public Boolean creatUser(VUser user) {
 		System.out.println("service");
-		userDao.creatUser(user);
+		vUserDao.creatUser(user);
+		return true;
+	}
+
+//	寻找用户
+	@Transactional
+	public Boolean queryUser(VUser user) {
+		System.out.println("service");
+		vUserDao.queryUser(user);
 		return true;
 	}
 

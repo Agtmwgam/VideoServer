@@ -4,6 +4,7 @@ import com.tw.common.JsonMapper;
 import com.tw.entity.DevicePicture;
 import com.tw.service.DevicePictureService;
 import com.tw.util.ResponseInfo;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +24,9 @@ import java.util.Map;
  * @return:
  */
 @Controller
-@RequestMapping(value = "/picture")
 public class DevicePictureController {
+
+    private static Logger log = Logger.getLogger(DevicePictureController.class);
 
     @Autowired
     private DevicePictureService  devicePictureService;
@@ -36,6 +38,7 @@ public class DevicePictureController {
      */
     @GetMapping("/getDensityPicture")
     public String getDensityPicture(@RequestParam(value = "serial") String serial) {
+        log.info("=====/getDensityPicture获取到的参数是=====serial:"+serial);
         ResponseInfo response = new ResponseInfo();
         Map<String, Object> resultMap = new HashMap<>();
         List<DevicePicture> list = devicePictureService.getDensityPicture(serial);
@@ -57,5 +60,6 @@ public class DevicePictureController {
         }
         return JsonMapper.toJsonString(response);
     }
+
 
 }

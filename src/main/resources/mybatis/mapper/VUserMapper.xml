@@ -11,6 +11,28 @@
 		values(#{phoneNumber},#{password})
 	</insert>
 
+	<!-- 根据传入的信息查找对应的用户信息 -->
+	<select id="queryUser" parameterType="com.tw.entity.VUser"
+			resultType="com.tw.entity.VUser">
+		select * from vuser
+		<where>
+			<if test="userID !=null and id!=''">
+				userID =#{userID}
+			</if>
+			<if test="nickName!=null and nickName!=''">
+				and nickName=#{nickName}
+			</if>
+			<if test="password !=null and password !=''">
+				and password =#{password}
+			</if>
+			<if test="createTime!=null and createTime!=''">
+				and createTime=#{createTime}
+			</if>
+			<if test="isValid!=null and isValid!=''">
+				and isValid=#{isValid}
+			</if>
+		</where>
+	</select>
 
 
 
