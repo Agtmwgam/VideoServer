@@ -15,7 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @ConfigurationProperties(prefix = "ftp")
 @PropertySource("classpath:application.properties")
-public  class FtpConfig {
+public class FtpConfig {
 
     @Value("${ftp.host}")
     private String host;

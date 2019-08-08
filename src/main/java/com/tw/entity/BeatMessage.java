@@ -2,6 +2,9 @@ package com.tw.entity;
 
 import lombok.Data;
 
+import java.time.DateTimeException;
+import java.util.Date;
+
 /**
  * @Author: zhuoshouyi
  * @Description:
@@ -10,7 +13,7 @@ import lombok.Data;
  * @return:
  */
 @Data
-public class BeatMessage {
+public class BeatMessage extends BaseEntity {
 
     // id
     private Integer beatId;
@@ -46,6 +49,6 @@ public class BeatMessage {
     private char isValid;
 
     // 创建时间
-    private String createTime;
+    private Date createTime;
 
 }
