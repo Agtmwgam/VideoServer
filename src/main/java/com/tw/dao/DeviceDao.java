@@ -15,6 +15,7 @@ import java.util.Map;
  * @date 2019年8月3日
  */
 @Mapper
+@Repository
 public interface DeviceDao {
 
     @Transient

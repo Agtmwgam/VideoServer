@@ -126,6 +126,8 @@ public class MessageService {
         Map<String, Object> resultMap = new HashMap<>();
         //生成随机数
         String randomNum = String.valueOf(MathUtil.random(6));
+        logger.info("=======发送的短信校验码为："+randomNum);
+
         SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, 5);
@@ -134,6 +136,8 @@ public class MessageService {
 
         //此处执行发送短信验证码方法
         Boolean isSend =sendMessage(phoneNumber);
+
+        logger.info("===========短信发送结果："+isSend);
         if (isSend) {
             //生成MD5值
             String hash = MD5Util.toMD5(ConstantParam.KEY + "@" + currentTime + "@" + randomNum);
@@ -155,8 +159,11 @@ public class MessageService {
         ResponseInfo response = new ResponseInfo();
         //从前端传过来的数据
         String requestHash = requestMap.get("hash").toString();
+        logger.info("=============前端收到的requestHash："+requestHash);
         String tamp = requestMap.get("tamp").toString();
+        logger.info("=============前端收到的tamp："+tamp);
         String msgNum = requestMap.get("msgNum").toString();
+        logger.info("=============前端收到的msgNum："+msgNum);
        //非空校验
         String hashString=requestHash+tamp+msgNum;
         if(StringUtils.isBlank(hashString)){
@@ -167,17 +174,21 @@ public class MessageService {
 
 
         String hash = MD5Util.toMD5(ConstantParam.KEY + "@" + tamp + "@" + msgNum);
+        logger.info("===========前端的hash码："+hash);
         if (tamp.compareTo(DateUtils.getDateTime()) > 0) {
             if (hash.equalsIgnoreCase(requestHash)){
+                logger.warn("===========hash码校验结果："+true);
                 //校验成功
                 response.setCode(CODE_SUCCESS);
                 response.setMessage("message validate success!");
             }else {
+                logger.error("===========hash码校验结果："+false);
                 //验证码不正确，校验失败
                 response.setCode(CODE_ERROR);
                 response.setMessage("message validate failed!");
             }
         } else {
+            logger.warn("===========hash码校验结果："+"超时啦");
             // 超时
             response.setCode(CODE_ERROR);
             response.setMessage("code is out of time, please send again!");
