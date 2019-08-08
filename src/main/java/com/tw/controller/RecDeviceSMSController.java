@@ -26,6 +26,9 @@ public class RecDeviceSMSController {
     @RequestMapping("/recDeviceLogin")
     public String recDeviceLogin(@RequestParam("message") String message) {
         System.out.println("======从设备端接收到的消息为："+message);
+
+        //
+
         return message;
     }
 
@@ -34,7 +37,8 @@ public class RecDeviceSMSController {
      * @Description: 从设备中接收心跳消息
      * @Date:  2019/8/4 23:49
      * @param: message 报文消息
-     * @return:
+     *
+     * @return: 0*10#001#SQZN001#OK
      */
     @RequestMapping("/recDeviceBeat")
     public String recDeviceBeat(@RequestParam("message") String message) {
@@ -55,7 +59,7 @@ public class RecDeviceSMSController {
      * @Date:  2019/8/4 23:50
      * @param: message 报文消息
      *      0*FF#001#2019-07-22T092312#SK01#SQZN001#1#192.168.1.2003
-     * @return:
+     * @return: 0*10#001#SQZN001#OK
      */
     @RequestMapping("/recDeviceWarn")
     public String recDeviceWarn(@RequestParam("message") String message) {
