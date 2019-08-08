@@ -10,7 +10,7 @@ import lombok.Data;
  * @return:
  */
 @Data
-public class BeatMessage {
+public class BeatMessage extends BaseEntity {
 
     // id
     private Integer beatId;

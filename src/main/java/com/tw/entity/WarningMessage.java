@@ -10,7 +10,7 @@ import lombok.Data;
  * @return:
  */
 @Data
-public class WarningMessage {
+public class WarningMessage extends BaseEntity {
 
     // id
     private Integer warnId;
