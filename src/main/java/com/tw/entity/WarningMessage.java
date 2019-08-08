@@ -2,6 +2,8 @@ package com.tw.entity;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @Author: zhuoshouyi
  * @Description:
@@ -52,5 +54,5 @@ public class WarningMessage extends BaseEntity {
     private char isValid;
 
     // 创建时间
-    private String createTime;
+    private Date createTime;
 }
