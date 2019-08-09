@@ -25,7 +25,7 @@ import java.util.*;
  * @param: null
  * @return:
  */
-
+@RestController
 @Controller
 public class AttachController  {
 
