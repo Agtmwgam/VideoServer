@@ -21,7 +21,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/picture/**").addResourceLocations("file:D:/testPicture/");
         registry.addResourceHandler("/logs/**").addResourceLocations("file:D:/testVideo/");
         //Linux下
-        registry.addResourceHandler("/uploads/**").addResourceLocations("file:/Users/liuyanzhao/Documents/uploads/");
+        registry.addResourceHandler("/video/**").addResourceLocations("file:/home/ftp123/video/");
+        registry.addResourceHandler("/picture/**").addResourceLocations("file:/home/ftp123/picture/");
 
     }
 
