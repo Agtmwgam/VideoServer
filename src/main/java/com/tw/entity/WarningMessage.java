@@ -46,5 +46,5 @@ public class WarningMessage extends BaseEntity {
     private String exeStatus;
 
     // IP来源
-    private String ip;
+    private String ip;=
 }

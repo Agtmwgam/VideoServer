@@ -21,4 +21,8 @@ public interface VUserDao {
     //查找用户
     VUser queryUser(VUser user);
 
+    //更新客户
+    @Transactional
+    Integer modifyUser(VUser user);
+
 }

@@ -14,7 +14,7 @@
 	<!-- 根据传入的信息查找对应的用户信息 -->
 	<select id="queryUser" parameterType="com.tw.entity.VUser"
 			resultType="com.tw.entity.VUser">
-		select * from vuser
+		select * from vUser
 		<where>
 			<if test="userID !=null and id!=''">
 				userID =#{userID}
@@ -34,6 +34,23 @@
 		</where>
 	</select>
 
+	<!-- 更新客户信息 -->
+	<update id="modifyUser" parameterType="com.tw.entity.VUser">
+		update vUser
+		<set>
+			<if test="nickName != null and nickName !=''">
+				nickName = #{nickName},
+			</if>
+			<if test="password != null and password != ''">
+				password = #{password},
+			</if>
+		</set>
+		<where>
+			<if test="phoneNumber !=null and phoneNumber!=''">
+				phoneNumber = #{phoneNumber}
+			</if>
+		</where>
+	</update>
 
 
 
