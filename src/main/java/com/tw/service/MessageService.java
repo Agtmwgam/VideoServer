@@ -168,7 +168,7 @@ public class MessageService {
         String hashString=requestHash+tamp+msgNum;
         if(StringUtils.isBlank(hashString)){
             response.setCode(CODE_ERROR);
-            response.setMessage("verify code can not be empty!");
+            response.setMessage(ConstantParam.VALID_CODE_EMPTY);
             return  response;
         }
 

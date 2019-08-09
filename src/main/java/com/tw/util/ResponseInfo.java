@@ -13,7 +13,6 @@ import java.util.HashMap;
  * @Description: 返回信息实体类
  * @date 2019年8月3日
  */
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public  class ResponseInfo<T> {
