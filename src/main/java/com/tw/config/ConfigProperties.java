@@ -1,6 +1,7 @@
 package com.tw.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @ConfigurationProperties(prefix = "sms")
 @PropertySource("classpath:application.properties")
+@EnableAutoConfiguration
 public class ConfigProperties {
 
     // 短信应用 SDK AppID

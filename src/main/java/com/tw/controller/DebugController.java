@@ -2,6 +2,7 @@ package com.tw.controller;
 
 import com.tw.config.ConfigProperties;
 import com.tw.service.MessageService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +25,23 @@ public class DebugController {
     @Autowired
     private MessageService messageService;
 
-    @GetMapping("/test")
+    private static org.apache.log4j.Logger logger = Logger.getLogger(LoginController.class);
+
+    /**
+     * @Author: John
+     * @Description: 查看是否能够调通
+     * @Date:  2019/8/7 23:47
+     * @param: null
+     * @return:
+     */
+    @RequestMapping("/test")
     public String test() {
-        System.out.println("============="+configProperties.toString());
+        logger.warn("====");
+        return "=========调用了test方法";
+    }
+
+    @GetMapping("/sendMessage")
+    public String sendMessage() {
         Boolean isSend = messageService.sendMessage("18814373836");
         System.out.println("=========发送短信结果:"+isSend);
         System.out.println("============调用debug的test方法");

@@ -29,11 +29,18 @@ public class VUserService {
 
 //	寻找用户
 	@Transactional
-	public Boolean queryUser(VUser user) {
-		System.out.println("service");
-		vUserDao.queryUser(user);
-		return true;
+	public VUser queryUser(VUser user) {
+		System.out.println("queryUser service");
+//		VUser returnUser=vUserDao.queryUser(user);
+		user=vUserDao.queryUser(user);
+		return user;
 	}
 
+	//更新客户
+	@Transactional
+	public Integer modifyUser(VUser user) {
+		Integer num=vUserDao.modifyUser(user);
+		return num;
+	}
 
 }

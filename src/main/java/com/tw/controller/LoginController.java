@@ -1,16 +1,13 @@
 package com.tw.controller;
 
-import com.tw.entity.common.ConstantParam;
-import com.tw.service.LoginService;
 import com.tw.service.MessageService;
 import com.tw.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.tw.util.ResponseInfo.CODE_ERROR;
@@ -30,8 +27,9 @@ public class LoginController {
     @Autowired
     MessageService messageService;
 
-    @Autowired
-    private LoginService loginService;
+    //声明一个Logger，这个是static的方式
+    private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
+
 
     @GetMapping("/sendMessage")
     public String sendMessage() {
@@ -50,18 +48,23 @@ public class LoginController {
      */
     @RequestMapping(value = "/smsSendCode", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseInfo sendMsg(@RequestBody Map<String,Object> requestMap) {
+
+        logger.info("===========从前端接收的内容为："+requestMap.toString());
+
         ResponseInfo response = new ResponseInfo();
         String phoneNumber = (String) requestMap.get("phoneNumber");
 
         //校验前端传过来的手机号码是否是正确的，如果正确就继续，否则就返回格式错误
         Boolean isValidPhoneNumber = PhoneUtil.isNotValidChinesePhone(phoneNumber);
         if (isValidPhoneNumber) {
-            Map<String, Object> resultMap = loginService.sendMessage(phoneNumber);
+            logger.info("===============校验手机号码："+phoneNumber+" 成功！");
+            Map<String, Object> resultMap = messageService.publicSendMessage(phoneNumber);
             response.setCode(CODE_SUCCESS);
             response.setMessage("send message success!");
             //将hash值和tamp时间返回给前端
             response.setData(resultMap);
         } else {
+            logger.error("===============校验手机号码："+phoneNumber+" 失败！");
             response.setCode(CODE_ERROR);
             response.setMessage("it's not correct phoneNumber!");
         }
@@ -78,7 +81,8 @@ public class LoginController {
      */
     @RequestMapping(value = "/smsValidate", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseInfo validateNum(@RequestBody Map<String,Object> requestMap) {
-        ResponseInfo response = loginService.validateNum(requestMap);
+        logger.info("==============从前端收到的校验信息为："+requestMap.toString());
+        ResponseInfo response = messageService.validateNum(requestMap);
         return response;
     }
 }

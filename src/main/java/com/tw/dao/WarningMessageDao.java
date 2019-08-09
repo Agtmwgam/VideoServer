@@ -2,6 +2,7 @@ package com.tw.dao;
 
 import com.tw.entity.WarningMessage;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @return:
  */
 @Mapper
+@Repository
 public interface WarningMessageDao {
 
     // save

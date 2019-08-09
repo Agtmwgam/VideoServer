@@ -2,12 +2,14 @@ package com.tw.dao;
 
 import java.util.ArrayList;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.tw.entity.User;
 
 @Mapper
+@Repository
 public interface UserDao  {
 	
 	//计算客户总数
