@@ -4,13 +4,19 @@ import com.tw.entity.VUser;
 import com.tw.entity.common.ConstantParam;
 import com.tw.service.MessageService;
 import com.tw.service.VUserService;
+import com.tw.util.PhoneUtil;
 import com.tw.util.ResponseInfo;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.tw.util.ResponseInfo.CODE_ERROR;
@@ -32,35 +38,58 @@ public class RegisterController {
     @Autowired
     private MessageService messageService;
 
+    //声明一个Logger，这个是static的方式
+    private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
+
+    @RequestMapping(value = "sendeMessage")
+    public ResponseInfo sendeMessage(@RequestBody String phoneNumber) {
+//        phoneNumber="18210081211";
+        ResponseInfo  responseInfo=new ResponseInfo();
+        Map<String, Object> resultMap = messageService.publicSendMessage(phoneNumber);
+        responseInfo.setData(resultMap);
+        System.out.println("hash:"+resultMap.get("hash"));
+        System.out.println("tamp:"+resultMap.get("tamp"));
+        return responseInfo;
+    }
+
     /**
      * @return
      * @Date 2019/8/5 22:21
      * @Created liutianwen
      * @Description 用户注册
      */
-    @RequestMapping(value = "toRegister")
-    public ResponseInfo createUser(@RequestBody Map<String, Object> requestMap) {
+    @PostMapping(value = "toRegister", headers = "Accept=application/json")
+//    public ResponseInfo createUser() {
+        public ResponseInfo createUser(@RequestBody Map<String,Object> requestMap) {
+        ResponseInfo response=new ResponseInfo();
+        VUser user=new VUser();
+        user.setPhoneNumber(requestMap.get("phoneNumber").toString());
+        user.setPassword(requestMap.get("password").toString());
+//        requestMap.put("VUser",user);
 
+//        Map<String, Object> requestMap=new HashMap<String, Object>();
+//        取出所有值   --------------->    需要释放
 //        String verifyCode = requestMap.get("verifyCode").toString();
-        VUser user = (VUser) requestMap.get("VUser");
-        String requestHash = requestMap.get("hash").toString();
-        String tamp = requestMap.get("tamp").toString();
-        String msgNum = requestMap.get("msgNum").toString();
+//        user = (VUser) requestMap.get("VUser");
+//        String requestHash = requestMap.get("hash").toString();
+//        String tamp = requestMap.get("tamp").toString();
+//        String msgNum = requestMap.get("msgNum").toString();
 
-        user.setPhoneNumber("18210081211");
-        user.setPassword("123$%^qwe");
-        requestMap.put("hash","");
-        requestMap.put("tamp","");
-        requestMap.put("msgNum","");
+//        测试数据
+//        user.setPhoneNumber("18210081211");
+//        user.setPassword("4563we");
+//        requestMap.put("hash","");
+//        requestMap.put("tamp","");
+//        requestMap.put("msgNum","543137");
 
 //       检查用户注册信息(手机号，密码，验证码)是否正常
-        ResponseInfo response = checkUserInfo(requestMap);
+        response = checkUserInfo(requestMap);
         if (response.getCode() == CODE_ERROR) {
             return response;
         }
 
         //创建用户
-        Boolean flag = userService.creatUser(user);
+        userService.creatUser(user);
         response.setCode(CODE_SUCCESS);
         response.setMessage(" Registered successfully!");
 
@@ -75,13 +104,13 @@ public class RegisterController {
      */
     public ResponseInfo checkUserInfo(Map<String, Object> requestMap) {
         ResponseInfo response = new ResponseInfo();
-        VUser user = (VUser) requestMap.get("VUser");
-        //       用户注册手机号
-        String phoneNumber = user.getPhoneNumber();
-//       用户注册密码
-        String password = user.getPassword();
+//        VUser user = (VUser) requestMap.get("VUser");
+        //用户注册手机号
+        String phoneNumber = requestMap.get("phoneNumber").toString();
+        //用户注册密码
+        String password = requestMap.get("password").toString();
         //手机号码是否正规范
-        Boolean isRightPhone = false;
+//        Boolean isRightPhone = false;
         //密码是否规范
         Boolean isRightPassword = false;
 
@@ -92,12 +121,12 @@ public class RegisterController {
             response.setMessage("The phoneNumber can not be empty!");
             return response;
         }
-        //手机号码校验是否规范
-        isRightPhone = phoneNumber.matches(ConstantParam.VERIFYPHONENUMBER);
-        if (!isRightPhone) {
+        //校验前端传过来的手机号码是否是正确的，如果正确就继续，否则就返回格式错误
+        Boolean isValidPhoneNumber = PhoneUtil.isNotValidChinesePhone(phoneNumber);
+        if (!isValidPhoneNumber) {
+            logger.error("===============校验手机号码："+phoneNumber+" 失败！");
             response.setCode(CODE_ERROR);
-            response.setMessage("The phoneNumber is not correct!");
-            return response;
+            response.setMessage("it's not correct phoneNumber!");
         }
 
 //        密码校验
@@ -129,14 +158,13 @@ public class RegisterController {
             return response;
         }
 
-
         //校验该用户是否已注册
         VUser user2 = new VUser();
         user2.setPhoneNumber(phoneNumber);
-        VUser returnUser = userService.queryUser(user2);
-        if (!StringUtils.isBlank(returnUser.getPhoneNumber())) {
-            response.setCode(CODE_ERROR);
+        user2.setPassword(password);
+        if ( userService.queryUser(user2) != new VUser()) {
             response.setMessage("The user is exist!");
+            response.setCode(CODE_ERROR);
             return response;
         }
 
