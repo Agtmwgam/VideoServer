@@ -47,10 +47,4 @@ public class WarningMessage extends BaseEntity {
 
     // IP来源
     private String ip;
-
-    // 是否生效
-    private char isValid;
-
-    // 创建时间
-    private String createTime;
 }
