@@ -31,3 +31,6 @@ Thumbs.db
 
 # config file
 *.properties
+
+MANIFEST.MF
+application.properties

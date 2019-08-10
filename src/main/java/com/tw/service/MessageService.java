@@ -175,7 +175,22 @@ public class MessageService {
 
         String hash = MD5Util.toMD5(ConstantParam.KEY + "@" + tamp + "@" + msgNum);
         logger.info("===========前端的hash码："+hash);
-        if (tamp.compareTo(DateUtils.getDateTime()) > 0) {
+
+        //TODO
+//        这里用于调试！！！
+//        打开这个开关可以不用一直向后台申请短信，会一直校验通过：
+//        if (tamp.compareTo(DateUtils.getDateTime()) > 0)
+//
+//        参数用下面的：
+//        {
+//            "hash":"fcd43a267df716917ad10fd32284c1b1",
+//            "tamp":"20190810000757",
+//            "msgNum":"308232"
+//        }
+        //TODO
+        //if (tamp.compareTo(DateUtils.getDateTime()) > 0) {
+
+        if (tamp.compareTo(DateUtils.getStringToday()) > 0) {
             if (hash.equalsIgnoreCase(requestHash)){
                 logger.warn("===========hash码校验结果："+true);
                 //校验成功
