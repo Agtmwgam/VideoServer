@@ -9,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -24,7 +23,6 @@ import static com.tw.util.ResponseInfo.CODE_SUCCESS;
  * @Created by liutianwen
  */
 @RestController
-@RequestMapping("/shungkon/")
 public class ForgetPasswordController {
 
     @Autowired
@@ -37,14 +35,10 @@ public class ForgetPasswordController {
      * @return
      * @Date 2019/8/5 22:21
      * @Created liutianwen
-     * @param phoneNumber
-     * @param newPassword
-     * @param hash
-     * @param tamp
-     * @param  msgNum
+     * @param requestMap  phoneNumber  newPassword hash tamp  msgNum
      * @Description 忘记密码
      */
-    @PostMapping(value = "forgetPwd")
+    @PostMapping(value = "/forgetPwd")
     public ResponseInfo findPassword(@RequestBody Map<String, Object> requestMap) {
         ResponseInfo response = new ResponseInfo();
         VUser user = new VUser();

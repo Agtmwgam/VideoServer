@@ -2,18 +2,14 @@ package com.tw.controller;
 
 import com.tw.entity.VUser;
 import com.tw.entity.common.ConstantParam;
-import com.tw.service.MessageService;
 import com.tw.service.VUserService;
 import com.tw.util.ResponseInfo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.Map;
-
 import static com.tw.util.ResponseInfo.CODE_ERROR;
 import static com.tw.util.ResponseInfo.CODE_SUCCESS;
 
@@ -24,7 +20,6 @@ import static com.tw.util.ResponseInfo.CODE_SUCCESS;
  * @Created by liutianwen
  */
 @RestController
-@RequestMapping("/shungkon/")
 public class ModifyPasswordController {
 
     @Autowired
@@ -34,16 +29,13 @@ public class ModifyPasswordController {
      * @return
      * @Date 2019/8/5 22:21
      * @Created liutianwen
-     * @param phoneNumber
-     * @param oldPassword
-     * @param newPassword
+     * @param requestMap  phoneNumber oldPassword  newPassword
      * @Description 修改密码（用户登录）
      */
-    @PostMapping(value = "modifyPwd")
+    @PostMapping(value = "/modifyPwd")
     public ResponseInfo findPassword(@RequestBody Map<String, Object> requestMap) {
         ResponseInfo response = new ResponseInfo();
         VUser user = new VUser();
-
 
         String phoneNumber = requestMap.get("phoneNumber").toString();
         String oldPassword = requestMap.get("oldPassword").toString();
