@@ -3,6 +3,7 @@ package com.tw.util;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -170,6 +171,18 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     }
 
     /**
+     * 得到现在时间
+     *
+     * @return 字符串 yyyyMMdd HHmmss
+     */
+    public static String getStringToday() {
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        String dateString = formatter.format(currentTime);
+        return dateString;
+    }
+
+    /**
      * @param args
      * @throws ParseException
      */
@@ -178,5 +191,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 //		System.out.println(getDate("yyyy年MM月dd日 E"));
 //		long time = new Date().getTime()-parseDate("2012-11-19").getTime();
 //		System.out.println(time/(24*60*60*1000));
+        System.out.println("=========="+getStringToday());
     }
 }
