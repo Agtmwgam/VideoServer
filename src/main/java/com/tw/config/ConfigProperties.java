@@ -15,7 +15,7 @@ import org.springframework.context.annotation.PropertySource;
  */
 @Configuration
 @ConfigurationProperties(prefix = "sms")
-@PropertySource("classpath:application.properties")
+@PropertySource(value = "classpath:application.properties",encoding = "utf-8")
 @EnableAutoConfiguration
 public class ConfigProperties {
 
