@@ -33,17 +33,19 @@ public class HeatData {
         int[][] picture =new int[ROW][COL]; //原始保存的图片，需要定时从嵌入式终端读取，灰度图片
         int[][] data =new int[ROW][COL]; //密度数据图片
 
-        //int i = 0, j = 0, k = 0;
-        //int ii = 0, jj = 0;
+        int i = 0, j = 0, k = 0;
+        int ii = 0, jj = 0;
 
         //先初始化data全为0
-        for (int i=0; i<ROW; i=i+1)
+        for ( i=0; i<ROW; i=i+1)
         {
-            for (int j=0; j<COL; j=j+1)
+            for (j=0; j<COL; j=j+1)
             {
                 data[i][j] = 0;
             }
         }
+        i = 0;j = 0;k = 0;
+        System.out.println("初始化data完成"+i+j+k);
 
         //把报警信息的数据读到data里面来
         for (WarningMessage message : list)
@@ -57,13 +59,13 @@ public class HeatData {
             int width=Integer.parseInt(location[2]);
             int height=Integer.parseInt(location[3]);
 
-            for (int i=x; i<x+width; i=i+1)
+            for (i=x; i<x+width; i=i+1)
             {
-                for (int j=y; j<y+height; j=j+1)
+                for (j=y; j<y+height; j=j+1)
                 {
-                    if(i<=1080-1&&j<1920-1){
+                    if(i<=ROW-1&&j<COL-1){
                         data[i][j] = data[i][j] + 1;
-                        //System.out.println("points.push({x:"+i+",y:"+j+",value:"+data[i][j]+"});");
+                        System.out.println("points.push({x:"+i+",y:"+j+",value:"+data[i][j]+"});");
                         Point p=new Point(i,j,data[i][j]);//将x,y,权重值存入点对象中
                         pointlist.add(p);
                     }
@@ -71,35 +73,42 @@ public class HeatData {
             }
         }
 
+        i = 0;j = 0;k = 0;
+        System.out.println("报警信息的数据读到data里"+i+j+k);
+
         //获取数组里的最大值，进行归一化，最终结果：data最大值为255，最小值为0
         int maxvalue = data[0][0];
-        for (int i=0; i<ROW; i=i+1)
+        for (i=0; i<ROW; i=i+1)
         {
-            for (int j=0; j<COL; j=j+1)
+            for (j=0; j<COL; j=j+1)
             {
-                if(maxvalue < data[i][j])
+                if(maxvalue < data[i][j]) {
                     maxvalue = data[i][j];
-            }
+                }
+                if(maxvalue==0){
+                    data[i][j] =0;
+                }
+                else {
+                    data[i][j] = Math.round(data[i][j] / maxvalue * 255); //round取整数，或者用mod函数取余数
+
+                }}
         }
-        System.out.println("maxvalue--"+maxvalue);
-        for (int i=0; i<ROW; i=i+1)
-        {
-            for (int j=0; j<COL; j=j+1)
-            {
-                data[i][j] = Math.round(data[i][j]%maxvalue*255); //round取整数，或者用mod函数取余数
-            }
-        }
+
+
+
+        i = 0;j = 0;k = 0;
+        System.out.println("进行归一化"+i+j+k);
 
         // 平滑滤波，避免数据显示太突兀
         int[][] data2 =new int[ROW][COL];  //密度数据图片2
         int sumdata = 0;
-        for (int i=FSIZE; i<ROW-FSIZE; i=i+1)
+        for (i=FSIZE; i<ROW-FSIZE; i=i+1)
         {
-            for (int j=FSIZE; j<COL-FSIZE; j=j+1)
+            for (j=FSIZE; j<COL-FSIZE; j=j+1)
             {
-                for (int ii=i-FSIZE; ii<i+FSIZE; ii=ii+1)
+                for (ii=i-FSIZE; ii<i+FSIZE; ii=ii+1)
                 {
-                    for (int jj=j-FSIZE; jj<j+FSIZE; jj=jj+1)
+                    for (jj=j-FSIZE; jj<j+FSIZE; jj=jj+1)
                     {
                         sumdata = sumdata + data[ii][jj]; //获得平滑块的总和，方便后面取均值
                     }
@@ -107,20 +116,10 @@ public class HeatData {
                 data2[i][j] = sumdata/((FSIZE+1)*(FSIZE+1)); //获得整个平滑块的均值
                 sumdata = 0;
                 data[i][j] = data2[i][j]; //将平滑滤波结果返回给data
-
+                log.info("points.push({x:"+i+",y:"+j+",value:"+data[i][j]+"});");
             }
         }
 
-        for (int i=FSIZE; i<ROW-FSIZE; i=i+1)
-        {
-            for (int j=FSIZE; j<COL-FSIZE; j=j+1)
-            {
-                data[i][j] = data2[i][j]; //将平滑滤波结果返回给data
-                //Point p=new Point(i,j,data2[i][j]);//将x,y,权重值存入点对象中
-                //pointlist.add(p);
-                log.info("points.push({x:"+i+",y:"+j+",value:"+data2[i][j]+"});");
-            }
-        }
 
 
         return  pointlist;
@@ -129,7 +128,7 @@ public class HeatData {
     public static void main (String[] args ){
         List<WarningMessage> list =new ArrayList<WarningMessage>();
 
-        WarningMessage w11=new WarningMessage();w11.setTargetLocation("12,52,20,20");list.add(w11);
+        /*WarningMessage w11=new WarningMessage();w11.setTargetLocation("12,52,20,20");list.add(w11);
         WarningMessage w12=new WarningMessage();w12.setTargetLocation("12,50,18,20");list.add(w12);
         WarningMessage w13=new WarningMessage();w13.setTargetLocation("12,50,20,18");list.add(w13);
         WarningMessage w14=new WarningMessage();w14.setTargetLocation("10,52,20,20");list.add(w14);
@@ -158,7 +157,7 @@ public class HeatData {
         WarningMessage w37=new WarningMessage();w37.setTargetLocation("873,40,28,12");list.add(w37);
         WarningMessage w38=new WarningMessage();w38.setTargetLocation("833,43,18,12");list.add(w38);
         WarningMessage w39=new WarningMessage();w39.setTargetLocation("1030,34,40,30");list.add(w39);
-        WarningMessage w40=new WarningMessage();w40.setTargetLocation("1040,36,30,20");list.add(w40);
+        WarningMessage w40=new WarningMessage();w40.setTargetLocation("1040,36,30,20");list.add(w40);*/
         WarningMessage w41=new WarningMessage();w41.setTargetLocation("1050,32,30,20");list.add(w41);
         WarningMessage w42=new WarningMessage();w42.setTargetLocation("1050,30,20,20");list.add(w42);
         WarningMessage w43=new WarningMessage();w43.setTargetLocation("1034,544,10,20");list.add(w43);

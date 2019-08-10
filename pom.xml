@@ -274,7 +274,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<maimClass>com.tw.RunVideoServer</maimClass>
+					<mainClass>com.tw.RunVideoServer</mainClass>
 				</configuration>
 				<executions>
 					<execution>
