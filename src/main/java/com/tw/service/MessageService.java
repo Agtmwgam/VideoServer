@@ -38,8 +38,8 @@ public class MessageService {
     @Autowired
     private ConfigProperties configProperties;
 
-	//声明一个Logger，这个是static的方式
-	private final static Logger logger = LoggerFactory.getLogger(MessageService.class);
+    //声明一个Logger，这个是static的方式
+    private final static Logger logger = LoggerFactory.getLogger(MessageService.class);
 
 
     @Async //异步注解
@@ -54,16 +54,16 @@ public class MessageService {
     }
 
 
-	/**
-	 * @Author: John
-	 * @Description: 发送单条短信
-	 * @Date:  2019/8/5 1:26
-	 * @param: phoneNumber	手机号码
-	 * @return:
-	 */
-    public Boolean sendMessage(String phoneNumber) {
-        //短信验证码
-        String RANDOM_INT = MathUtil.randomStr(6);
+    /**
+     * @Author: John
+     * @Description: 发送单条短信
+     * @Date:  2019/8/5 1:26
+     * @param: phoneNumber	手机号码
+     * @return:
+     */
+    public Boolean sendMessage(String phoneNumber, String randomNum) {
+//        //短信验证码
+//        String RANDOM_INT = MathUtil.randomStr(6);
 
         //短信间隔时间
         String smsTime = configProperties.getSmsTime();
@@ -80,7 +80,7 @@ public class MessageService {
 
         try {
             //参数，例如 验证码为5678，5分钟内填写
-            String[] params = {RANDOM_INT, smsTime};
+            String[] params = {randomNum, smsTime};
             SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
             logger.info("========参数为：phoneNum:"+phoneNumber);
             SmsSingleSenderResult result = ssender.sendWithParam("86",  phoneNumber, templateId, params, smsSign, "", "");
@@ -89,7 +89,7 @@ public class MessageService {
             //TODO
             //如果短信结果是成功的，就需要将短信和手机号码和加密密钥变成MD5码
             if (StringUtils.isNotEmpty(resultStr)) {
-                if (resultStr.contains("ok")) {
+                if (resultStr.contains("OK")) {
                     return true;
                 } else {
                     return false;
@@ -135,7 +135,7 @@ public class MessageService {
         String currentTime = sf.format(calendar.getTime());
 
         //此处执行发送短信验证码方法
-        Boolean isSend =sendMessage(phoneNumber);
+        Boolean isSend =sendMessage(phoneNumber, randomNum);
 
         logger.info("===========短信发送结果："+isSend);
         if (isSend) {
@@ -164,7 +164,7 @@ public class MessageService {
         logger.info("=============前端收到的tamp："+tamp);
         String msgNum = requestMap.get("msgNum").toString();
         logger.info("=============前端收到的msgNum："+msgNum);
-       //非空校验
+        //非空校验
         String hashString=requestHash+tamp+msgNum;
         if(StringUtils.isBlank(hashString)){
             response.setCode(CODE_ERROR);
@@ -195,8 +195,4 @@ public class MessageService {
         }
         return response;
     }
-
-
-
-
 }

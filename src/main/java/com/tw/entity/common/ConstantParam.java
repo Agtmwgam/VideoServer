@@ -23,4 +23,8 @@ public class ConstantParam {
     //    手机号验证                                                                           --by liutianwen
     public static final String VERIFYPHONENUMBER = "^[1][3,4,5,7,8][0-9]{9}$";
 
+    //    错误信息
+//    验证码不能为空
+    public static final String VALID_CODE_EMPTY = "verify code can not be empty!";
+
 }

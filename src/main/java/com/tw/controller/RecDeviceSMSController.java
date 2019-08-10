@@ -53,23 +53,27 @@ public class RecDeviceSMSController {
 
         // 1.调用登陆验证
 
-//        // 2.将心跳信息入库
-//        Boolean isSuccess = service.beatMessageSave(message);
 
-        //先把messge里面的内容解析成bean方便调用
+        // 2.数据校验,心跳数据为7个字段
+        String[] beat = message.split("#");
+        if (beat.length!=7){
+            return "";
+        }
+
+
+        // 3.先把messge里面的内容解析成bean方便调用
         try {
-            String[] beat = message.split("#");
-            BeatMessage beatBean = new BeatMessage();
-            beatBean.setFrame(beat[0]);
-            beatBean.setMesNo(beat[1]);
-            beatBean.setMesDate(beat[2]);
-            beatBean.setDeviceModel(beat[3]);
-            beatBean.setSerial(beat[4]);
-            beatBean.setExeStatus(beat[5]);
-            beatBean.setIp(beat[6]);
-            logger.info("==========收到的心跳内容是"+beatBean.toString());
+            BeatMessage beatMessageBean = new BeatMessage();
+            beatMessageBean.setFrame(beat[0]);
+            beatMessageBean.setMesNo(beat[1]);
+            beatMessageBean.setMesDate(beat[2]);
+            beatMessageBean.setDeviceModel(beat[3]);
+            beatMessageBean.setSerial(beat[4]);
+            beatMessageBean.setExeStatus(beat[5]);
+            beatMessageBean.setIp(beat[6]);
+            logger.info("==========收到的心跳内容是"+beatMessageBean.toString());
             logger.info("==========需要返回这样的格式的消息：0*FF#001#T42683512#OK");
-            String returnStr = beatBean.getFrame()+"#"+beatBean.getMesNo()+"#"+beatBean.getSerial()+"#OK";
+            String returnStr = beatMessageBean.getFrame()+"#"+beatMessageBean.getMesNo()+"#"+beatMessageBean.getSerial()+"#OK";
             logger.info("==========真实返回的内容为："+returnStr);
             return returnStr;
         } catch (Exception e) {
@@ -77,6 +81,9 @@ public class RecDeviceSMSController {
             logger.info("===========系统异常");
             return "java后台系统异常=======";
         }
+
+        // 4.将心跳信息入库
+//        Boolean isSuccess = service.beatMessageSave(message);
 
     }
 
@@ -102,19 +109,19 @@ public class RecDeviceSMSController {
 
         try {
             String[] warn = message.split("#");
-            WarningMessage warnBean = new WarningMessage();
-            warnBean.setFrame(warn[0]);
-            warnBean.setMesNo(warn[1]);
-            warnBean.setMesDate(warn[2]);
-            warnBean.setDeviceModel(warn[3]);
-            warnBean.setSerial(warn[4]);
-            warnBean.setVideoResolution(warn[5]);
-            warnBean.setTargetLocation(warn[6]);
-            warnBean.setExeStatus(warn[7]);
-            warnBean.setIp(warn[8]);
-            logger.info("==========收到的告警内容是"+warnBean.toString());
+            WarningMessage warningMessageBean = new WarningMessage();
+            warningMessageBean.setFrame(warn[0]);
+            warningMessageBean.setMesNo(warn[1]);
+            warningMessageBean.setMesDate(warn[2]);
+            warningMessageBean.setDeviceModel(warn[3]);
+            warningMessageBean.setSerial(warn[4]);
+            warningMessageBean.setVideoResolution(warn[5]);
+            warningMessageBean.setTargetLocation(warn[6]);
+            warningMessageBean.setExeStatus(warn[7]);
+            warningMessageBean.setIp(warn[8]);
+            logger.info("==========收到的告警内容是"+warningMessageBean.toString());
             logger.info("==========需要返回这样的格式的消息：0*10#001#T42683512#OK");
-            String returnStr = warnBean.getFrame()+"#"+warnBean.getMesNo()+"#"+warnBean.getSerial()+"#OK";
+            String returnStr = warningMessageBean.getFrame()+"#"+warningMessageBean.getMesNo()+"#"+warningMessageBean.getSerial()+"#OK";
             logger.info("==========真实返回的内容为："+returnStr);
             return returnStr;
         } catch (Exception e) {
@@ -129,15 +136,15 @@ public class RecDeviceSMSController {
 //          01、心跳消息
 //        String beatMessage = "0*FF#001#2019-07-22T092312#ML16#T42683512#1#192.168.1.200";
 //        String[] beat = beatMessage.split("#");
-//        BeatMessage beatBean = new BeatMessage();
-//        beatBean.setFrame(beat[0]);
-//        beatBean.setMesNo(beat[1]);
-//        beatBean.setMesDate(beat[2]);
-//        beatBean.setDeviceModel(beat[3]);
-//        beatBean.setSerial(beat[4]);
-//        beatBean.setExeStatus(beat[5]);
-//        beatBean.setIp(beat[6]);
+//        BeatMessage beatMessageBean = new BeatMessage();
+//        beatMessageBean.setFrame(beat[0]);
+//        beatMessageBean.setMesNo(beat[1]);
+//        beatMessageBean.setMesDate(beat[2]);
+//        beatMessageBean.setDeviceModel(beat[3]);
+//        beatMessageBean.setSerial(beat[4]);
+//        beatMessageBean.setExeStatus(beat[5]);
+//        beatMessageBean.setIp(beat[6]);
 //
-//        logger.info("==="+beatBean.toString());
+//        logger.info("==="+beatMessageBean.toString());
     }
 }

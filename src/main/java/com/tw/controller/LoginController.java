@@ -20,7 +20,7 @@ import static com.tw.util.ResponseInfo.CODE_SUCCESS;
  * @param: null
  * @return:
  */
-@Controller
+@RestController
 @RequestMapping("/login")
 public class LoginController {
 
@@ -31,12 +31,12 @@ public class LoginController {
     private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
 
-    @GetMapping("/sendMessage")
-    public String sendMessage() {
-        Boolean isSend = messageService.sendMessage("18210081211");
-        System.out.println("=========发送短信结果:"+isSend);
-        return "发送成功";
-    }
+//    @GetMapping("/sendMessage")
+//    public String sendMessage() {
+//        Boolean isSend = messageService.publicSendMessage("18210081211");
+//        System.out.println("=========发送短信结果:"+isSend);
+//        return "发送成功";
+//    }
 
 
     /**

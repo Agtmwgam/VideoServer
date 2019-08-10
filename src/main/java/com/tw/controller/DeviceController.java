@@ -1,11 +1,17 @@
 package com.tw.controller;
 
+import com.tw.dto.UserRoleDTO;
 import com.tw.entity.Device;
 import com.tw.service.DeviceService;
 import com.tw.util.ResponseInfo;
+import com.tw.util.UserAuthentication;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +40,14 @@ public class DeviceController {
      * @return:
      */
     @PostMapping("/addDevice")
-    public ResponseInfo addDevice(@RequestBody Device device) {
+    public ResponseInfo addDevice(@RequestBody Device device,
+                                  HttpServletRequest httpServletRequest) {
+
+        // 1.校验用户身份
+        UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
+
+
+
         ResponseInfo responseInfo = new ResponseInfo();
         int isAdd = deviceService.addDevice(device);
         if (isAdd == 1) {

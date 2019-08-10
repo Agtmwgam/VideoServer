@@ -40,11 +40,11 @@ public class DebugController {
         return "=========调用了test方法";
     }
 
-    @GetMapping("/sendMessage")
-    public String sendMessage() {
-        Boolean isSend = messageService.sendMessage("18814373836");
-        System.out.println("=========发送短信结果:"+isSend);
-        System.out.println("============调用debug的test方法");
-        return "调用debug的test方法";
-    }
+//    @GetMapping("/sendMessage")
+//    public String sendMessage() {
+//        Boolean isSend = messageService.sendMessage("18814373836");
+//        System.out.println("=========发送短信结果:"+isSend);
+//        System.out.println("============调用debug的test方法");
+//        return "调用debug的test方法";
+//    }
 }

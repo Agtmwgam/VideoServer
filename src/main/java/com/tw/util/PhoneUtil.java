@@ -41,7 +41,7 @@ public class PhoneUtil {
      * @return
      */
     public static boolean isNotValidChinesePhone(String phone) {
-        return !isValidChinesePhone(phone);
+        return isValidChinesePhone(phone);
     }
 
 

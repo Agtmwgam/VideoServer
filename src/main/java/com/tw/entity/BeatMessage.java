@@ -2,9 +2,6 @@ package com.tw.entity;
 
 import lombok.Data;
 
-import java.time.DateTimeException;
-import java.util.Date;
-
 /**
  * @Author: zhuoshouyi
  * @Description:
@@ -44,11 +41,5 @@ public class BeatMessage extends BaseEntity {
 
     // IP来源
     private String ip;
-
-    // 是否生效
-    private char isValid;
-
-    // 创建时间
-    private Date createTime;
 
 }
