@@ -26,7 +26,7 @@ import static com.tw.util.ResponseInfo.CODE_SUCCESS;
  * @return:
  */
 @RestController
-@RequestMapping("/shungkon/login")
+@RequestMapping("/login")
 public class LoginController {
 
     @Autowired

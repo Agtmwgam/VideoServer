@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tw.dao.DevGroupDao">
+
+
+    <!-- 增加devGroup -->
+    <select id="addGroup" parameterType="DevGroup">
+        INSERT INTO
+            devGroup
+            (groupName)
+        values
+            (#{groupName})
+    </select>
+
+
+    <!-- 删除devGroup -->
+    <update id="id" parameterType="int">
+        UPDATE
+            devGroup
+        SET
+            isValid = '0'
+        WHERE
+            groupId = #{groupId}
+        AND
+            isValid = '1'
+    </update>
+
+
+    <!-- 修改devGroup -->
+    <update id="updateDevGroup" parameterType="DevGroup">
+        UPDATE
+            devGroup
+        SET
+            groupName = #{groupName}
+        WHERE
+            groupId = #{groupId}
+        AND
+            isValid = '1'
+    </update>
+
+
+    <!-- 根据devGroupId查询devGroup -->
+    <select id="getDevGroupById" parameterType="int" resultType="DevGroup">
+        SELECT
+            *
+        FROM
+            devGroup
+        WHERE
+            groupId = #{groupId}
+        AND
+            isValid = '1'
+    </select>
+
+
+    <!-- 根据devGroupName查询devGroup -->
+    <select id="getDevGroupByGroupName" parameterType="String" resultType="DevGroup">
+        SELECT
+            *
+        FROM
+            devGroup
+        WHERE
+            groupName = #{groupName}
+        AND
+            isValid = '1'
+    </select>
+
+</mapper>
