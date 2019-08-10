@@ -25,37 +25,33 @@ import static com.tw.util.ResponseInfo.CODE_SUCCESS;
  */
 @RestController
 @RequestMapping("/shungkon/")
-public class ForgetPasswordController {
+public class ModifyPasswordController {
 
     @Autowired
     private VUserService userService;
-
-    @Autowired
-    private MessageService messageService;
 
     /**
      * @return
      * @Date 2019/8/5 22:21
      * @Created liutianwen
      * @param phoneNumber
+     * @param oldPassword
      * @param newPassword
-     * @param hash
-     * @param tamp
-     * @param  msgNum
-     * @Description 忘记密码
+     * @Description 修改密码（用户登录）
      */
-    @PostMapping(value = "forgetPwd")
+    @PostMapping(value = "modifyPwd")
     public ResponseInfo findPassword(@RequestBody Map<String, Object> requestMap) {
         ResponseInfo response = new ResponseInfo();
         VUser user = new VUser();
 
 
         String phoneNumber = requestMap.get("phoneNumber").toString();
+        String oldPassword = requestMap.get("oldPassword").toString();
         String newPassword = requestMap.get("newPassword").toString();
         user.setPhoneNumber(phoneNumber);
         user.setPassword(newPassword);
 
-//       检查用户注册信息(手机号，新密码，验证码)是否正常
+//       检查用户注册信息(手机号，旧密码，新密码)是否正常
          response = checkUserInfo(requestMap);
         if (response.getCode() == CODE_ERROR) {
             return response;
@@ -81,6 +77,7 @@ public class ForgetPasswordController {
         String phoneNumber = requestMap.get("phoneNumber").toString();
         //用户注册密码
         String password = requestMap.get("newPassword").toString();
+        String oldPassword = requestMap.get("oldPassword").toString();
         //手机号码是否正规范
         Boolean isRightPhone = false;
         //密码是否规范
@@ -108,8 +105,14 @@ public class ForgetPasswordController {
             response.setMessage("The password can not be empty!");
             return response;
         }
+        if (StringUtils.isBlank(oldPassword)) {
+            response.setCode(CODE_ERROR);
+            response.setMessage("The oldPassword can not be empty!");
+            return response;
+        }
         //密码是否符合规范
         isRightPassword = password.matches(ConstantParam.VERIFYPASSWORD);
+        isRightPassword = oldPassword.matches(ConstantParam.VERIFYPASSWORD);
         //      密码是否符合规范
         if (!isRightPassword) {
             response.setCode(CODE_ERROR);
@@ -117,27 +120,14 @@ public class ForgetPasswordController {
             return response;
         }
 
-        // 验证码校验
-//        短信是否为空
-        if (StringUtils.isBlank(requestMap.get("msgNum").toString())) {
-            response.setCode("9999");
-            response.setMessage("The msgNum can not be empty!");
-            return response;
-        }
-        //  调用短信验证码验证接口
-        response = messageService.validateNum(requestMap);
-        if (response.getCode() == CODE_ERROR) {
-            return response;
-        }
-
-
         //校验该用户是否已注册
         VUser user2 = new VUser();
         user2.setPhoneNumber(phoneNumber);
+        user2.setPassword(oldPassword);
         VUser returnUser = userService.queryUser(user2);
         if (StringUtils.isBlank(returnUser.getPhoneNumber())) {
             response.setCode(CODE_ERROR);
-            response.setMessage("The user is not exist!");
+            response.setMessage("The user is not exist or passwork is not correct!");
             return response;
         }
 

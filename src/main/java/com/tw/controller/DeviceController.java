@@ -6,12 +6,10 @@ import com.tw.service.DeviceService;
 import com.tw.util.ResponseInfo;
 import com.tw.util.UserAuthentication;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,10 +24,14 @@ import java.util.Map;
  * @return:
  */
 @Controller
+@RequestMapping("/shungkon")
 public class DeviceController {
 
     @Autowired
     private DeviceService deviceService;
+
+    //日志
+    private static Logger logger = Logger.getLogger(DeviceController.class);
 
 
     /**
@@ -40,15 +42,22 @@ public class DeviceController {
      * @return:
      */
     @PostMapping("/addDevice")
-    public ResponseInfo addDevice(@RequestBody Device device,
-                                  HttpServletRequest httpServletRequest) {
+    public ResponseInfo addDevice(@RequestBody Device device, HttpServletRequest httpServletRequest) {
+
+        ResponseInfo responseInfo = new ResponseInfo();
 
         // 1.校验用户身份
         UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
 
+        //查询数据库中是否已经存在该设备，感觉设备号和验证码检测
+        List<Device> deviceList = deviceService.getDeviceByCodition(device);
+        if (deviceList != null && deviceList.size() > 0) {
+            logger.warn("设备 " + device.getSerial() +" 已经存在！");
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device already exists！");
+            return responseInfo;
+        }
 
-
-        ResponseInfo responseInfo = new ResponseInfo();
         int isAdd = deviceService.addDevice(device);
         if (isAdd == 1) {
             responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
