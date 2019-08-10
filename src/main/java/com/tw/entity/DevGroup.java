@@ -1,5 +1,8 @@
 package com.tw.entity;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
  * @Author: John
  * @Description:设备组类
@@ -7,26 +10,11 @@ package com.tw.entity;
  * @param: null
  * @return:
  */
+@Data
 public class DevGroup extends BaseEntity {
     private int groupId;             //自增主键
     private String groupName;       //组名
 
-
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
 
     @Override
     public String toString() {

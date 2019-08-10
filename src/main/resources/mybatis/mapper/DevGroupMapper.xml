@@ -5,7 +5,7 @@
 
 
     <!-- 增加devGroup -->
-    <select id="addGroup" parameterType="DevGroup">
+    <select id="addGroup" parameterType="com.tw.entity.DevGroup">
         INSERT INTO
             devGroup
             (groupName)
@@ -28,7 +28,7 @@
 
 
     <!-- 修改devGroup -->
-    <update id="updateDevGroup" parameterType="DevGroup">
+    <update id="updateDevGroup" parameterType="com.tw.entity.DevGroup">
         UPDATE
             devGroup
         SET
@@ -41,7 +41,7 @@
 
 
     <!-- 根据devGroupId查询devGroup -->
-    <select id="getDevGroupById" parameterType="int" resultType="DevGroup">
+    <select id="getDevGroupById" parameterType="int" resultType="com.tw.entity.DevGroup">
         SELECT
             *
         FROM
@@ -54,7 +54,7 @@
 
 
     <!-- 根据devGroupName查询devGroup -->
-    <select id="getDevGroupByGroupName" parameterType="String" resultType="DevGroup">
+    <select id="getDevGroupByGroupName" parameterType="String" resultType="com.tw.entity.DevGroup">
         SELECT
             *
         FROM
