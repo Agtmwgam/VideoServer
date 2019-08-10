@@ -22,4 +22,6 @@ public interface DeviceVideoDao {
     String getWarningInfoDesc(@Param("serial")String serial,@Param("eventId")String eventId);
 
     List<DeviceVideo> getWarningInfoList(String serial);
+
+     int AddVideo(DeviceVideo video);
 }

@@ -1,11 +1,9 @@
 package com.tw.controller;
 
-import com.tw.common.JsonMapper;
-import com.tw.dto.UserRoleDTO;
+import com.tw.util.JsonMapperUtil;
 import com.tw.entity.DeviceVideo;
 import com.tw.service.DeviceVideoService;
 import com.tw.util.ResponseInfo;
-import com.tw.util.UserAuthentication;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,7 +44,7 @@ public class DeviceVideoController {
     public String getWarningInfoDesc(HttpServletRequest httpServletRequest
             , @RequestParam(value = "serial") String serial
             , @RequestParam(value = "eventId") String eventId) {
-        log.info("=====/getWarningInfoDesc获取到的参数是=====serial:"+serial+"  eventId:"+eventId);
+        log.info("=====/getWarningInfoDesc从前端获取到的参数是=====serial:"+serial+"  eventId:"+eventId);
         //获取用户信息
        // UserRoleDTO  userRoleDTO =UserAuthentication.authentication(httpServletRequest);
         //int user=userRoleDTO.getUserID();
@@ -65,7 +63,7 @@ public class DeviceVideoController {
             response.setCode(ResponseInfo.CODE_ERROR);
             response.setMessage("warningVideoPath error!");
         }
-        return JsonMapper.toJsonString(response);
+        return JsonMapperUtil.toJsonString(response);
     }
 
 
@@ -78,7 +76,7 @@ public class DeviceVideoController {
     public String getWarningInfoList(@RequestParam(value = "serial") String serial
             , @RequestParam(value = "pageSize", required = false) Integer pageSize
             , @RequestParam(value = "pageNo", required = false) Integer pageNo) {
-        log.info("=====/getWarningInfoList获取到的参数是=====serial:"+serial);
+        log.info("=====/getWarningInfoList从前端获取到的参数是=====serial:"+serial);
         ResponseInfo response = new ResponseInfo();
         Map<String, Object> resultMap = new HashMap<>();
         List<DeviceVideo> list = deviceVideoService.getWarningInfoList(serial);
@@ -98,7 +96,7 @@ public class DeviceVideoController {
             response.setMessage("getWarningInfoList failed!");
 
         }
-        return JsonMapper.toJsonString(response);
+        return JsonMapperUtil.toJsonString(response);
     }
 
 

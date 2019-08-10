@@ -1,6 +1,6 @@
 package com.tw.controller;
 
-import com.tw.common.JsonMapper;
+import com.tw.util.JsonMapperUtil;
 import com.tw.entity.DevicePicture;
 import com.tw.service.DevicePictureService;
 import com.tw.util.ResponseInfo;
@@ -37,7 +37,7 @@ public class DevicePictureController {
      */
     @GetMapping("/getDensityPicture")
     public String getDensityPicture(@RequestParam(value = "serial") String serial) {
-        log.info("=====/getDensityPicture获取到的参数是=====serial:"+serial);
+        log.info("=====/getDensityPicture从前端获取到的参数是=====serial:"+serial);
         ResponseInfo response = new ResponseInfo();
         Map<String, Object> resultMap = new HashMap<>();
         List<DevicePicture> list = devicePictureService.getDensityPicture(serial);
@@ -57,7 +57,7 @@ public class DevicePictureController {
             response.setMessage("getDensityPicture failed!");
 
         }
-        return JsonMapper.toJsonString(response);
+        return JsonMapperUtil.toJsonString(response);
     }
 
 

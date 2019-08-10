@@ -35,6 +35,14 @@
     </select>
 
 
+    <!-- 新增视频 -->
+    <insert id="AddVideo" parameterType="com.tw.entity.DeviceVideo">
+        INSERT INTO
+        deviceVideo
+        (serial, eventId, warningVideoName,warningVideoPath,warningTime,isValid)
+        VALUES
+        (#{serial}, #{eventId}, #{warningVideoName}, #{warningVideoPath}, #{warningTime}, #{isValid})
+    </insert>
 
 
 

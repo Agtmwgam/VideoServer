@@ -1,24 +1,24 @@
-package com.tw.common;
+package com.tw.service;
 
 import com.tw.entity.Point;
 import com.tw.entity.WarningMessage;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @Author: lushiqin
- * @Description:
+ * @Description: 密度图片生成服务类
  * @Date: 2019/8/8
  * @param: null
  * @return:
  */
-@Component
-public class HeatData {
+@Service
+public class HeatDataService {
 
-    private static Logger log = Logger.getLogger(HeatData.class);
+    private static Logger log = Logger.getLogger(HeatDataService.class);
 
     public  List<Point> caculateHeatData(List<WarningMessage> list) {
 
@@ -166,10 +166,10 @@ public class HeatData {
         WarningMessage w49=new WarningMessage();w49.setTargetLocation("123,554,48,32");list.add(w49);
         WarningMessage w50=new WarningMessage();w50.setTargetLocation("1023,554,28,32");list.add(w50);
 
-        HeatData heatData=new HeatData();
+        HeatDataService heatDataService =new HeatDataService();
 
 
-        heatData.caculateHeatData(list);
+        heatDataService.caculateHeatData(list);
 
 
     }
