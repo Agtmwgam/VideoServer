@@ -37,38 +37,23 @@ public class ForgetPasswordController {
      * @return
      * @Date 2019/8/5 22:21
      * @Created liutianwen
-     * @param phoneNumber: "12345678901"
-     * @param newPassword: "123456"
-     * @param hash:
-     * @param tamp：
-     *@param  msgNum：
+     * @param phoneNumber
+     * @param newPassword
+     * @param hash
+     * @param tamp
+     * @param  msgNum
      * @Description 忘记密码
      */
     @PostMapping(value = "forgetPwd")
     public ResponseInfo findPassword(@RequestBody Map<String, Object> requestMap) {
-//    public ResponseInfo modifyPassword() {
         ResponseInfo response = new ResponseInfo();
         VUser user = new VUser();
 
-//        phoneNumber: "12345678901"
-//        messageCode: "876845"
-//        newPassword: "123456"
 
         String phoneNumber = requestMap.get("phoneNumber").toString();
         String newPassword = requestMap.get("newPassword").toString();
         user.setPhoneNumber(phoneNumber);
         user.setPassword(newPassword);
-
-//        取出数据
-//        VUser user = (VUser) requestMap.get("VUser");
-//        String requestHash = requestMap.get("hash").toString();
-//        String tamp = requestMap.get("tamp").toString();
-//        String msgNum = requestMap.get("msgNum").toString();
-
-//        测试数据
-//        user.setPhoneNumber("18210081211");
-//        user.setPassword("4ge5ge@");
-
 
 //       检查用户注册信息(手机号，新密码，验证码)是否正常
          response = checkUserInfo(requestMap);
@@ -150,13 +135,13 @@ public class ForgetPasswordController {
         VUser user2 = new VUser();
         user2.setPhoneNumber(phoneNumber);
         VUser returnUser = userService.queryUser(user2);
-        if (!StringUtils.isBlank(returnUser.getPhoneNumber())) {
+        if (StringUtils.isBlank(returnUser.getPhoneNumber())) {
             response.setCode(CODE_ERROR);
             response.setMessage("The user is not exist!");
             return response;
         }
 
-        response.setCode(CODE_ERROR);
+        response.setCode(CODE_SUCCESS);
         return response;
     }
 

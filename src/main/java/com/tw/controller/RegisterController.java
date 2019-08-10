@@ -59,28 +59,11 @@ public class RegisterController {
      * @Description 用户注册
      */
     @PostMapping(value = "toRegister", headers = "Accept=application/json")
-//    public ResponseInfo createUser() {
         public ResponseInfo createUser(@RequestBody Map<String,Object> requestMap) {
         ResponseInfo response=new ResponseInfo();
         VUser user=new VUser();
         user.setPhoneNumber(requestMap.get("phoneNumber").toString());
         user.setPassword(requestMap.get("password").toString());
-//        requestMap.put("VUser",user);
-
-//        Map<String, Object> requestMap=new HashMap<String, Object>();
-//        取出所有值   --------------->    需要释放
-//        String verifyCode = requestMap.get("verifyCode").toString();
-//        user = (VUser) requestMap.get("VUser");
-//        String requestHash = requestMap.get("hash").toString();
-//        String tamp = requestMap.get("tamp").toString();
-//        String msgNum = requestMap.get("msgNum").toString();
-
-//        测试数据
-//        user.setPhoneNumber("18210081211");
-//        user.setPassword("4563we");
-//        requestMap.put("hash","");
-//        requestMap.put("tamp","");
-//        requestMap.put("msgNum","543137");
 
 //       检查用户注册信息(手机号，密码，验证码)是否正常
         response = checkUserInfo(requestMap);
