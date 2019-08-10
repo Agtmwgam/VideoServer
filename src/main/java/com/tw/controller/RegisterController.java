@@ -162,13 +162,14 @@ public class RegisterController {
         VUser user2 = new VUser();
         user2.setPhoneNumber(phoneNumber);
         user2.setPassword(password);
-        if ( userService.queryUser(user2) != new VUser()) {
+
+        if ( userService.queryUser(user2) != null) {
             response.setMessage("The user is exist!");
             response.setCode(CODE_ERROR);
             return response;
         }
 
-        response.setCode(CODE_ERROR);
+        response.setCode(CODE_SUCCESS);
         return response;
     }
 

@@ -37,6 +37,11 @@ public class ForgetPasswordController {
      * @return
      * @Date 2019/8/5 22:21
      * @Created liutianwen
+     * @param phoneNumber: "12345678901"
+     * @param newPassword: "123456"
+     * @param hash:
+     * @param tamp：
+     *@param  msgNum：
      * @Description 忘记密码
      */
     @PostMapping(value = "forgetPwd")

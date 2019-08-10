@@ -30,10 +30,7 @@ public class VUserService {
 //	寻找用户
 	@Transactional
 	public VUser queryUser(VUser user) {
-		System.out.println("queryUser service");
-//		VUser returnUser=vUserDao.queryUser(user);
-		user=vUserDao.queryUser(user);
-		return user;
+		return vUserDao.queryUser(user);
 	}
 
 	//更新客户
