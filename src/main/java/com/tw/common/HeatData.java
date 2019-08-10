@@ -23,107 +23,104 @@ public class HeatData {
 
     private static Logger log = Logger.getLogger(HeatData.class);
 
-    public  List<Point> caculateHeatData(List<WarningMessage> list){
+    public  List<Point> caculateHeatData(List<WarningMessage> list) {
 
-        List<Point>  pointlist=new ArrayList<Point>();//返回值为一个三位数组
-        int ROW=1280;//图片尺寸
-        int COL=720;//图片尺寸
-        int FSIZE=10;//平滑滤波尺寸
+        List<Point> pointlist = new ArrayList<Point>();//返回值为一个三位数组
+        int ROW = 1280;//图片尺寸
+        int COL = 720;//图片尺寸
+        int FSIZE = 10;//平滑滤波尺寸
 
-        int[][] picture =new int[ROW][COL]; //原始保存的图片，需要定时从嵌入式终端读取，灰度图片
-        int[][] data =new int[ROW][COL]; //密度数据图片
+        int[][] picture = new int[ROW][COL]; //原始保存的图片，需要定时从嵌入式终端读取，灰度图片
+        int[][] data = new int[ROW][COL]; //密度数据图片
 
         int i = 0, j = 0, k = 0;
         int ii = 0, jj = 0;
 
         //先初始化data全为0
-        for ( i=0; i<ROW; i=i+1)
-        {
-            for (j=0; j<COL; j=j+1)
-            {
+        for (i = 0; i < ROW; i = i + 1) {
+            for (j = 0; j < COL; j = j + 1) {
                 data[i][j] = 0;
             }
         }
-        i = 0;j = 0;k = 0;
-        System.out.println("初始化data完成"+i+j+k);
 
         //把报警信息的数据读到data里面来
-        for (WarningMessage message : list)
-        {
-            String targetLocation=message.getTargetLocation();
-            String[] location=targetLocation.split(",");
+        for (WarningMessage message : list) {
+            String targetLocation = message.getTargetLocation();
+            String[] location = targetLocation.split(",");
             //解析目标位置，每条message信息里面包括四个值message.x, message.y, message.width, message.height
             //x代表目标出现的横坐标，x代表目标出现的纵坐标，width，height分别为目标矩形的高和宽
-            int x=Integer.parseInt(location[0]);
-            int y=Integer.parseInt(location[1]);
-            int width=Integer.parseInt(location[2]);
-            int height=Integer.parseInt(location[3]);
+            int x = Integer.parseInt(location[0]);
+            int y = Integer.parseInt(location[1]);
+            int width = Integer.parseInt(location[2]);
+            int height = Integer.parseInt(location[3]);
 
-            for (i=x; i<x+width; i=i+1)
-            {
-                for (j=y; j<y+height; j=j+1)
-                {
-                    if(i<=ROW-1&&j<COL-1){
+            for (i = x; i < x + width; i = i + 1) {
+                for (j = y; j < y + height; j = j + 1) {
+                    if (i <= ROW - 1 && j < COL - 1) {
                         data[i][j] = data[i][j] + 1;
-                        System.out.println("points.push({x:"+i+",y:"+j+",value:"+data[i][j]+"});");
+                       /* System.out.println("points.push({x:"+i+",y:"+j+",value:"+data[i][j]+"});");
                         Point p=new Point(i,j,data[i][j]);//将x,y,权重值存入点对象中
-                        pointlist.add(p);
+                        pointlist.add(p);*/
                     }
                 }
             }
         }
 
-        i = 0;j = 0;k = 0;
-        System.out.println("报警信息的数据读到data里"+i+j+k);
 
         //获取数组里的最大值，进行归一化，最终结果：data最大值为255，最小值为0
         int maxvalue = data[0][0];
-        for (i=0; i<ROW; i=i+1)
-        {
-            for (j=0; j<COL; j=j+1)
-            {
-                if(maxvalue < data[i][j]) {
+        for (i = 0; i < ROW; i = i + 1) {
+            for (j = 0; j < COL; j = j + 1) {
+                if (maxvalue < data[i][j]) {
                     maxvalue = data[i][j];
                 }
-                if(maxvalue==0){
-                    data[i][j] =0;
-                }
-                else {
+            }
+        }
+
+        for (i = 0; i < ROW; i = i + 1) {
+            for (j = 0; j < COL; j = j + 1) {
+                if (maxvalue == 0) {
+                    data[i][j] = 0;
+                } else {
                     data[i][j] = Math.round(data[i][j] / maxvalue * 255); //round取整数，或者用mod函数取余数
 
-                }}
+                }
+            }
+        }
+
+        // 平滑滤波，避免数据显示太突兀
+        int[][] data2 = new int[ROW][COL];  //密度数据图片2
+        int sumdata = 0;
+        for (i = FSIZE; i < ROW - FSIZE; i = i + 1) {
+            for (j = FSIZE; j < COL - FSIZE; j = j + 1) {
+                for (ii = i - FSIZE; ii < i + FSIZE; ii = ii + 1) {
+                    for (jj = j - FSIZE; jj < j + FSIZE; jj = jj + 1) {
+                        sumdata = sumdata + data[ii][jj]; //获得平滑块的总和，方便后面取均值
+                    }
+                }
+                data2[i][j] = sumdata / ((FSIZE + 1) * (FSIZE + 1)); //获得整个平滑块的均值
+                sumdata = 0;
+                if(data2[i][j] !=0){
+                    log.info("points.push({x:" + i + ",y:" + j + ",value:" + data2[i][j] + "});");
+                }
+            }
         }
 
 
-
-        i = 0;j = 0;k = 0;
-        System.out.println("进行归一化"+i+j+k);
-
-        // 平滑滤波，避免数据显示太突兀
-        int[][] data2 =new int[ROW][COL];  //密度数据图片2
-        int sumdata = 0;
         for (i=FSIZE; i<ROW-FSIZE; i=i+1)
         {
             for (j=FSIZE; j<COL-FSIZE; j=j+1)
             {
-                for (ii=i-FSIZE; ii<i+FSIZE; ii=ii+1)
-                {
-                    for (jj=j-FSIZE; jj<j+FSIZE; jj=jj+1)
-                    {
-                        sumdata = sumdata + data[ii][jj]; //获得平滑块的总和，方便后面取均值
-                    }
-                }
-                data2[i][j] = sumdata/((FSIZE+1)*(FSIZE+1)); //获得整个平滑块的均值
-                sumdata = 0;
                 data[i][j] = data2[i][j]; //将平滑滤波结果返回给data
-                log.info("points.push({x:"+i+",y:"+j+",value:"+data[i][j]+"});");
+                Point p = new Point(i, j, data2[i][j]);//将x,y,权重值存入点对象中
+                pointlist.add(p);
             }
         }
 
 
-
-        return  pointlist;
+        return pointlist;
     }
+
 
     public static void main (String[] args ){
         List<WarningMessage> list =new ArrayList<WarningMessage>();
