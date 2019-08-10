@@ -118,7 +118,7 @@ public class HeatData {
                 data[i][j] = data2[i][j]; //将平滑滤波结果返回给data
                 //Point p=new Point(i,j,data2[i][j]);//将x,y,权重值存入点对象中
                 //pointlist.add(p);
-                System.out.println("points.push({x:"+i+",y:"+j+",value:"+data2[i][j]+"});");
+                log.info("points.push({x:"+i+",y:"+j+",value:"+data2[i][j]+"});");
             }
         }
 

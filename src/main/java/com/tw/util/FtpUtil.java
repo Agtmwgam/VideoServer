@@ -82,6 +82,7 @@ public class FtpUtil {
                 try {
                     ftp.disconnect();
                 } catch (IOException ioe) {
+                    ioe.printStackTrace();
                 }
             }
         }
@@ -115,6 +116,10 @@ public class FtpUtil {
             }
             ftp.changeWorkingDirectory(remotePath);// 转移到FTP服务器目录
             FTPFile[] fs = ftp.listFiles();
+            if (fs.length==0) { //如果文件夹中不存在任何文件，则直接返回
+                ftp.disconnect();
+                return result;
+            }
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(fileName)) {
                     File localFile = new File(localPath + "/" + ff.getName());

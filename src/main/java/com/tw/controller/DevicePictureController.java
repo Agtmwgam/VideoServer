@@ -20,7 +20,9 @@ import java.util.Map;
  * @param: null
  * @return:
  */
+@RestController
 @Controller
+@RequestMapping("/picture/")
 public class DevicePictureController {
 
     private static Logger log = Logger.getLogger(DevicePictureController.class);

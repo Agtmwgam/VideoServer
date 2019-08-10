@@ -1,5 +1,6 @@
 package com.tw.controller;
 
+import com.tw.common.JsonMapper;
 import com.tw.config.FtpConfig;
 import com.tw.util.FtpUtil;
 import com.tw.util.ResponseInfo;
@@ -27,6 +28,7 @@ import java.util.*;
  */
 @RestController
 @Controller
+@RequestMapping("/attach/")
 public class AttachController  {
 
     private static Logger log = Logger.getLogger(AttachController.class);
@@ -36,10 +38,85 @@ public class AttachController  {
 
 
     /***
-     * @Description:上传固件至ftp服务器
+     * 上传固件至ftp服务器（单文件上传）
+     * 前端一个表单，选择文件，form的enctype为multipart/form-data 报文头不需要设置Content-Type
+     * @param file
      * @return
      */
-    @RequestMapping(value = "upload", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    @PostMapping("/upload")
+    @ResponseBody
+    public String upload(@RequestParam("file") MultipartFile file) {
+        ResponseInfo  responseInfo = new ResponseInfo();
+
+        if (file.isEmpty()) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("未检测到附件.请上传对应格式附件.");
+            return JsonMapper.toJsonString(responseInfo);
+        }
+
+        //给文件一个唯一的名字，上传过程采用覆盖的形式。
+        String myFileName = file.getOriginalFilename();
+        String fileNewName="T_ML_UPGRADE.exe";
+        // 记录上传开始时间
+        int pre = (int) System.currentTimeMillis();
+
+        try {// 开始传输到ftp
+            boolean result = FtpUtil.uploadFile(ftpConfig.getHost(), ftpConfig.getPort(),
+                    ftpConfig.getUsername(), ftpConfig.getPassword(), ftpConfig.getBasePath(),
+                    ftpConfig.getFirmwarePath(), fileNewName, file.getInputStream());
+            if (result) {
+                responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+                responseInfo.setMessage("附件" + myFileName + "上传成功");
+            } else {
+                responseInfo.setCode(ResponseInfo.CODE_ERROR);
+                responseInfo.setMessage("附件" + myFileName + "上传失败,请重试！");
+            }
+
+        } catch (IOException e) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("附件" + myFileName + "上传失败,服务器异常！");
+        }finally {
+            return JsonMapper.toJsonString(responseInfo);
+        }
+
+    }
+
+
+
+    /***
+     * 从指定的ftp.firmwarePath目录下载固件，指定下载的路径
+     * @return
+     */
+    @GetMapping("/downloadFirmware")
+    public String downloadFirmware(@RequestParam(value = "fileLocalPath") String fileLocalPath) {
+        //fileLocalPath="d:\\";
+        //根据前端传递过来的fileId，在数据库中查询文件名称、文件远端路径
+        String fileName = "T_ML_UPGRADE.exe";
+        //根据文件类型判断传递过来的是图片还是视频，选择远程ftp服务器中的存放路径
+        boolean result = FtpUtil.downloadFile(ftpConfig.getHost(), ftpConfig.getPort(),
+                ftpConfig.getUsername(), ftpConfig.getPassword(), ftpConfig.getBasePath()+ftpConfig.getFirmwarePath(),
+                fileName,fileLocalPath );
+
+        ResponseInfo responseInfo = new ResponseInfo<>();
+
+        if (result) {
+            responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+            responseInfo.setMessage("附件下载成功,请前往"+fileLocalPath+"查看文件。");
+
+        } else {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("附件下载失败，请重试或者联系管理员");
+        }
+        return JsonMapper.toJsonString(responseInfo);
+    }
+
+
+    /***
+     * 暂时不用 （多文件上传）
+     * @Description:
+     * @return
+     */
+    @RequestMapping(value = "upload1", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public ResponseInfo<String>  upload( HttpServletRequest request,
                          HttpServletResponse response, Model model) {
 
@@ -62,7 +139,7 @@ public class AttachController  {
                         String myFileName = file.getOriginalFilename();
                         String fileType=myFileName.substring(myFileName.lastIndexOf(".")+1,myFileName.length());
                         //给文件一个唯一的名字，上传过程采用覆盖的形式。
-                        String fileNewName="firmware."+fileType;
+                        String fileNewName="T_ML_V0.0.1.txt";
                         // 记录上传开始时间
                         int pre = (int) System.currentTimeMillis();
                         // 开始传输到ftp
@@ -95,35 +172,6 @@ public class AttachController  {
 
         return responseInfo;
     }
-
-    /***
-     *
-     * @param fileId   文件名称
-     * @param fileLocalPath  文件本地存放路径
-     * @return
-     */
-    @GetMapping("/download")
-    public ResponseInfo<String> download(@RequestParam(name = "fileId", required = false) String fileId
-            , @RequestParam(name = "fileType", required = false) String fileType
-            , @RequestParam(name = "fileLocalPath", required = false) String fileLocalPath) {
-        //根据前端传递过来的fileId，在数据库中查询文件名称、文件远端路径
-        fileLocalPath = "d:/";
-        String fileName = "sn123456_20190803150322.png";
-        //根据文件类型判断传递过来的是图片还是视频，选择远程ftp服务器中的存放路径
-        boolean result = FtpUtil.downloadFile(ftpConfig.getHost(), ftpConfig.getPort(),
-                ftpConfig.getUsername(), ftpConfig.getPassword(), ftpConfig.getBasePath()+ftpConfig.getPicturePath(),
-                fileName,fileLocalPath );
-
-        ResponseInfo<String> response = null;
-
-        if (result) {
-            log.info("=======下载文件"+ fileName +"成功=======");
-        } else {
-            log.info("=======下载文件"+ fileName +"失败=======");
-        }
-        return response;
-    }
-
 
 
 
