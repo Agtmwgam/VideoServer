@@ -1,20 +1,47 @@
 接口文档
 
-注册发送短信接口
-POST 112.74.77.11:1010/shungkon/sendSMS
-//测试修改，这个接口需要修改
-
+发送短信接口
+POST http://112.74.77.11:1060/login/smsSendCode
 
 参数
-phoneNumber: "12345678901"
+{"phoneNumber":"13513513513"}
 
 
 返回
 {
     "code": "0000",
-    "message": "成功",
-    "data": []
+    "message": "send message success!",
+    "data": {
+        "tamp": "20190810000710",
+        "hash": "fcd43a267df716917ad10fd32284c1b2"
+    },
+    "pageNo": null,
+    "pageSize": null,
+    "total": null
 }
+
+
+
+校验短信验证码接口
+POST http://112.74.77.11:1060/login/smsValidate
+
+参数
+{
+	"hash":"fcd43a267df716917ad10fd32284c1b2",
+	"tamp":"20190810000710",
+	"msgNum":"308232"
+}
+
+返回
+{
+    "code": "0000",
+    "message": "message validate success!",
+    "data": null,
+    "pageNo": null,
+    "pageSize": null,
+    "total": null
+}
+
 
 
 
