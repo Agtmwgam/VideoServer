@@ -18,13 +18,16 @@ phoneNumber: "12345678901"
 
 
 注册保存用户信息接口
-POST 112.74.77.11:1010/shungkon/validateSMS
+POST 112.74.77.11:1010/shungkon/toRegister
 
 
 参数
 phoneNumber: "12345678901"
-code: "8972"
 password: "123456"
+hash:
+tamp：
+msgNum：
+
 
 
 返回
@@ -63,8 +66,10 @@ POST 112.74.77.11:1010/shungkon/forgetPwd
 
 参数
 phoneNumber: "12345678901"
-messageCode: "876845"
 newPassword: "123456"
+hash:
+tamp：
+msgNum：
 
 
 返回

@@ -29,7 +29,7 @@ import static com.tw.util.ResponseInfo.CODE_SUCCESS;
  * @Created by liutianwen
  */
 @Controller
-@RequestMapping("/register/")
+@RequestMapping("/shungkon/")
 public class RegisterController {
 
     @Autowired

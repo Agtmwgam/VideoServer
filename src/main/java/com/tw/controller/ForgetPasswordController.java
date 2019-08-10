@@ -8,6 +8,7 @@ import com.tw.util.ResponseInfo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -23,7 +24,7 @@ import static com.tw.util.ResponseInfo.CODE_SUCCESS;
  * @Created by liutianwen
  */
 @Controller
-@RequestMapping("/forget/")
+@RequestMapping("/shungkon/")
 public class ForgetPasswordController {
 
     @Autowired
@@ -38,25 +39,40 @@ public class ForgetPasswordController {
      * @Created liutianwen
      * @Description 忘记密码
      */
-    @RequestMapping(value = "findPwd")
+    @PostMapping(value = "forgetPwd")
     public ResponseInfo findPassword(@RequestBody Map<String, Object> requestMap) {
+//    public ResponseInfo modifyPassword() {
+        ResponseInfo response = new ResponseInfo();
+        VUser user = new VUser();
 
-//        String verifyCode = requestMap.get("verifyCode").toString();
-        VUser user = (VUser) requestMap.get("VUser");
-        String requestHash = requestMap.get("hash").toString();
-        String tamp = requestMap.get("tamp").toString();
-        String msgNum = requestMap.get("msgNum").toString();
+//        phoneNumber: "12345678901"
+//        messageCode: "876845"
+//        newPassword: "123456"
 
-        user.setPhoneNumber("18210081211");
+        String phoneNumber = requestMap.get("phoneNumber").toString();
+        String newPassword = requestMap.get("newPassword").toString();
+        user.setPhoneNumber(phoneNumber);
+        user.setPassword(newPassword);
+
+//        取出数据
+//        VUser user = (VUser) requestMap.get("VUser");
+//        String requestHash = requestMap.get("hash").toString();
+//        String tamp = requestMap.get("tamp").toString();
+//        String msgNum = requestMap.get("msgNum").toString();
+
+//        测试数据
+//        user.setPhoneNumber("18210081211");
+//        user.setPassword("4ge5ge@");
+
 
 //       检查用户注册信息(手机号，新密码，验证码)是否正常
-        ResponseInfo response = checkUserInfo(requestMap);
+         response = checkUserInfo(requestMap);
         if (response.getCode() == CODE_ERROR) {
             return response;
         }
 
-        //创建用户
-        Boolean flag = userService.creatUser(user);
+        //修改密码
+        userService.modifyUser(user);
         response.setCode(CODE_SUCCESS);
         response.setMessage(" Registered successfully!");
 
@@ -71,11 +87,10 @@ public class ForgetPasswordController {
      */
     public ResponseInfo checkUserInfo(Map<String, Object> requestMap) {
         ResponseInfo response = new ResponseInfo();
-        VUser user = (VUser) requestMap.get("VUser");
-        //       用户注册手机号
-        String phoneNumber = user.getPhoneNumber();
-//       用户注册密码
-        String password = user.getPassword();
+        //用户注册手机号
+        String phoneNumber = requestMap.get("phoneNumber").toString();
+        //用户注册密码
+        String password = requestMap.get("newPassword").toString();
         //手机号码是否正规范
         Boolean isRightPhone = false;
         //密码是否规范
