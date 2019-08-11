@@ -487,14 +487,12 @@ deviceVerifyCode: ""
 }
 
 
-
+（修改）
 管理员用户管理查询接口
-POST 112.74.77.11:2019/shungkon/getUserMessage
-
+POST 112.74.77.11:2019/shungkon/getUserInfo
 
 参数
 phoneNumber: "12345678901"
-
 
 返回
 {
