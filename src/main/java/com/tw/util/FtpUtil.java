@@ -136,6 +136,10 @@ public class FtpUtil {
                 ftp.disconnect();
                 return result;
             }
+            //设置下载文件的类型为二进制类型
+            ftp.setFileType(FTP.BINARY_FILE_TYPE);
+            //设置编码类型
+            ftp.setControlEncoding("UTF-8");
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(fileName)) {
                     File localFile = new File(localPath + "/" + ff.getName());
@@ -143,6 +147,7 @@ public class FtpUtil {
                         // 先得到文件的上级目录，并创建上级目录，在创建文件
                         localFile.getParentFile().mkdir();
                         localFile.createNewFile();
+                        log.info("==========FtpUtil:downloadFile==创建本地接收文件不存在，先创建========="+ff.getName()+"\n");
                     }
                     log.info("==========FtpUtil:downloadFile==远程文件下载到本地========="+ff.getName()+"\n");
                     OutputStream is = new FileOutputStream(localFile);

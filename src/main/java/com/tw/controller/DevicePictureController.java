@@ -45,13 +45,12 @@ public class DevicePictureController {
         }
         if (list != null) {
             int total = list.size();
-            resultMap.put("total", total);
-            resultMap.put("list", list);
+            resultMap.put("densityPictureName", list.get(0).getDensityPictureName());
+            resultMap.put("densityPicturePath", list.get(0).getDensityPicturePath());
             response.setCode(ResponseInfo.CODE_SUCCESS);
             response.setData(resultMap);
             response.setMessage("getDensityPicture success!");
         } else {
-            resultMap.put("total", 0);
             response.setCode(ResponseInfo.CODE_ERROR);
             response.setMessage("getDensityPicture failed!");
 
