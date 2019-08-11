@@ -226,7 +226,22 @@
 			</exclusions>
 		</dependency>
 
-	</dependencies>
+        <!-- 测试用依赖包 added by zhuoshouyi -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>5.1.7.RELEASE</version>
+        </dependency>
+
+    </dependencies>
 
 	<build>
 		<plugins>

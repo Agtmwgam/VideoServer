@@ -6,10 +6,19 @@
 
     <!-- 心跳数据入库 -->
     <insert id="saveBeatMessage" parameterType="com.tw.entity.BeatMessage">
-        insert into warningMessage
+        insert into beatMessage
         (frame,mesNo,mesDate,groupName,deviceName,deviceModel,serial,exeStatus,ip)
         values(#{frame},#{mesNo},#{mesDate},#{groupName},#{deviceName},#{deviceModel},#{serial},#{exeStatus},#{ip})
     </insert>
+
+    <!-- 根据 serial 查询心跳信息 -->
+    <select id="findBySerial" parameterType="java.lang.String"  resultType="com.tw.entity.BeatMessage">
+        select *
+        from beatMessage beat
+        where beat.serial=#{serial}
+        order by mesDate desc
+        limit 1
+    </select>
 
 
 

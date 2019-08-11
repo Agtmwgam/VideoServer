@@ -63,6 +63,8 @@ public class DeviceController {
             return responseInfo;
         }
 
+
+        ResponseInfo responseInfo = new ResponseInfo();
         int isAdd = deviceService.addDevice(device);
         if (isAdd == 1) {
             responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
