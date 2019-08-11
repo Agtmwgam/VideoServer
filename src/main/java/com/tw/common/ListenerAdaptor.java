@@ -53,7 +53,7 @@ public class ListenerAdaptor extends FileAlterationListenerAdaptor {
         String serial = str[0];
         String warningTime =  str[1];
         String warningVideoName = myFileName;
-        String warningVideoPath =ftpConfig.getVideoPath()+ "\\"+serial+"\\"+myFileName;
+        String warningVideoPath =ftpConfig.getVideoPath()+ "/"+serial+"/"+myFileName;
 
         System.out.println("====ListenerAdaptor:onFileCreate【文件创建】监控处理开始。文件名为：" + file);
         System.out.println("eventId:"+eventId);
