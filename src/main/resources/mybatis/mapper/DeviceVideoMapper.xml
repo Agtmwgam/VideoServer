@@ -31,10 +31,20 @@
         deviceVideo
         WHERE
          serial = #{serial}
-
+        <if test="pageNo != null  and pageSize!=null ">
+         LIMIT ${(pageNo-1)*pageSize},${pageSize};
+        </if>
     </select>
 
 
+    <!-- 新增视频 -->
+    <insert id="AddVideo" parameterType="com.tw.entity.DeviceVideo">
+        INSERT INTO
+        deviceVideo
+        (serial, eventId, warningVideoName,warningVideoPath,warningTime,isValid)
+        VALUES
+        (#{serial}, #{eventId}, #{warningVideoName}, #{warningVideoPath}, #{warningTime}, #{isValid})
+    </insert>
 
 
 

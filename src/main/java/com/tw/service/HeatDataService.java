@@ -1,27 +1,23 @@
-package com.tw.common;
+package com.tw.service;
 
-import com.tw.controller.DeviceVideoController;
 import com.tw.entity.Point;
 import com.tw.entity.WarningMessage;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: lushiqin
- * @Description:
+ * @Description: 密度图片生成服务类
  * @Date: 2019/8/8
- * @param: null
  * @return:
  */
-@Component
-public class HeatData {
+@Service
+public class HeatDataService {
 
-    private static Logger log = Logger.getLogger(HeatData.class);
+    private static Logger log = Logger.getLogger(HeatDataService.class);
 
     public  List<Point> caculateHeatData(List<WarningMessage> list) {
 
@@ -56,12 +52,10 @@ public class HeatData {
 
             for (i = x; i < x + width; i = i + 1) {
                 for (j = y; j < y + height; j = j + 1) {
-                    if (i <= ROW - 1 && j < COL - 1) {
                         data[i][j] = data[i][j] + 1;
                        /* System.out.println("points.push({x:"+i+",y:"+j+",value:"+data[i][j]+"});");
                         Point p=new Point(i,j,data[i][j]);//将x,y,权重值存入点对象中
                         pointlist.add(p);*/
-                    }
                 }
             }
         }
@@ -77,13 +71,16 @@ public class HeatData {
             }
         }
 
+        //如果最大值为0，则返回
+        if (maxvalue == 0) {
+            return  null;
+        }
+
         for (i = 0; i < ROW; i = i + 1) {
             for (j = 0; j < COL; j = j + 1) {
-                if (maxvalue == 0) {
-                    data[i][j] = 0;
-                } else {
-                    data[i][j] = Math.round(data[i][j] / maxvalue * 255); //round取整数，或者用mod函数取余数
-
+                data[i][j] = Math.round(data[i][j] / maxvalue * 255); //round取整数，或者用mod函数取余数
+                if(data[i][j] !=0){
+                    log.info("points.push({x:" + i + ",y:" + j + ",value:" + data[i][j] + "});");
                 }
             }
         }
@@ -100,20 +97,22 @@ public class HeatData {
                 }
                 data2[i][j] = sumdata / ((FSIZE + 1) * (FSIZE + 1)); //获得整个平滑块的均值
                 sumdata = 0;
-                if(data2[i][j] !=0){
-                    log.info("points.push({x:" + i + ",y:" + j + ",value:" + data2[i][j] + "});");
-                }
+
             }
         }
 
 
+        Point p =new Point(0,0,0);
         for (i=FSIZE; i<ROW-FSIZE; i=i+1)
         {
             for (j=FSIZE; j<COL-FSIZE; j=j+1)
             {
                 data[i][j] = data2[i][j]; //将平滑滤波结果返回给data
-                Point p = new Point(i, j, data2[i][j]);//将x,y,权重值存入点对象中
+                p = new Point(i, j, data2[i][j]);//将x,y,权重值存入点对象中
                 pointlist.add(p);
+                if(data[i][j] !=0){
+                    //log.info("points.push({x:" + i + ",y:" + j + ",value:" + data[i][j] + "});");
+                }
             }
         }
 
@@ -125,7 +124,7 @@ public class HeatData {
     public static void main (String[] args ){
         List<WarningMessage> list =new ArrayList<WarningMessage>();
 
-        /*WarningMessage w11=new WarningMessage();w11.setTargetLocation("12,52,20,20");list.add(w11);
+        WarningMessage w11=new WarningMessage();w11.setTargetLocation("12,52,20,20");list.add(w11);
         WarningMessage w12=new WarningMessage();w12.setTargetLocation("12,50,18,20");list.add(w12);
         WarningMessage w13=new WarningMessage();w13.setTargetLocation("12,50,20,18");list.add(w13);
         WarningMessage w14=new WarningMessage();w14.setTargetLocation("10,52,20,20");list.add(w14);
@@ -154,7 +153,7 @@ public class HeatData {
         WarningMessage w37=new WarningMessage();w37.setTargetLocation("873,40,28,12");list.add(w37);
         WarningMessage w38=new WarningMessage();w38.setTargetLocation("833,43,18,12");list.add(w38);
         WarningMessage w39=new WarningMessage();w39.setTargetLocation("1030,34,40,30");list.add(w39);
-        WarningMessage w40=new WarningMessage();w40.setTargetLocation("1040,36,30,20");list.add(w40);*/
+        WarningMessage w40=new WarningMessage();w40.setTargetLocation("1040,36,30,20");list.add(w40);
         WarningMessage w41=new WarningMessage();w41.setTargetLocation("1050,32,30,20");list.add(w41);
         WarningMessage w42=new WarningMessage();w42.setTargetLocation("1050,30,20,20");list.add(w42);
         WarningMessage w43=new WarningMessage();w43.setTargetLocation("1034,544,10,20");list.add(w43);
@@ -166,10 +165,10 @@ public class HeatData {
         WarningMessage w49=new WarningMessage();w49.setTargetLocation("123,554,48,32");list.add(w49);
         WarningMessage w50=new WarningMessage();w50.setTargetLocation("1023,554,28,32");list.add(w50);
 
-        HeatData heatData=new HeatData();
+        HeatDataService heatDataService =new HeatDataService();
 
 
-        heatData.caculateHeatData(list);
+        heatDataService.caculateHeatData(list);
 
 
     }

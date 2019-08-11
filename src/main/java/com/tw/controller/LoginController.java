@@ -1,13 +1,18 @@
 package com.tw.controller;
 
+import com.tw.entity.VUser;
 import com.tw.service.MessageService;
+import com.tw.service.UserService;
+import com.tw.service.VUserService;
 import com.tw.util.*;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.tw.util.ResponseInfo.CODE_ERROR;
@@ -27,17 +32,11 @@ public class LoginController {
     @Autowired
     MessageService messageService;
 
+    @Autowired
+    private VUserService vUserService;
+
     //声明一个Logger，这个是static的方式
     private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
-
-
-//    @GetMapping("/sendMessage")
-//    public String sendMessage() {
-//        Boolean isSend = messageService.publicSendMessage("18210081211");
-//        System.out.println("=========发送短信结果:"+isSend);
-//        return "发送成功";
-//    }
-
 
     /**
      * @Author: John
@@ -83,6 +82,79 @@ public class LoginController {
     public ResponseInfo validateNum(@RequestBody Map<String,Object> requestMap) {
         logger.info("==============从前端收到的校验信息为："+requestMap.toString());
         ResponseInfo response = messageService.validateNum(requestMap);
+        return response;
+    }
+
+
+    /**
+     * @Author: John
+     * @Description: 用户通过密码登录
+     * @Date:  2019/8/10 14:49
+     * @param: requestMap 登录信息（phoneNumber、pwd）
+     * @return:
+     */
+    @RequestMapping(value = "/logOnByPwd", method = RequestMethod.POST, headers = "Accept=application/json")
+    public ResponseInfo logOnByPwd(@RequestBody Map<String,Object> requestMap) {
+        ResponseInfo response = new ResponseInfo();
+        //短信校验是通过的情况下才可以登录
+        String passWord = (String) requestMap.get("pwd");
+        if (StringUtils.isBlank(passWord)) {
+            response.setCode(CODE_ERROR);
+            response.setMessage("PassWord couldn't be null!");
+            return response;
+        }
+        //如果密码不为空，就校验
+        String phoneNumber = (String)requestMap.get("phoneNumber");
+        VUser vUser = new VUser();
+        vUser.setPassword(phoneNumber);
+        vUser.setPassword(passWord);
+        VUser user = vUserService.queryUser(vUser);
+        if (user != null) {
+            System.out.println("============查询到的用户为："+user.toString());
+            System.out.println("============登录成功");
+            //TODO
+            //这里后面要将这个登录状态放到jwt里面，维持这个登录状态
+            //TODO
+            response.setCode(CODE_SUCCESS);
+            response.setMessage(phoneNumber + " login success!");
+            return response;
+        }
+        response.setCode(CODE_ERROR);
+        response.setMessage("couldn't find this user!");
+        return response;
+
+    }
+
+
+    /**
+     * @Author: John
+     * @Description: 用户通过短信登录
+     * @Date:  2019/8/10 16:02
+     * @param: requestMap
+     * @return:
+     */
+    @RequestMapping(value = "/logOnByMsg", method = RequestMethod.POST, headers = "Accept=application/json")
+    public ResponseInfo logOnByMsg(@RequestBody Map<String,Object> requestMap) {
+        ResponseInfo response = new ResponseInfo();
+        //先检测是否在数据库中应有该手机号码了
+        String phoneNumber = (String)requestMap.get("phoneNumber");
+        VUser vUser = new VUser();
+        vUser.setPhoneNumber(phoneNumber);
+        if (vUserService.queryUser(vUser) == null) {
+            response.setCode(CODE_ERROR);
+            response.setMessage("this phoneNumber:" + phoneNumber + "have not yet registered, please registed first!");
+            return response;
+        }
+        ResponseInfo resResponse = messageService.validateNum(requestMap);
+        if (resResponse.getCode() == CODE_SUCCESS) {
+            logger.warn("======短信校验成功");
+            response.setCode(CODE_SUCCESS);
+            response.setMessage(phoneNumber + " registered success!");
+        } else {
+            logger.warn("======短信校验失败");
+            response.setCode(CODE_ERROR);
+            response.setMessage(phoneNumber + " registered failed!");
+        }
         return response;
     }
 }

@@ -7,9 +7,8 @@ import org.springframework.context.annotation.PropertySource;
 
 /**
  * @Author: lushiqin
- * @Description:
+ * @Description:FTP路径配置基类
  * @Date: 2019/8/3
- * @param: null
  * @return:
  */
 @Configuration

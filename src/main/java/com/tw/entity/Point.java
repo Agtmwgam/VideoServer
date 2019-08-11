@@ -4,9 +4,8 @@ import lombok.Data;
 
 /**
  * @Author: lushiqin
- * @Description:
+ * @Description:密度图片 热点类
  * @Date: 2019/8/9
- * @param: null
  * @return:
  */
 @Data

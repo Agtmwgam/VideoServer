@@ -60,4 +60,15 @@ public class DeviceVideo extends BaseEntity{
         this.liveStreaming = liveStreaming;
         this.description = description;
     }
+
+    public DeviceVideo(String serial,String eventId,String warningVideoName,
+                       String warningVideoPath, String warningTime
+                       ) {
+        super();
+        this.serial = serial;
+        this.eventId = eventId;
+        this.warningVideoName = warningVideoName;
+        this.warningVideoPath = warningVideoPath;
+        this.warningTime = warningTime;
+    }
 }

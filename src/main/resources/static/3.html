@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        div {
+            width:690px; height:458px;border: 1px solid;border-color: grey;
+        }
+    </style>
+</head>
+<body>
+<div id="heatmap">
+    <canvas id="cvs" class="heatmap-canvas" width="690" height="458"></canvas>
+</div>
+</body>
+<script src="../jq/heatmap.js"></script>
+<script type="text/javascript">
+    //获取canvas元素
+    //var cvs = document.getElementById("cvs");
+    //var cvs = config.canvas;
+    //创建image对象
+    var imgObj = new Image();
+    imgObj.src = "1.jpg";
+    //待图片加载完后，将其显示在canvas上
+    imgObj.onload = function(){
+        var ctx = cvs.getContext('2d');
+        //ctx.drawImage(this, 0, 0);//this即是imgObj,保持图片的原始大小：470*480
+        ctx.drawImage(this, 0, 0,690,458);//改变图片的大小到1024*768
+    }
+
+    // 创建一个heatmap实例对象
+    // “h337” 是heatmap.js全局对象的名称.可以使用它来创建热点图实例
+    // 这里直接指定热点图渲染的div了.heatmap支持自定义的样式方案,网页外包接活具体可看官网api
+    var heatmapInstance = h337.create({
+        container: document.querySelector('#heatmap'),
+    });
+    //构建一些随机数据点,网页切图价格这里替换成你的业务数据
+    var points = [];
+    var max = 0;
+    var width = 690;
+    var height = 458;
+    var len = 100;
+    while (len--) {
+        var val = Math.floor(Math.random()*255);
+        //var val = 1;
+        max = Math.max(max, val);
+        var point = {
+            x: Math.floor(Math.random()*width),
+            y: Math.floor(Math.random()*height),
+            value: val
+        };
+        points.push(point);
+    }
+
+
+    var data = {
+    max: max,
+    data: points
+};
+57 //因为data是一组数据,web切图报价所以直接setData
+heatmapInstance.setData(data); //数据绑定还可以使用
+</script>
+</html>
