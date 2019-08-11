@@ -21,7 +21,7 @@ import java.util.*;
 
 /**
  * @Author: lushiqin
- * @Description:  上传固件至ftp服务器
+ * @Description:  固件管理（上传下载）
  * @Date: 2019/8/3
  * @return:
  */
@@ -89,6 +89,7 @@ public class AttachController  {
      */
     @GetMapping("/downloadFirmware")
     public String downloadFirmware(@RequestParam(value = "fileLocalPath") String fileLocalPath) {
+        log.info("=====/downloadFirmware下载固件,从前端获取到的路径=====fileLocalPath:"+fileLocalPath);
         //fileLocalPath="d:\\";
         //根据前端传递过来的fileId，在数据库中查询文件名称、文件远端路径
         String fileName = "T_ML_UPGRADE.exe";

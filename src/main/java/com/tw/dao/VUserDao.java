@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author liutianwen
  * @Description:用户DAO
@@ -20,6 +22,9 @@ public interface VUserDao {
 
     //查找用户
     VUser queryUser(VUser user);
+
+    //模糊查找用户
+    List<VUser> fuzzyQueryUser(VUser user);
 
     //更新客户
     @Transactional

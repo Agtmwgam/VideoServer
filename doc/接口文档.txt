@@ -46,7 +46,7 @@ POST http://112.74.77.11:1060/login/smsValidate
 
 
 注册保存用户信息接口
-POST 112.74.77.11:1010/shungkon/toRegister
+POST 112.74.77.11:2019/shungkon/toRegister
 
 
 参数
@@ -89,7 +89,7 @@ pwd: "123456"
 
 
 忘记密码接口
-POST 112.74.77.11:1010/shungkon/forgetPwd
+POST 112.74.77.11:2019/shungkon/forgetPwd
 
 
 参数
@@ -110,7 +110,7 @@ msgNum：
 
 
 修改密码接口
-POST 112.74.77.11:1010/shungkon/modifyPwd
+POST 112.74.77.11:2019/shungkon/modifyPwd
 
 
 参数
@@ -129,7 +129,7 @@ newPassword: ""
 
 
 客户端添加设备接口
-POST 112.74.77.11:1010/shungkon/addDevice
+POST 112.74.77.11:2019/shungkon/addDevice
 
 
 参数
@@ -148,7 +148,7 @@ devicePassword: "123456"
 
 
 客户端显示设备接口
-POST 112.74.77.11:1010/shungkon/getDeviceGroup
+POST 112.74.77.11:2019/shungkon/getDeviceGroup
 
 
 参数
@@ -182,7 +182,7 @@ POST 112.74.77.11:1010/shungkon/getDeviceGroup
 
 
 客户端添加分组接口
-POST 112.74.77.11:1010/shungkon/addGroup
+POST 112.74.77.11:2019/shungkon/addGroup
 
 
 参数
@@ -199,7 +199,7 @@ groupName: "12345678901"
 
 
 修改设备分组名称接口
-POST 112.74.77.11:1010/shungkon/modifyDeviceGroupName
+POST 112.74.77.11:2019/shungkon/modifyDeviceGroupName
 
 
 参数
@@ -217,7 +217,7 @@ groupName: "123456"
 
 
 删除设备分组接口
-POST 112.74.77.11:1010/shungkon/deleteDeviceGroup
+POST 112.74.77.11:2019/shungkon/deleteDeviceGroup
 
 
 参数
@@ -235,7 +235,7 @@ groupId: 12345678901
 
 
 修改设备名称接口
-POST 112.74.77.11:1010/shungkon/modifyDeviceName
+POST 112.74.77.11:2019/shungkon/modifyDeviceName
 
 
 参数
@@ -253,7 +253,7 @@ deviceName: ""
 
 
 查询分组列表接口
-POST 112.74.77.11:1010/shungkon/getMyAllGroup
+POST 112.74.77.11:2019/shungkon/getMyAllGroup
 
 
 参数
@@ -283,7 +283,7 @@ POST 112.74.77.11:1010/shungkon/getMyAllGroup
 
 
 移动分组接口
-POST 112.74.77.11:1010/shungkon/moveDeviceGroup
+POST 112.74.77.11:2019/shungkon/moveDeviceGroup
 
 
 参数
@@ -301,7 +301,7 @@ groupId: 324
 
 
 删除设备接口
-POST 112.74.77.11:1010/shungkon/deleteDevice
+POST 112.74.77.11:2019/shungkon/deleteDevice
 
 
 参数
@@ -317,92 +317,98 @@ deviceId: 12345678901
 
 
 
-告警视频列表接口
-POST 112.74.77.11:1010/shungkon/getWarningInfoList
-
-
-参数
-serial: 123
-
+（修改过）
+1 告警视频列表接口
+GET 112.74.77.11:2019/shungkon/video/getWarningInfoList?serial=QSZN001&pageSize=2&pageNo=1
 
 返回
 {
     "code": "0000",
     "message": "成功",
+    "pageNo": 1,
+    "pageSize": 2,
+    "total": 1
     "data": [
         {
-            "eventId": 123,
-            "deviceName": "",
-            "warningTime": "2019-07-30 00:00:00",
+            "eventId": "QSZN001_2019-07-22T092312",
+            "serial": "QSZN001",
+            "warningTime": "2019-07-22T092312",
             "warningPictureLittle": "",
             "warningMessage": ""
 
          },
          {
-            "eventId": 124,
-            "deviceName": "",
-            "warningTime": "2019-07-29 00:00:00",
+            "eventId": "QSZN001_2019-07-22T092312",
+            "serial": "QSZN001",
+            "warningTime": "2019-07-22T092312",
             "warningPictureLittle": "",
-            "warningMessage": ""
-
-         },
-         {
-            "eventId": 125,
-            "deviceName": "",
-            "warningTime": "2019-07-28 00:00:00",
-            "warningPictureLittle": "",
-            "warningMessage": ""
+            "warningMessage": """"
 
          }
      ]
 }
 
 
-
-告警视频详情接口
-POST 112.74.77.11:1010/shungkon/getWarningInfoDesc
-
-
-参数
-serial: 123,
-eventId: 123
-
+（修改过）
+2 告警视频详情接口
+GET 112.74.77.11:2019/shungkon/video/getWarningInfoDesc?serial=QSZN001&eventId=QSZN001_2019-07-22T092312
 
 返回
 {
     "code": "0000",
     "message": "成功",
     "data": [
-        "warningVideoPath":""
+        "warningVideoPath":"\\video\\QSZN001_20190803150322.mp4"
      ]
 }
 
+（新增）
+3 固件上传接口
+POST 112.74.77.11:2019/shungkon/attach/upload
+备注：前端一个表单，选择文件，form的enctype为multipart/form-data 报文头不需要设置Content-Type
+
+返回
+{
+    "code": "0000",
+    "message": "附件2018各项目情况.xlsx上传成功"
+}
 
 
-密度分析图片详情接口
-POST 112.74.77.11:1010/shungkon/getDensityPicture
+（新增）
+4 固件下载接口
+GET 112.74.77.11:2019/shungkon/attach/downloadFirmware?fileLocalPath=d://testPicture
+
+返回
+{
+    "code": "0000",
+    "message": "附件下载成功,请前往d://testPicture查看文件。"
+}
 
 
-参数
-serial: 123
-
+（修改过）
+5 密度分析图片详情接口
+GET 112.74.77.11:2019/shungkon/picture/getDensityPicture?serial=QSZN001
 
 返回
 {
     "code": "0000",
     "message": "成功",
-    "data": [
+    "data":
         {
             "densityPictureName": "",
-            "densityPicturePath": ""
+            "densityPicturePath":"\\picture\\QSZN001_20190803150322.png"
         }
      ]
 }
 
 
 
+
+
+
+
 日志列表接口
-POST 112.74.77.11:1010/shungkon/logList
+POST 112.74.77.11:2019/shungkon/logList
 
 
 参数
@@ -445,7 +451,7 @@ pageSize: 15
 
 
 管理员设备管理接口
-POST 112.74.77.11:1010/shungkon/deviceMessage
+POST 112.74.77.11:2019/shungkon/deviceMessage
 
 
 参数
@@ -475,7 +481,7 @@ productDate: ""
 
 
 管理员设备管理接口
-POST 112.74.77.11:1010/shungkon/addNewDevice
+POST 112.74.77.11:2019/shungkon/addNewDevice
 
 
 参数
@@ -493,7 +499,7 @@ deviceVerifyCode: ""
 
 
 管理员用户管理查询接口
-POST 112.74.77.11:1010/shungkon/getUserMessage
+POST 112.74.77.11:2019/shungkon/getUserMessage
 
 
 参数
@@ -523,7 +529,7 @@ phoneNumber: "12345678901"
 
 
 管理员用户详情接口
-POST 112.74.77.11:1010/shungkon/getUserAndDeviceInfo
+POST 112.74.77.11:2019/shungkon/getUserAndDeviceInfo
 
 
 参数

@@ -1,11 +1,13 @@
 package com.tw.common;
 
+import com.tw.config.FtpConfig;
 import com.tw.entity.DeviceVideo;
 import com.tw.entity.common.ConstantParam;
 import com.tw.service.DeviceVideoService;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.File;
@@ -20,6 +22,9 @@ import java.io.File;
 public class ListenerAdaptor extends FileAlterationListenerAdaptor {
 
     private static Logger log = Logger.getLogger(ListenerAdaptor.class);
+
+    @Autowired
+    private FtpConfig ftpConfig;
 
     /**
      * 业务
@@ -40,7 +45,7 @@ public class ListenerAdaptor extends FileAlterationListenerAdaptor {
      **/
     @Override
     public void onFileCreate(File file) {
-        log.info("====ListenerAdaptor【文件创建】监控处理开始。文件名为：" + file);
+        log.info("====ListenerAdaptor:onFileCreate【文件创建】监控处理开始。文件名为：" + file);
 
         String myFileName = file.getName();
         String eventId =myFileName.substring(0,myFileName.lastIndexOf("."));
@@ -48,8 +53,9 @@ public class ListenerAdaptor extends FileAlterationListenerAdaptor {
         String serial = str[0];
         String warningTime =  str[1];
         String warningVideoName = myFileName;
-        String warningVideoPath = "\\"+serial+"\\"+myFileName;
+        String warningVideoPath =ftpConfig.getVideoPath()+ "/"+serial+"/"+myFileName;
 
+        System.out.println("====ListenerAdaptor:onFileCreate【文件创建】监控处理开始。文件名为：" + file);
         System.out.println("eventId:"+eventId);
         System.out.println("serial:"+serial);
         System.out.println("warningTime:"+warningTime);
@@ -62,8 +68,8 @@ public class ListenerAdaptor extends FileAlterationListenerAdaptor {
         DeviceVideo video=new DeviceVideo(serial, eventId, warningVideoName,warningVideoPath,warningTime);
         video.setIsValid(ConstantParam.IS_VALID_YES);
         deviceVideoService.AddVideo(video);
-        log.info("====ListenerAdaptor【文件创建】监控处理结束=====" );
-
+        log.info("====ListenerAdaptor:onFileCreate【文件创建】监控处理结束=====" );
+        System.out.println("====ListenerAdaptor:onFileCreate【文件创建】监控处理结束=====" );
     }
 
 

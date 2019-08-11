@@ -4,6 +4,7 @@ import com.tw.entity.BeatMessage;
 import com.tw.entity.LoginMessage;
 import com.tw.entity.WarningMessage;
 import com.tw.service.RecDeviceSMSService;
+import com.tw.util.HEXUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -219,19 +222,39 @@ public class RecDeviceSMSController {
     }
 
 
-    public static void main(String[] args) {
-//          01、心跳消息
-//        String beatMessage = "0*FF#001#2019-07-22T092312#ML16#T42683512#1#192.168.1.200";
-//        String[] beat = beatMessage.split("#");
-//        BeatMessage beatMessageBean = new BeatMessage();
-//        beatMessageBean.setFrame(beat[0]);
-//        beatMessageBean.setMesNo(beat[1]);
-//        beatMessageBean.setMesDate(beat[2]);
-//        beatMessageBean.setDeviceModel(beat[3]);
-//        beatMessageBean.setSerial(beat[4]);
-//        beatMessageBean.setExeStatus(beat[5]);
-//        beatMessageBean.setIp(beat[6]);
-//
-//        logger.info("==="+beatMessageBean.toString());
+    public static void main(String[] args) throws UnsupportedEncodingException {
+
+        StringBuilder resultStr = new StringBuilder();
+
+        //测试十六进制每一位都减3
+        //ABCDEF ==》 414243444546(16)
+        String recCode = "444546474849";
+        //取到报文里面的随机数中的第三位数：
+        int random = 3;
+        //转成十进制
+        int randomHex = Integer.valueOf(String.valueOf(random), 16);
+
+        //01、将十六进制拆出来
+        ArrayList<String> allHex16 = HEXUtil.splitByBytes(recCode, 2);
+
+
+        //02、对每一个十六进制进行逆运算，减去random值
+        for (String everyHex16 : allHex16) {
+            //十六进制转十进制
+            int tempC = Integer.valueOf(everyHex16, 16);
+            //将加密前加的那个随机数减回去，得到加密前的报文的十进制
+            int resultC = tempC - randomHex;
+            //再将得到的加密前的十进制转成十六进制
+            String resultHex = Integer.toHexString(resultC);
+            resultStr.append(resultHex);
+            System.out.println("==========resultHex:"+resultHex);
+            System.out.println("==========resultStr:"+resultStr);
+        }
+        System.out.println("============转回字符串："+HEXUtil.decode(resultStr.toString()));
+
+
+
     }
+
+
 }
