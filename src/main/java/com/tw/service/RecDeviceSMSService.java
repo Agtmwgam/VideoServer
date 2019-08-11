@@ -2,9 +2,11 @@ package com.tw.service;
 
 import com.tw.dao.BeatMessageDao;
 import com.tw.dao.DeviceDao;
+import com.tw.dao.LoginMessageDao;
 import com.tw.dao.WarningMessageDao;
 import com.tw.entity.BeatMessage;
 import com.tw.entity.Device;
+import com.tw.entity.LoginMessage;
 import com.tw.entity.WarningMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ public class RecDeviceSMSService {
 
     BeatMessageDao beatMessageDao;
 
+    LoginMessageDao loginMessageDao;
+
     DeviceDao deviceDao;
 
     /**
@@ -45,6 +49,39 @@ public class RecDeviceSMSService {
             return false;
         }
 
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Boolean checkLogin(String serial){
+
+        // TODO 如何验证登陆信息
+
+        LoginMessage loginMessage = loginMessageDao.findBySerial(serial);
+        if (loginMessage==null){
+            log.error("【验证登陆信息】此设备无登陆信息");
+            return false;
+        }else{
+            // TODO 增加失效时间
+            return true;
+        }
+
+    }
+
+    /**
+     * 登陆报文入库
+     * @param loginMessage
+     * @return
+     */
+    public Boolean loginMessageSave(LoginMessage loginMessage){
+
+        // 1.将此条登陆信息写入进数据库
+        loginMessageDao.saveLoginMessage(loginMessage);
+        log.info("【登陆信息】登陆信息入库成功");
+
+        return true;
     }
 
     /**

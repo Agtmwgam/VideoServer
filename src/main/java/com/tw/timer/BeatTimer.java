@@ -61,27 +61,32 @@ public class BeatTimer implements InitializingBean {
             // 获取最近一条的心跳信息
             BeatMessage beatMessage = beatMessageDao.findBySerial(devices.getSerial());
 
-            // 如果没有查找到此设备的心跳信息,就将此设备的 isOnline 置为 0
+            // 1.如果没有查找到此设备的心跳信息,就将此设备的 isOnline 置为 0
             if (beatMessage==null){
                 devices.setIsOnline('0');
                 deviceDao.updateDevice(devices);
                 log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为0");
-                continue;
-            }
-
-            // 如果最近一条心跳信息的分钟差值大于5,就将 device isOnline 置为 0
-            long difMin = (date.getTime() - beatMessage.getMesDate().getTime()) / (1000 * 60);
-            if (difMin>5){
-                devices.setIsOnline('0');
-                deviceDao.updateDevice(devices);
-                log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为0");
-            }else if (difMin<=5){
-                devices.setIsOnline('1');
-                deviceDao.updateDevice(devices);
-                log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为1");
+            }else {
+                // 2.查询此条心跳信息的设备状态,如果为0直接置0,如果为1再进行后续判断
+                if (beatMessage.getExeStatus()=='0'){
+                    devices.setIsOnline('0');
+                    deviceDao.updateDevice(devices);
+                    log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为0");
+                }else {
+                    // 3.如果最近一条心跳信息的分钟差值大于5,就将 device isOnline 置为 0
+                    long difMin = (date.getTime() - beatMessage.getMesDate().getTime()) / (1000 * 60);
+                    if (difMin>5){
+                        devices.setIsOnline('0');
+                        deviceDao.updateDevice(devices);
+                        log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为0");
+                    }else if (difMin<=5){
+                        devices.setIsOnline('1');
+                        deviceDao.updateDevice(devices);
+                        log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为1");
+                    }
+                }
             }
         }
-
     }
 
     @Override
