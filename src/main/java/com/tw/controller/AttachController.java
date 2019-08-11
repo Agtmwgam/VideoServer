@@ -1,6 +1,6 @@
 package com.tw.controller;
 
-import com.tw.common.JsonMapper;
+import com.tw.util.JsonMapperUtil;
 import com.tw.config.FtpConfig;
 import com.tw.util.FtpUtil;
 import com.tw.util.ResponseInfo;
@@ -21,9 +21,8 @@ import java.util.*;
 
 /**
  * @Author: lushiqin
- * @Description:  上传固件至ftp服务器
+ * @Description:  固件管理（上传下载）
  * @Date: 2019/8/3
- * @param: null
  * @return:
  */
 @RestController
@@ -46,12 +45,13 @@ public class AttachController  {
     @PostMapping("/upload")
     @ResponseBody
     public String upload(@RequestParam("file") MultipartFile file) {
+        log.info("=====/upload上传固件,从前端获取到的文件名=====file:"+file.getOriginalFilename());
         ResponseInfo  responseInfo = new ResponseInfo();
 
         if (file.isEmpty()) {
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("未检测到附件.请上传对应格式附件.");
-            return JsonMapper.toJsonString(responseInfo);
+            return JsonMapperUtil.toJsonString(responseInfo);
         }
 
         //给文件一个唯一的名字，上传过程采用覆盖的形式。
@@ -76,7 +76,7 @@ public class AttachController  {
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("附件" + myFileName + "上传失败,服务器异常！");
         }finally {
-            return JsonMapper.toJsonString(responseInfo);
+            return JsonMapperUtil.toJsonString(responseInfo);
         }
 
     }
@@ -89,6 +89,7 @@ public class AttachController  {
      */
     @GetMapping("/downloadFirmware")
     public String downloadFirmware(@RequestParam(value = "fileLocalPath") String fileLocalPath) {
+        log.info("=====/downloadFirmware下载固件,从前端获取到的路径=====fileLocalPath:"+fileLocalPath);
         //fileLocalPath="d:\\";
         //根据前端传递过来的fileId，在数据库中查询文件名称、文件远端路径
         String fileName = "T_ML_UPGRADE.exe";
@@ -107,7 +108,7 @@ public class AttachController  {
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("附件下载失败，请重试或者联系管理员");
         }
-        return JsonMapper.toJsonString(responseInfo);
+        return JsonMapperUtil.toJsonString(responseInfo);
     }
 
 

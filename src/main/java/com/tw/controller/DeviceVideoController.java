@@ -1,11 +1,9 @@
 package com.tw.controller;
 
-import com.tw.common.JsonMapper;
-import com.tw.dto.UserRoleDTO;
+import com.tw.util.JsonMapperUtil;
 import com.tw.entity.DeviceVideo;
 import com.tw.service.DeviceVideoService;
 import com.tw.util.ResponseInfo;
-import com.tw.util.UserAuthentication;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +21,6 @@ import java.util.Map;
  * @Author: lushiqin
  * @Description: 短视频功能模块
  * @Date: 2019/8/6
- * @param: null
  * @return:
  */
 @RestController
@@ -46,7 +43,7 @@ public class DeviceVideoController {
     public String getWarningInfoDesc(HttpServletRequest httpServletRequest
             , @RequestParam(value = "serial") String serial
             , @RequestParam(value = "eventId") String eventId) {
-        log.info("=====/getWarningInfoDesc获取到的参数是=====serial:"+serial+"  eventId:"+eventId);
+        log.info("=====/getWarningInfoDesc从前端获取到的参数是=====serial:"+serial+"  eventId:"+eventId);
         //获取用户信息
        // UserRoleDTO  userRoleDTO =UserAuthentication.authentication(httpServletRequest);
         //int user=userRoleDTO.getUserID();
@@ -65,7 +62,7 @@ public class DeviceVideoController {
             response.setCode(ResponseInfo.CODE_ERROR);
             response.setMessage("warningVideoPath error!");
         }
-        return JsonMapper.toJsonString(response);
+        return JsonMapperUtil.toJsonString(response);
     }
 
 
@@ -78,17 +75,19 @@ public class DeviceVideoController {
     public String getWarningInfoList(@RequestParam(value = "serial") String serial
             , @RequestParam(value = "pageSize", required = false) Integer pageSize
             , @RequestParam(value = "pageNo", required = false) Integer pageNo) {
-        log.info("=====/getWarningInfoList获取到的参数是=====serial:"+serial);
+        log.info("=====/getWarningInfoList从前端获取到的参数是=====serial:"+serial);
         ResponseInfo response = new ResponseInfo();
         Map<String, Object> resultMap = new HashMap<>();
-        List<DeviceVideo> list = deviceVideoService.getWarningInfoList(serial);
+        List<DeviceVideo> list = deviceVideoService.getWarningInfoList(serial,pageSize,pageNo);
         for (DeviceVideo device1 : list) {
             System.out.println("===:"+device1.toString());
         }
         if (list != null) {
             int total = list.size();
-            resultMap.put("total", total);
             resultMap.put("list", list);
+            response.setPageSize(pageSize);
+            response.setPageNo(pageNo);
+            response.setTotal(total);
             response.setCode(ResponseInfo.CODE_SUCCESS);
             response.setMessage("getWarningInfoList success!");
             response.setData(resultMap);
@@ -98,7 +97,7 @@ public class DeviceVideoController {
             response.setMessage("getWarningInfoList failed!");
 
         }
-        return JsonMapper.toJsonString(response);
+        return JsonMapperUtil.toJsonString(response);
     }
 
 

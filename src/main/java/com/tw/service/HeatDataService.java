@@ -1,23 +1,23 @@
-package com.tw.common;
+package com.tw.service;
 
 import com.tw.entity.Point;
 import com.tw.entity.WarningMessage;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @Author: lushiqin
- * @Description:
+ * @Description: 密度图片生成服务类
  * @Date: 2019/8/8
- * @param: null
  * @return:
  */
-@Component
-public class HeatData {
+@Service
+public class HeatDataService {
 
-    private static Logger log = Logger.getLogger(HeatData.class);
+    private static Logger log = Logger.getLogger(HeatDataService.class);
 
     public  List<Point> caculateHeatData(List<WarningMessage> list) {
 
@@ -52,12 +52,10 @@ public class HeatData {
 
             for (i = x; i < x + width; i = i + 1) {
                 for (j = y; j < y + height; j = j + 1) {
-                    //if (i <= ROW - 1 && j < COL - 1) {
                         data[i][j] = data[i][j] + 1;
                        /* System.out.println("points.push({x:"+i+",y:"+j+",value:"+data[i][j]+"});");
                         Point p=new Point(i,j,data[i][j]);//将x,y,权重值存入点对象中
                         pointlist.add(p);*/
-                    //}
                 }
             }
         }
@@ -73,6 +71,7 @@ public class HeatData {
             }
         }
 
+        //如果最大值为0，则返回
         if (maxvalue == 0) {
             return  null;
         }
@@ -92,7 +91,7 @@ public class HeatData {
         for (i = FSIZE; i < ROW - FSIZE; i = i + 1) {
             for (j = FSIZE; j < COL - FSIZE; j = j + 1) {
                 for (ii = i - FSIZE; ii < i + FSIZE; ii = ii + 1) {
-                        for (jj = j - FSIZE; jj < j + FSIZE; jj = jj + 1) {
+                    for (jj = j - FSIZE; jj < j + FSIZE; jj = jj + 1) {
                         sumdata = sumdata + data[ii][jj]; //获得平滑块的总和，方便后面取均值
                     }
                 }
@@ -101,6 +100,7 @@ public class HeatData {
 
             }
         }
+
 
         Point p =new Point(0,0,0);
         for (i=FSIZE; i<ROW-FSIZE; i=i+1)
@@ -165,13 +165,10 @@ public class HeatData {
         WarningMessage w49=new WarningMessage();w49.setTargetLocation("123,554,48,32");list.add(w49);
         WarningMessage w50=new WarningMessage();w50.setTargetLocation("1023,554,28,32");list.add(w50);
 
-        HeatData heatData=new HeatData();
+        HeatDataService heatDataService =new HeatDataService();
 
 
-        List<Point> testList=heatData.caculateHeatData(list);
-//        for    (Point  p: testList){
-//            System.out.println(p.toString());
-//        }
+        heatDataService.caculateHeatData(list);
 
 
     }

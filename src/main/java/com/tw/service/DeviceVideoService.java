@@ -1,15 +1,11 @@
 package com.tw.service;
 
 import com.tw.dao.DeviceVideoDao;
-import com.tw.entity.Device;
 import com.tw.entity.DeviceVideo;
-import com.tw.entity.common.ConstantParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: lushiqin
@@ -38,9 +34,13 @@ public class DeviceVideoService {
      * @param serial ,eventId
      * @return
      */
-    public List<DeviceVideo> getWarningInfoList(String serial) {
+    public List<DeviceVideo> getWarningInfoList(String serial,Integer pageSize, Integer pageNo) {
 
-        return dao.getWarningInfoList(serial);
+        return dao.getWarningInfoList(serial,pageSize,pageNo);
     }
 
+
+    public int AddVideo(DeviceVideo video) {
+        return dao.AddVideo(video);
+    }
 }

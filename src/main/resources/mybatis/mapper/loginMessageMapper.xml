@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tw.dao.LoginMessageDao">
+
+
+    <!-- 登陆数据入库 -->
+    <insert id="saveLoginMessage" parameterType="com.tw.entity.LoginMessage">
+        insert into loginMessage
+        (frame,serial,deviceVerifyCode,deviceType,softVersion,productDate,rand)
+        values(#{frame},#{serial},#{deviceVerifyCode},#{deviceType},#{softVersion},#{productDate},#{rand})
+    </insert>
+
+    <!-- 根据 serial 查询心跳信息 -->
+    <select id="findBySerial" parameterType="java.lang.String"  resultType="com.tw.entity.LoginMessage">
+        select *
+        from loginMessage login
+        where login.serial=#{serial}
+    </select>
+
+</mapper>

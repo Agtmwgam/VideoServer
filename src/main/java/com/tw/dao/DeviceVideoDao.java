@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * @author liutianwen
- * @Description:
+ * @Description: 告警视频
  * @date 2019年8月3日
  */
 @Mapper
@@ -21,5 +21,7 @@ public interface DeviceVideoDao {
 
     String getWarningInfoDesc(@Param("serial")String serial,@Param("eventId")String eventId);
 
-    List<DeviceVideo> getWarningInfoList(String serial);
+    List<DeviceVideo> getWarningInfoList(@Param("serial")String serial,@Param("pageSize")Integer pageSize, @Param("pageNo")Integer pageNo);
+
+     int AddVideo(DeviceVideo video);
 }
