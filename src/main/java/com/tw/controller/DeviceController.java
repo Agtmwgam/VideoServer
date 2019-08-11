@@ -11,7 +11,6 @@ import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -64,7 +63,6 @@ public class DeviceController {
         }
 
 
-        ResponseInfo responseInfo = new ResponseInfo();
         int isAdd = deviceService.addDevice(device);
         if (isAdd == 1) {
             responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
