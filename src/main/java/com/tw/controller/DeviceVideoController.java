@@ -21,7 +21,6 @@ import java.util.Map;
  * @Author: lushiqin
  * @Description: 短视频功能模块
  * @Date: 2019/8/6
- * @param: null
  * @return:
  */
 @RestController

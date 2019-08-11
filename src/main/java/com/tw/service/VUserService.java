@@ -1,7 +1,6 @@
 package com.tw.service;
 
 
-import com.tw.common.HeatData;
 import com.tw.dao.VUserDao;
 import com.tw.entity.VUser;
 import org.apache.log4j.Logger;

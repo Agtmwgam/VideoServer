@@ -12,7 +12,6 @@ import java.util.List;
  * @Author: lushiqin
  * @Description: 密度图片生成服务类
  * @Date: 2019/8/8
- * @param: null
  * @return:
  */
 @Service
@@ -53,12 +52,10 @@ public class HeatDataService {
 
             for (i = x; i < x + width; i = i + 1) {
                 for (j = y; j < y + height; j = j + 1) {
-                    //if (i <= ROW - 1 && j < COL - 1) {
                         data[i][j] = data[i][j] + 1;
                        /* System.out.println("points.push({x:"+i+",y:"+j+",value:"+data[i][j]+"});");
                         Point p=new Point(i,j,data[i][j]);//将x,y,权重值存入点对象中
                         pointlist.add(p);*/
-                    //}
                 }
             }
         }
@@ -74,6 +71,7 @@ public class HeatDataService {
             }
         }
 
+        //如果最大值为0，则返回
         if (maxvalue == 0) {
             return  null;
         }
@@ -104,12 +102,13 @@ public class HeatDataService {
         }
 
 
+        Point p =new Point(0,0,0);
         for (i=FSIZE; i<ROW-FSIZE; i=i+1)
         {
             for (j=FSIZE; j<COL-FSIZE; j=j+1)
             {
                 data[i][j] = data2[i][j]; //将平滑滤波结果返回给data
-                Point p = new Point(i, j, data2[i][j]);//将x,y,权重值存入点对象中
+                p = new Point(i, j, data2[i][j]);//将x,y,权重值存入点对象中
                 pointlist.add(p);
                 if(data[i][j] !=0){
                     //log.info("points.push({x:" + i + ",y:" + j + ",value:" + data[i][j] + "});");

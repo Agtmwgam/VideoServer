@@ -15,9 +15,8 @@ import java.util.Map;
 
 /**
  * @Author: lushiqin
- * @Description:
+ * @Description:密度图片功能模块
  * @Date: 2019/8/6
- * @param: null
  * @return:
  */
 @RestController

@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * @author liutianwen
- * @Description:
+ * @Description: 告警视频
  * @date 2019年8月3日
  */
 @Mapper

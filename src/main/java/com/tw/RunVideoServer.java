@@ -46,7 +46,7 @@ public class RunVideoServer {
 
 
 	/***
-	 * 文件监听服务,配置在启动类中监听线程会自动启动
+	 * 文件监听服务,配置在启动类中监听线程会自动启动  added  by  lushiqin
  	 */
 	//被@PostConstruct修饰的方法会在服务器加载Servlet的时候运行，并且只会被服务器调用一次
 	@PostConstruct

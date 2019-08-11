@@ -13,7 +13,7 @@ import java.io.File;
  * @Author: lushiqin
  * @Description:
  * @Date: 2019/8/10
- * @param: null
+ * @param: 文件监听处理类
  * @return:
  */
 @Component
@@ -45,7 +45,6 @@ public class ListenerAdaptor extends FileAlterationListenerAdaptor {
         String myFileName = file.getName();
         String eventId =myFileName.substring(0,myFileName.lastIndexOf("."));
         String[] str = eventId.split("_");
-        //String filepath=file.getPath();
         String serial = str[0];
         String warningTime =  str[1];
         String warningVideoName = file.getName();
@@ -63,7 +62,7 @@ public class ListenerAdaptor extends FileAlterationListenerAdaptor {
         DeviceVideo video=new DeviceVideo(serial, eventId, warningVideoName,warningVideoPath,warningTime);
         video.setIsValid(ConstantParam.IS_VALID_YES);
         deviceVideoService.AddVideo(video);
-        log.info("====ListenerAdaptor【文件创建】监控处理技术。" );
+        log.info("====ListenerAdaptor【文件创建】监控处理结束=====" );
 
     }
 

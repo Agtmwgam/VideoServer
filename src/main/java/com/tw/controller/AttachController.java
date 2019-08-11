@@ -23,7 +23,6 @@ import java.util.*;
  * @Author: lushiqin
  * @Description:  上传固件至ftp服务器
  * @Date: 2019/8/3
- * @param: null
  * @return:
  */
 @RestController
