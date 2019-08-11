@@ -316,91 +316,88 @@ deviceId: 12345678901
 }
 
 
-（修改过）
+
 告警视频列表接口
-GET 112.74.77.11:2019/shungkon/video/getWarningInfoList?serial=QSZN001&pageSize=2&pageNo=1
+POST 112.74.77.11:1010/shungkon/getWarningInfoList
+
+
+参数
+serial: 123
+
 
 返回
 {
     "code": "0000",
     "message": "成功",
-    "pageNo": 1,
-    "pageSize": 2,
-    "total": 1
     "data": [
         {
-            "eventId": "QSZN001_2019-07-22T092312",
-            "serial": "QSZN001",
-            "warningTime": "2019-07-22T092312",
+            "eventId": 123,
+            "deviceName": "",
+            "warningTime": "2019-07-30 00:00:00",
             "warningPictureLittle": "",
             "warningMessage": ""
 
          },
          {
-            "eventId": "QSZN001_2019-07-22T092312",
-            "serial": "QSZN001",
-            "warningTime": "2019-07-22T092312",
+            "eventId": 124,
+            "deviceName": "",
+            "warningTime": "2019-07-29 00:00:00",
             "warningPictureLittle": "",
-            "warningMessage": """"
+            "warningMessage": ""
+
+         },
+         {
+            "eventId": 125,
+            "deviceName": "",
+            "warningTime": "2019-07-28 00:00:00",
+            "warningPictureLittle": "",
+            "warningMessage": ""
 
          }
      ]
 }
 
 
-（修改过）
+
 告警视频详情接口
-GET 112.74.77.11:2019/shungkon/video/getWarningInfoDesc?serial=QSZN001&eventId=QSZN001_2019-07-22T092312
+POST 112.74.77.11:1010/shungkon/getWarningInfoDesc
+
+
+参数
+serial: 123,
+eventId: 123
+
 
 返回
 {
     "code": "0000",
     "message": "成功",
     "data": [
-        "warningVideoPath":"\\video\\QSZN001_20190803150322.mp4"
+        "warningVideoPath":""
      ]
 }
 
-（新增）
-固件上传接口
-POST 112.74.77.11:2019/shungkon/attach/upload
-备注：前端一个表单，选择文件，form的enctype为multipart/form-data 报文头不需要设置Content-Type
-
-返回
-{
-    "code": "0000",
-    "message": "附件2018各项目情况.xlsx上传成功"
-}
 
 
-（新增）
-固件下载接口
-GET 112.74.77.11:2019/shungkon/attach/downloadFirmware?fileLocalPath=d://testPicture
-
-返回
-{
-    "code": "0000",
-    "message": "附件下载成功,请前往d://testPicture查看文件。"
-}
-
-
-（修改过）
 密度分析图片详情接口
-GET 112.74.77.11:2019/shungkon/picture/getDensityPicture?serial=QSZN001
+POST 112.74.77.11:1010/shungkon/getDensityPicture
+
+
+参数
+serial: 123
+
 
 返回
 {
     "code": "0000",
     "message": "成功",
-    "data":
+    "data": [
         {
             "densityPictureName": "",
-            "densityPicturePath":"\\picture\\QSZN001_20190803150322.png"
+            "densityPicturePath": ""
         }
      ]
 }
-
-
 
 
 

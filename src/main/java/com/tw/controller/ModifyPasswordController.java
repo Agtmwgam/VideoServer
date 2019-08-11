@@ -15,7 +15,7 @@ import static com.tw.util.ResponseInfo.CODE_SUCCESS;
 
 /**
  * @Classname RegisterController
- * @Description 用户注册
+ * @Description 用户修改密码
  * @Date 2019/8/5 22:21
  * @Created by liutianwen
  */
@@ -61,7 +61,7 @@ public class ModifyPasswordController {
      * @return
      * @Date 2019/8/5 22:21
      * @Created liutianwen
-     * @Description 校验用户注册时，校验所有参数是否正常
+     * @Description 用户修改密码时，校验所有参数是否正常
      */
     public ResponseInfo checkUserInfo(Map<String, Object> requestMap) {
         ResponseInfo response = new ResponseInfo();
