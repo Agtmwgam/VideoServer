@@ -31,7 +31,9 @@
         deviceVideo
         WHERE
          serial = #{serial}
-
+        <if test="pageNo != null  and pageSize!=null ">
+         LIMIT ${(pageNo-1)*pageSize},${pageSize};
+        </if>
     </select>
 
 

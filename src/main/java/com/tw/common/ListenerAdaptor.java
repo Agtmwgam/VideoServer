@@ -47,8 +47,8 @@ public class ListenerAdaptor extends FileAlterationListenerAdaptor {
         String[] str = eventId.split("_");
         String serial = str[0];
         String warningTime =  str[1];
-        String warningVideoName = file.getName();
-        String warningVideoPath = file.getPath();
+        String warningVideoName = myFileName;
+        String warningVideoPath = "\\"+serial+"\\"+myFileName;
 
         System.out.println("eventId:"+eventId);
         System.out.println("serial:"+serial);

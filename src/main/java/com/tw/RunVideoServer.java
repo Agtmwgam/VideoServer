@@ -1,6 +1,7 @@
 package com.tw;
 
 import com.tw.common.ListenerAdaptor;
+import com.tw.config.FtpConfig;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -27,6 +28,10 @@ public class RunVideoServer {
 
 	@Autowired
 	private ListenerAdaptor listenerAdaptor;
+
+	@Autowired
+	private FtpConfig ftpConfig;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(RunVideoServer.class, args);
@@ -55,11 +60,12 @@ public class RunVideoServer {
 		log.info("====文件监听服务启动========");
 		System.out.println("====ListenerServer文件监听服务启动========");
 
-		// 设置监控目录
-		String monitorDir = "D:\\testVideo";
+		// 设置监控目录,监听FTP服务器的视频存放路径
+		String monitorDir = "D:\\testVideo";//本机测试用
+		//String monitorDir = ftpConfig.getBasePath()+ftpConfig.getVideoPath();//正式环境
 
 		// 设置扫描间隔
-		long interval = TimeUnit.SECONDS.toMillis(1);
+		long interval = TimeUnit.SECONDS.toMillis(5);
 		// 创建过滤器
 		// 匹配目录
 		IOFileFilter directories = FileFilterUtils.and(FileFilterUtils.directoryFileFilter(), HiddenFileFilter.VISIBLE);
