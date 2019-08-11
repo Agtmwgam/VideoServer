@@ -61,8 +61,8 @@ public class RunVideoServer {
 		System.out.println("====ListenerServer文件监听服务启动========");
 
 		// 设置监控目录,监听FTP服务器的视频存放路径
-		//String monitorDir = "D:\\testVideo";//本机测试用
-		String monitorDir = ftpConfig.getBasePath()+ftpConfig.getVideoPath();//正式环境
+        //String monitorDir = "D:\\testVideo";//本机测试用
+        String monitorDir = ftpConfig.getBasePath()+ftpConfig.getVideoPath();//正式环境
 
 		// 设置扫描间隔
 		long interval = TimeUnit.SECONDS.toMillis(5);
