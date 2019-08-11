@@ -11,11 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Pattern;
+
 @RestController
 @RequestMapping("/recMessage")
 @Slf4j
 public class RecDeviceSMSController {
 
+    final String PATTERN1 = "^[A-Z]\\d{8}$";
+    final String PATTERN2 = "^[A-Z]{6}&";
+
+    // 全局统一时间格式化格式
+    SimpleDateFormat FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     RecDeviceSMSService service;
@@ -28,13 +37,40 @@ public class RecDeviceSMSController {
      * @Description:
      * @Date:  2019/8/6 23:01
      * @param: message
+     *      0*55#T42683512#ERDFAA#ML16#T_ML_V0.0.1#20190731#1234
      * @return:
      */
     @RequestMapping("/recDeviceLogin")
     public String recDeviceLogin(@RequestParam("message") String message) {
         logger.info("======从设备端接收到的消息为："+message);
 
-        //
+        String[] mes = message.split("#");
+
+        // 1.校验字段数量
+        if (mes.length != 7){
+            return "【ERROR】字段数量不正确";
+        }
+
+        // 2.解密
+        int rand = Integer.valueOf(mes[6].substring(2, 3));
+
+        // 十六进制-3
+        // TODO
+        String vertifMes = mes[2];
+
+        // 3.校验字段
+        if (Pattern.matches(PATTERN1, mes[1])){
+            return "设备号不正确";
+        }
+        if (Pattern.matches(PATTERN2, mes[2])){
+            return "设备验证吗不正确";
+        }
+
+        // 4.校验数据库
+        boolean isCheck = service.checkDevice(mes[1], vertifMes);
+
+        // 5.TODO
+
 
         return message;
     }
@@ -44,7 +80,7 @@ public class RecDeviceSMSController {
      * @Description: 从设备中接收心跳消息
      * @Date:  2019/8/4 23:49
      * @param: message 报文消息
-     *
+     *      0*FF#001#2019-07-22T092312#ML16#T42683512#1#192.168.1.200
      * @return: 0*10#001#SQZN001#OK
      */
     @RequestMapping("/recDeviceBeat")
@@ -57,7 +93,7 @@ public class RecDeviceSMSController {
         // 2.数据校验,心跳数据为7个字段
         String[] beat = message.split("#");
         if (beat.length!=7){
-            return "";
+            return "字段数量不正确";
         }
 
 
@@ -66,15 +102,28 @@ public class RecDeviceSMSController {
             BeatMessage beatMessageBean = new BeatMessage();
             beatMessageBean.setFrame(beat[0]);
             beatMessageBean.setMesNo(beat[1]);
-            beatMessageBean.setMesDate(beat[2]);
+            beatMessageBean.setMesDate(new Date(Integer.valueOf(beat[2].substring(0,4))-1900,
+                    Integer.valueOf(beat[2].substring(5,7))-1, Integer.valueOf(beat[2].substring(8,10)),
+                    Integer.valueOf(beat[2].substring(11,13)), Integer.valueOf(beat[2].substring(13,15)),
+                    Integer.valueOf(beat[2].substring(15,17))));
             beatMessageBean.setDeviceModel(beat[3]);
             beatMessageBean.setSerial(beat[4]);
-            beatMessageBean.setExeStatus(beat[5]);
+            beatMessageBean.setExeStatus(beat[5].charAt(0));
             beatMessageBean.setIp(beat[6]);
+
+            // 校验字段
+            if (Pattern.matches(PATTERN1, beatMessageBean.getSerial())){
+                return "设备号不正确";
+            }
+
             logger.info("==========收到的心跳内容是"+beatMessageBean.toString());
             logger.info("==========需要返回这样的格式的消息：0*FF#001#T42683512#OK");
             String returnStr = beatMessageBean.getFrame()+"#"+beatMessageBean.getMesNo()+"#"+beatMessageBean.getSerial()+"#OK";
             logger.info("==========真实返回的内容为："+returnStr);
+
+            // 4.将心跳信息入库
+            service.beatMessageSave(beatMessageBean);
+
             return returnStr;
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,8 +131,7 @@ public class RecDeviceSMSController {
             return "java后台系统异常=======";
         }
 
-        // 4.将心跳信息入库
-//        Boolean isSuccess = service.beatMessageSave(message);
+
 
     }
 
@@ -107,6 +155,12 @@ public class RecDeviceSMSController {
 //
 //        return "======"+message;
 
+        // 2.数据校验,告警数据为9个字段
+        String[] beat = message.split("#");
+        if (beat.length!=9){
+            return "字段数量不正确";
+        }
+
         try {
             String[] warn = message.split("#");
             WarningMessage warningMessageBean = new WarningMessage();
@@ -123,6 +177,15 @@ public class RecDeviceSMSController {
             logger.info("==========需要返回这样的格式的消息：0*10#001#T42683512#OK");
             String returnStr = warningMessageBean.getFrame()+"#"+warningMessageBean.getMesNo()+"#"+warningMessageBean.getSerial()+"#OK";
             logger.info("==========真实返回的内容为："+returnStr);
+
+            // 校验字段
+            if (Pattern.matches(PATTERN1, warningMessageBean.getSerial())){
+                return "设备号不正确";
+            }
+
+            // 4.将告警信息入库
+            service.warningMessageSave(warningMessageBean);
+
             return returnStr;
         } catch (Exception e) {
             e.printStackTrace();

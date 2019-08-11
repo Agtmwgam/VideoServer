@@ -2,6 +2,8 @@ package com.tw.entity;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @Author: zhuoshouyi
  * @Description:
@@ -22,7 +24,7 @@ public class BeatMessage extends BaseEntity {
     private String mesNo;
 
     // 时间
-    private String mesDate;
+    private Date mesDate;
 
     // 组名
     private String groupName;
@@ -37,7 +39,7 @@ public class BeatMessage extends BaseEntity {
     private String serial;
 
     // 设备状态
-    private String exeStatus;
+    private char exeStatus;
 
     // IP来源
     private String ip;

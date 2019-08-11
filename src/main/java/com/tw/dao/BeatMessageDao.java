@@ -20,4 +20,8 @@ public interface BeatMessageDao {
     @Transactional
     void saveBeatMessage(BeatMessage beatMessage);
 
+    // 根据 serial 找到 device 的信息
+    BeatMessage findBySerial(String serial);
+
+
 }

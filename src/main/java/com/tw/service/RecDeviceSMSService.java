@@ -1,13 +1,15 @@
 package com.tw.service;
 
-import com.tw.convert.StringArr2BeatMessageConvert;
-import com.tw.convert.StringArr2WarningMessageConvert;
 import com.tw.dao.BeatMessageDao;
+import com.tw.dao.DeviceDao;
 import com.tw.dao.WarningMessageDao;
 import com.tw.entity.BeatMessage;
+import com.tw.entity.Device;
 import com.tw.entity.WarningMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 
 /**
  * @Author: zhuoshouyi
@@ -24,22 +26,34 @@ public class RecDeviceSMSService {
 
     BeatMessageDao beatMessageDao;
 
+    DeviceDao deviceDao;
+
+    /**
+     * 校验数据库是否与传进来的设备号和验证码一致
+     * @return
+     */
+    public Boolean checkDevice(String serial, String code){
+
+        HashMap map = new HashMap();
+        map.put(serial, "1");
+
+        Device device = deviceDao.getDeviceById(map);
+        if (device.getDeviceVerifyCode().equals(code)){
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
     /**
      * 告警信息处理service
      * @return
      */
-    public Boolean warningMessageSave(String message){
+    public Boolean warningMessageSave(WarningMessage warningMessage){
 
-        // 1.将 message 转换成 WarningMessage 对象
-        String[] mes = message.split("#");
-        if (mes.length != 11){
-            log.error("【ERROR】告警信息字段数量不正确");
-            return false;
-        }
-        WarningMessage warningMessage = StringArr2WarningMessageConvert.convert(mes);
-
-
-        // 2.将此条告警信息插入进数据库
+        // 1.将此条告警信息插入进数据库
         warningMessageDao.saveWarningMessage(warningMessage);
         log.info("【告警信息】告警信息入库成功");
 
@@ -50,19 +64,18 @@ public class RecDeviceSMSService {
      * 心跳信息处理service
      * @return
      */
-    public Boolean beatMessageSave(String message){
+    public Boolean beatMessageSave(BeatMessage beatMessage){
 
-        // 1.将 message 转换成 WarningMessage 对象
-        String[] mes = message.split("#");
-        if (mes.length != 9){
-            log.error("【ERROR】心跳信息字段数量不正确");
-            return false;
-        }
-        BeatMessage beatMessage = StringArr2BeatMessageConvert.convert(mes);
-
-
-        // 2.将此条告警信息插入进数据库
+        // 1.将此条告警信息插入进数据库
         beatMessageDao.saveBeatMessage(beatMessage);
+        HashMap deviceMap = new HashMap<>();
+        deviceMap.put(beatMessage.getSerial(), "1");
+        Device device = deviceDao.getDeviceById(deviceMap);
+        device.setDeviceStatus(beatMessage.getExeStatus());
+        device.setIsOnline('1');
+        device.setNewBeatTime(beatMessage.getMesDate());
+        deviceDao.updateDevice(device);
+
         log.info("【心跳信息】心跳信息入库成功");
 
         return true;
