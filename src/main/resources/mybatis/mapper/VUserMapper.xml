@@ -43,7 +43,7 @@
 		select * from vUser
 		<where>
 			<if test="phoneNumber !=null and phoneNumber !=''">
-				 phoneNumber LIKE '%'+#{phoneNumber}+'%'
+				 phoneNumber LIKE '%${phoneNumber}%'
 			</if>
 		</where>
 	</select>

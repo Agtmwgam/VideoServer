@@ -46,7 +46,6 @@ public class UserManagementController {
         //模糊查询用户
         List<VUser> userList= userService.fuzzyQueryUser(user);
         response.setCode(CODE_SUCCESS);
-        response.setMessage(" Registered successfully!");
         response.setData(userList);
 
         return response;

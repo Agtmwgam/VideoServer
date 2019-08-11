@@ -43,7 +43,14 @@ public class VUserService {
 	//模糊查找用户
 	@Transactional
 	public List<VUser> fuzzyQueryUser(VUser user) {
-		return vUserDao.fuzzyQueryUser(user);
+		List<VUser> userList=null;
+		try {
+			userList=vUserDao.fuzzyQueryUser(user);
+		}catch (Exception e){
+			log.error("查询用户错误！");
+			log.error(e.toString());
+		}
+		return userList;
 	}
 
 	//更新客户
