@@ -4,7 +4,6 @@ import com.tw.entity.Point;
 import com.tw.entity.WarningMessage;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +92,7 @@ public class HeatData {
         for (i = FSIZE; i < ROW - FSIZE; i = i + 1) {
             for (j = FSIZE; j < COL - FSIZE; j = j + 1) {
                 for (ii = i - FSIZE; ii < i + FSIZE; ii = ii + 1) {
-                    for (jj = j - FSIZE; jj < j + FSIZE; jj = jj + 1) {
+                        for (jj = j - FSIZE; jj < j + FSIZE; jj = jj + 1) {
                         sumdata = sumdata + data[ii][jj]; //获得平滑块的总和，方便后面取均值
                     }
                 }
@@ -103,13 +102,13 @@ public class HeatData {
             }
         }
 
-
+        Point p =new Point(0,0,0);
         for (i=FSIZE; i<ROW-FSIZE; i=i+1)
         {
             for (j=FSIZE; j<COL-FSIZE; j=j+1)
             {
                 data[i][j] = data2[i][j]; //将平滑滤波结果返回给data
-                Point p = new Point(i, j, data2[i][j]);//将x,y,权重值存入点对象中
+                p = new Point(i, j, data2[i][j]);//将x,y,权重值存入点对象中
                 pointlist.add(p);
                 if(data[i][j] !=0){
                     //log.info("points.push({x:" + i + ",y:" + j + ",value:" + data[i][j] + "});");
@@ -169,7 +168,10 @@ public class HeatData {
         HeatData heatData=new HeatData();
 
 
-        heatData.caculateHeatData(list);
+        List<Point> testList=heatData.caculateHeatData(list);
+//        for    (Point  p: testList){
+//            System.out.println(p.toString());
+//        }
 
 
     }
