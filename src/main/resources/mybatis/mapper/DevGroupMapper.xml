@@ -65,4 +65,24 @@
             isValid = '1'
     </select>
 
+    <!-- 根据 device serial 查询devGroup -->
+    <select id="getDevGroupBySerial" parameterType="String" resultType="com.tw.entity.DevGroup">
+        SELECT
+            g.*
+        FROM
+            devGroup g
+        LEFT JOIN deviceGroupRelate dgr on dgr.groupId = g.groupId
+        LEFT JOIN device d on dgr.deviceId = d.deviceId
+        WHERE
+            d.serial = #{serial}
+        AND
+            g.isValid = '1'
+        AND
+            dgr.isValid = '1'
+        AND
+            d.isValid = '1'
+    </select>
+
+
+
 </mapper>

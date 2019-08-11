@@ -6,9 +6,10 @@
 
     <!-- 登陆数据入库 -->
     <insert id="saveLoginMessage" parameterType="com.tw.entity.LoginMessage">
-        insert into loginMessage
+        INSERT INTO loginMessage
         (frame,serial,deviceVerifyCode,deviceType,softVersion,productDate,rand)
-        values(#{frame},#{serial},#{deviceVerifyCode},#{deviceType},#{softVersion},#{productDate},#{rand})
+        VALUES(#{frame},#{serial},#{deviceVerifyCode},#{deviceType},#{softVersion},#{productDate},#{rand})
+        WHERE NOT EXISTS (select * from loginMessage l where l.serial=#{serial})
     </insert>
 
     <!-- 根据 serial 查询心跳信息 -->
@@ -17,5 +18,16 @@
         from loginMessage login
         where login.serial=#{serial}
     </select>
+
+    <!-- 根据 serial 修改心跳信息 -->
+    <update id="updateIsValidBySerial" parameterType="com.tw.entity.LoginMessage" >
+        UPDATE
+            loginMessage
+        SET
+            isValid = #{isValid}
+        WHERE
+            serial=#{serial}
+    </update>
+
 
 </mapper>
