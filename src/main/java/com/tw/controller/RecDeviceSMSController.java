@@ -1,6 +1,7 @@
 package com.tw.controller;
 
 import com.tw.entity.BeatMessage;
+import com.tw.entity.LoginMessage;
 import com.tw.entity.WarningMessage;
 import com.tw.service.RecDeviceSMSService;
 import com.tw.util.HEXUtil;
@@ -69,11 +70,21 @@ public class RecDeviceSMSController {
             return "设备验证吗不正确";
         }
 
-        // 4.校验数据库
+        // 4.将 message 转换成 loginMessage
+        LoginMessage loginMessage = new LoginMessage();
+        loginMessage.setFrame(mes[0]);
+        loginMessage.setSerial(mes[1]);
+        loginMessage.setDeviceVerifyCode(mes[2]);
+        loginMessage.setDeviceType(mes[3]);
+        loginMessage.setSoftVersion(mes[4]);
+        loginMessage.setProductDate(mes[5]);
+        loginMessage.setRand(mes[6]);
+
+        // 5.校验数据库
         boolean isCheck = service.checkDevice(mes[1], vertifMes);
 
-        // 5.TODO
-
+        // 6.验证数据无误后写入loginMessage
+        service.loginMessageSave(loginMessage);
 
         return message;
     }
@@ -90,12 +101,11 @@ public class RecDeviceSMSController {
     public String recDeviceBeat(@RequestParam("message") String message) {
         logger.info("======从设备端接收到的心跳消息为：" + message);
 
-        // 1.调用登陆验证
-
 
         // 2.数据校验,心跳数据为7个字段
         String[] beat = message.split("#");
         if (beat.length!=7){
+            log.error("【心跳】字段数量不正确");
             return "字段数量不正确";
         }
 
@@ -115,14 +125,22 @@ public class RecDeviceSMSController {
             beatMessageBean.setIp(beat[6]);
 
             // 校验字段
-            if (Pattern.matches(PATTERN1, beatMessageBean.getSerial())){
+            if (!Pattern.matches(PATTERN1, beatMessageBean.getSerial())){
+                log.error("【心跳】设备号不正确");
                 return "设备号不正确";
             }
 
-            logger.info("==========收到的心跳内容是"+beatMessageBean.toString());
-            logger.info("==========需要返回这样的格式的消息：0*FF#001#T42683512#OK");
+            // 调用登陆验证
+            if (!service.checkLogin(beatMessageBean.getSerial())){
+                log.error("【心跳】登陆验证信息错误");
+                return "登陆验证信息错误.";
+            }
+
+
+            logger.info("【心跳】==========收到的心跳内容是"+beatMessageBean.toString());
+            logger.info("【心跳】==========需要返回这样的格式的消息：0*FF#001#T42683512#OK");
             String returnStr = beatMessageBean.getFrame()+"#"+beatMessageBean.getMesNo()+"#"+beatMessageBean.getSerial()+"#OK";
-            logger.info("==========真实返回的内容为："+returnStr);
+            logger.info("【心跳】==========真实返回的内容为："+returnStr);
 
             // 4.将心跳信息入库
             service.beatMessageSave(beatMessageBean);
@@ -130,7 +148,7 @@ public class RecDeviceSMSController {
             return returnStr;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.info("===========系统异常");
+            logger.info("【心跳】===========系统异常");
             return "java后台系统异常=======";
         }
 
@@ -152,15 +170,11 @@ public class RecDeviceSMSController {
         logger.info("======从设备端接收到的告警消息为："+message);
 
 //        // 1.调用登陆验证
-//
-//        // 2.将告警信息入库,以时间和序列号做唯一标识,如果已存在就更新,如果不存在即插入(防止和告警视频重复插入)
-//        Boolean isSuccess = service.warningMessageSave(message);
-//
-//        return "======"+message;
 
         // 2.数据校验,告警数据为9个字段
         String[] beat = message.split("#");
         if (beat.length!=9){
+            log.error("【心跳】字段数量不正确");
             return "字段数量不正确";
         }
 
@@ -169,21 +183,31 @@ public class RecDeviceSMSController {
             WarningMessage warningMessageBean = new WarningMessage();
             warningMessageBean.setFrame(warn[0]);
             warningMessageBean.setMesNo(warn[1]);
-            warningMessageBean.setMesDate(warn[2]);
+            warningMessageBean.setMesDate(new Date(Integer.valueOf(warn[2].substring(0,4))-1900,
+                    Integer.valueOf(warn[2].substring(5,7))-1, Integer.valueOf(warn[2].substring(8,10)),
+                    Integer.valueOf(warn[2].substring(11,13)), Integer.valueOf(warn[2].substring(13,15)),
+                    Integer.valueOf(warn[2].substring(15,17))));
             warningMessageBean.setDeviceModel(warn[3]);
             warningMessageBean.setSerial(warn[4]);
             warningMessageBean.setVideoResolution(warn[5]);
             warningMessageBean.setTargetLocation(warn[6]);
             warningMessageBean.setExeStatus(warn[7]);
             warningMessageBean.setIp(warn[8]);
-            logger.info("==========收到的告警内容是"+warningMessageBean.toString());
-            logger.info("==========需要返回这样的格式的消息：0*10#001#T42683512#OK");
+            logger.info("【告警】==========收到的告警内容是"+warningMessageBean.toString());
+            logger.info("【告警】==========需要返回这样的格式的消息：0*10#001#T42683512#OK");
             String returnStr = warningMessageBean.getFrame()+"#"+warningMessageBean.getMesNo()+"#"+warningMessageBean.getSerial()+"#OK";
-            logger.info("==========真实返回的内容为："+returnStr);
+            logger.info("【告警】==========真实返回的内容为："+returnStr);
 
             // 校验字段
-            if (Pattern.matches(PATTERN1, warningMessageBean.getSerial())){
+            if (!Pattern.matches(PATTERN1, warningMessageBean.getSerial())){
+                log.error("【告警】设备号不正确");
                 return "设备号不正确";
+            }
+
+            // 调用登陆验证
+            if (!service.checkLogin(warningMessageBean.getSerial())){
+                log.error("【告警】登陆验证信息错误");
+                return "登陆验证信息错误.";
             }
 
             // 4.将告警信息入库
@@ -192,7 +216,7 @@ public class RecDeviceSMSController {
             return returnStr;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.info("===========系统异常");
+            logger.error("【告警】===========系统异常");
             return "java后台系统异常=======";
         }
     }
