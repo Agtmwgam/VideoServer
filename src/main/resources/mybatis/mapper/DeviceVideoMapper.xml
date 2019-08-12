@@ -18,7 +18,7 @@
         <if test="eventId != null ">
             AND eventId = #{eventId}
         </if>
-
+        order by createTime desc  limit 1
 
     </select>
 
@@ -26,15 +26,32 @@
 
     <select id="getWarningInfoList"  resultType="com.tw.entity.DeviceVideo" >
         SELECT
-        *
-        FROM
-        deviceVideo
+        a.id,
+        a.eventId,
+        a.serial,
+        a.warningVideoName,
+        a.warningVideoPath,
+        a.warningTime,
+        a.fileType,
+        a.warningPictureLittle,
+        a.warningPictureBig,
+        a.description,
+        a.liveStreaming,
+        a.createTime,
+        a.isValid,
+        CONCAT(CAST(date_format(ifnull(b.mesDate,b.createTime), '%Y年%m月%d日%h时%m分%s秒')  AS CHAR CHARACTER SET utf8)
+        ,CAST(ifnull(b.groupName,'') AS CHAR CHARACTER SET utf8)
+        ,CAST(ifnull(b.deviceName,'') AS CHAR CHARACTER SET utf8)
+        ,'发现目标，并成功告警。') as warningMessage
+        FROM deviceVideo a
+        LEFT JOIN warningMessage b ON a.eventId=b.eventId
         WHERE
-         serial = #{serial}
+         a.serial = #{serial}
         <if test="pageNo != null  and pageSize!=null ">
          LIMIT ${(pageNo-1)*pageSize},${pageSize};
         </if>
     </select>
+
 
 
     <!-- 新增视频 -->

@@ -1,7 +1,9 @@
 package com.tw.controller;
 
-import com.tw.util.JsonMapperUtil;
 import com.tw.entity.DevicePicture;
+import com.tw.entity.Point;
+import com.tw.service.HeatDataService;
+import com.tw.util.JsonMapperUtil;
 import com.tw.service.DevicePictureService;
 import com.tw.util.ResponseInfo;
 import org.apache.log4j.Logger;
@@ -29,6 +31,9 @@ public class DevicePictureController {
     @Autowired
     private DevicePictureService  devicePictureService;
 
+    @Autowired
+    private HeatDataService heatDataService;
+
     /***
      * @description 密度分析图详情接口
      * @param serial
@@ -40,15 +45,9 @@ public class DevicePictureController {
         ResponseInfo response = new ResponseInfo();
         Map<String, Object> resultMap = new HashMap<>();
         List<DevicePicture> list = devicePictureService.getDensityPicture(serial);
-        for (DevicePicture device1 : list) {
-            System.out.println("===:"+device1.toString());
-        }
         if (list != null) {
-            int total = list.size();
-            resultMap.put("densityPictureName", list.get(0).getDensityPictureName());
-            resultMap.put("densityPicturePath", list.get(0).getDensityPicturePath());
             response.setCode(ResponseInfo.CODE_SUCCESS);
-            response.setData(resultMap);
+            response.setData(list);
             response.setMessage("getDensityPicture success!");
         } else {
             response.setCode(ResponseInfo.CODE_ERROR);
@@ -57,6 +56,40 @@ public class DevicePictureController {
         }
         return JsonMapperUtil.toJsonString(response);
     }
+
+
+    /***
+     * @description 密度分析图详情接口
+     * @param serial
+     * @return
+     */
+    @GetMapping("/getDensityPictureData")
+    public String getDensityPictureData(@RequestParam(value = "serial") String serial) {
+        log.info("=====/caculateHeatData从前端获取到的参数是=====serial:" + serial);
+
+        ResponseInfo response = new ResponseInfo();
+        List<String> dataset=devicePictureService.getDensityPictureData(serial);
+        if(dataset==null){
+            log.info("=====/caculateHeatData:告警消息数据集为空=====serial:" + serial);
+            response.setCode(ResponseInfo.CODE_ERROR);
+            response.setMessage("caculateHeatData failed!");
+        }
+        List<Point>  points = heatDataService.caculateHeatData(dataset);
+        if (points != null) {
+            response.setCode(ResponseInfo.CODE_SUCCESS);
+            response.setData(points);
+            response.setMessage("caculateHeatData success!");
+        } else {
+            response.setCode(ResponseInfo.CODE_ERROR);
+            response.setMessage("caculateHeatData failed!");
+
+        }
+        return JsonMapperUtil.toJsonString(response);
+
+    }
+
+
+
 
 
 }

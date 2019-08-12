@@ -3,16 +3,43 @@
 
 <mapper namespace="com.tw.dao.DevicePictureDao">
 
-
-    <select id="getDensityPicture"  resultType="com.tw.entity.DevicePicture" >
+    <!--返回某台设备一周的热力图-->
+    <select id="getDensityPicture"  resultType="String" >
         SELECT
-        *
+        densityPicturePath
         FROM
         devicePicture
         WHERE
-        serial = #{serial}
+        serial = #{serial} and fileType="2"
+        order by createTime desc  limit  7
 
     </select>
+
+
+    <!--取昨天早上8点到今天早上8点之间的告警消息 -->
+    <select id="getDensityPictureData"   resultType="String">
+        SELECT
+        targetLocation
+        FROM
+        warningMessage
+        where
+        serial = #{serial}
+        AND
+        createTime >=DATE_ADD(CURDATE(), INTERVAL -16 HOUR)
+        AND DATE_ADD(CURDATE(), INTERVAL 8 HOUR)>=createTime
+
+    </select>
+
+
+
+    <!-- 新增图片 -->
+    <insert id="AddPicture" parameterType="com.tw.entity.DevicePicture">
+        INSERT INTO
+        devicePicture
+        (serial, densityPictureName,densityPicturePath,fileType,isValid)
+        VALUES
+        (#{serial}, #{densityPictureName}, #{densityPicturePath},#{fileType}, #{isValid})
+    </insert>
 
 
 </mapper>

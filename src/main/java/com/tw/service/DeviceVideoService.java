@@ -39,7 +39,11 @@ public class DeviceVideoService {
         return dao.getWarningInfoList(serial,pageSize,pageNo);
     }
 
-
+    /***
+     * 增加告警视频路径映射
+     * @param video
+     * @return
+     */
     public int AddVideo(DeviceVideo video) {
         return dao.AddVideo(video);
     }

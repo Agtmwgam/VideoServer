@@ -5,16 +5,16 @@
     <title></title>
     <style>
         div {
-            width:1280px; height:720px;border: 1px solid;border-color: grey;
+            width:1280px; height:720px;border: 1px solid;
         }
     </style>
 </head>
 <body>
 <div id="heatmap">
-    <canvas id="cvs" class="heatmap-canvas" width="1280" height="720"></canvas>
+    <canvas id="cvs"  width="1280" height="720"></canvas>
 </div>
 </body>
-<script src="../jq/heatmap.js"></script>
+<script src="../shungkon/jq/heatmap.js"></script>
 <script type="text/javascript">
     //获取canvas元素
     //var cvs = document.getElementById("cvs");
@@ -34,6 +34,16 @@
     // 这里直接指定热点图渲染的div了.heatmap支持自定义的样式方案,网页外包接活具体可看官网api
     var heatmapInstance = h337.create({
         container: document.querySelector('#heatmap'),
+        //backgroundColor:'red',    // '#121212'    'rgba(0,102,256,0.2)'
+        gradient: {
+            '0.7': 'blue',
+            '1': 'red',
+            '1.0': 'white',
+            '0.2':'yellow',
+            '0.4':'green'
+        },
+        radius: 5,        // [0,+∞)
+        opacity:0.9,
     });
     //构建一些随机数据点,网页切图价格这里替换成你的业务数据
     var points = [];

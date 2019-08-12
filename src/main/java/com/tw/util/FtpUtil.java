@@ -77,7 +77,7 @@ public class FtpUtil {
             }
             //设置上传文件的类型为二进制类型
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
-            //上传文件
+            //上传文件 （文件存在覆盖，不存在则新建）
             if (!ftp.storeFile(filename, input)) {
                 log.info("==========FtpUtil:uploadFile==FTP服务器,保存文件时报错");
                 return result;

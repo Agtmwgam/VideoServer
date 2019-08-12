@@ -54,16 +54,15 @@ public class AttachController  {
             return JsonMapperUtil.toJsonString(responseInfo);
         }
 
-        //给文件一个唯一的名字，上传过程采用覆盖的形式。
         String myFileName = file.getOriginalFilename();
-        String fileNewName="T_ML_UPGRADE.exe";
+        //String fileNewName="T_ML_UPGRADE.exe";
         // 记录上传开始时间
         int pre = (int) System.currentTimeMillis();
 
         try {// 开始传输到ftp
             boolean result = FtpUtil.uploadFile(ftpConfig.getHost(), ftpConfig.getPort(),
                     ftpConfig.getUsername(), ftpConfig.getPassword(), ftpConfig.getBasePath(),
-                    ftpConfig.getFirmwarePath(), fileNewName, file.getInputStream());
+                    ftpConfig.getFirmwarePath(), myFileName, file.getInputStream());
             if (result) {
                 responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
                 responseInfo.setMessage("附件" + myFileName + "上传成功");
@@ -84,6 +83,7 @@ public class AttachController  {
 
 
     /***
+     * 暂时不用
      * 从指定的ftp.firmwarePath目录下载固件，指定下载的路径
      * @return
      */

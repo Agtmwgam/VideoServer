@@ -1,9 +1,7 @@
 package com.tw.dao;
 
 import com.tw.entity.DevicePicture;
-import com.tw.entity.DeviceVideo;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,5 +16,10 @@ import java.util.List;
 public interface DevicePictureDao {
 
     List<DevicePicture> getDensityPicture(String serail);
+
+    List<String> getDensityPictureData(String serail);
+
+
+    int AddPicture(DevicePicture devicePicture);
 
 }
