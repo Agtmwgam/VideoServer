@@ -1,7 +1,9 @@
 package com.tw.controller;
 
+import com.tw.entity.RootInfo;
 import com.tw.entity.VUser;
 import com.tw.service.MessageService;
+import com.tw.service.RootInfoService;
 import com.tw.service.UserService;
 import com.tw.service.VUserService;
 import com.tw.util.*;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +37,9 @@ public class LoginController {
 
     @Autowired
     private VUserService vUserService;
+
+    @Autowired
+    private RootInfoService rootInfoService;
 
     //声明一个Logger，这个是static的方式
     private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -138,18 +144,35 @@ public class LoginController {
         ResponseInfo response = new ResponseInfo();
         //先检测是否在数据库中应有该手机号码了
         String phoneNumber = (String)requestMap.get("phoneNumber");
+        Boolean isRootPhone = false;
+
+        //如果管理员列表里面有这个号码的话，有限处理成管理员权限
+        RootInfo rootInfo = new RootInfo();
+        rootInfo.setRootPhone(phoneNumber);
+        List<RootInfo> info = rootInfoService.getRootInfo(rootInfo);
+        if (info != null && info.size() >0) {
+            isRootPhone = true;
+        }
+
         VUser vUser = new VUser();
         vUser.setPhoneNumber(phoneNumber);
-        if (vUserService.queryUser(vUser) == null) {
+        if ((vUserService.queryUser(vUser) == null) & !isRootPhone) {
             response.setCode(CODE_ERROR);
             response.setMessage("this phoneNumber:" + phoneNumber + "have not yet registered, please registed first!");
             return response;
         }
+
         ResponseInfo resResponse = messageService.validateNum(requestMap);
         if (resResponse.getCode() == CODE_SUCCESS) {
             logger.warn("======短信校验成功");
             response.setCode(CODE_SUCCESS);
             response.setMessage(phoneNumber + " registered success!");
+            //如果是管理员登录成功，要把管理员的标记添加到data里面
+            if (isRootPhone) {
+                Map<String, Object> isRootMap = new HashMap<String, Object>();
+                isRootMap.put("isRoot", CODE_SUCCESS);
+                response.setData(isRootMap);
+            }
         } else {
             logger.warn("======短信校验失败");
             response.setCode(CODE_ERROR);
@@ -157,4 +180,8 @@ public class LoginController {
         }
         return response;
     }
+
+
+    //校验管理员的二次登录密码
+
 }
