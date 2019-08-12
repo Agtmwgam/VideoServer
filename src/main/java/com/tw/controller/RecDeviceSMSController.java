@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @RestController
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
 public class RecDeviceSMSController {
 
     final String PATTERN1 = "^[A-Z]\\d{8}$";
-    final String PATTERN2 = "^[A-Z]{6}&";
+    final String PATTERN2 = "^[A-Z]{6}$";
 
     // 全局统一时间格式化格式
     SimpleDateFormat FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -37,7 +38,7 @@ public class RecDeviceSMSController {
     private final static Logger logger = LoggerFactory.getLogger(RecDeviceSMSController.class);
 
     /**
-     * @Author: John
+     * @Author: John,zhuoshouyi
      * @Description:
      * @Date:  2019/8/6 23:01
      * @param: message
@@ -46,28 +47,47 @@ public class RecDeviceSMSController {
      */
     @RequestMapping("/recDeviceLogin")
     public String recDeviceLogin(@RequestParam("message") String message) {
-        logger.info("======从设备端接收到的消息为："+message);
 
+        logger.info("======从设备端接收到的消息为："+message);
         String[] mes = message.split("#");
 
         // 1.校验字段数量
         if (mes.length != 7){
-            return "【ERROR】字段数量不正确";
+            log.error("【设备登陆】字段数量不正确");
+            return "字段数量不正确,无法解析";
         }
+
+        // 传入参数
+        final String FRAME = mes[0];
+        final String SERIAL = mes[1];
+        final String DEVICEVERIFYCODE = mes[2];
+        final String RAND = mes[6];
+
+        // 返回值
+        final String NOLOGIN = FRAME + "#" + SERIAL + "#notlogin";
+        final String SUCCESS = FRAME + "#" + SERIAL + "#OK";
+        final String FAILD = FRAME + "#" + SERIAL + "#ERROR";
 
         // 2.解密
-        int rand = Integer.valueOf(mes[6].substring(2, 3));
-
+        int rand = Integer.valueOf(RAND.substring(2, 3));
         // 十六进制-3
-        // TODO
-        String vertifMes = mes[2];
+        String vertifMes;
+        try {
+            vertifMes = loginMessageDecode(DEVICEVERIFYCODE, rand);
+
+        }catch (Exception e){
+            log.error("【设备登陆】验证码解析错误");
+            return FAILD;
+        }
 
         // 3.校验字段
-        if (Pattern.matches(PATTERN1, mes[1])){
-            return "设备号不正确";
+        if (!Pattern.matches(PATTERN1, SERIAL)){
+            log.error("【设备登陆】设备号不正确");
+            return FAILD;
         }
-        if (Pattern.matches(PATTERN2, mes[2])){
-            return "设备验证吗不正确";
+        if (!Pattern.matches(PATTERN2, DEVICEVERIFYCODE)){
+            log.error("【设备登陆】设备验证码不正确");
+            return FAILD;
         }
 
         // 4.将 message 转换成 loginMessage
@@ -81,16 +101,22 @@ public class RecDeviceSMSController {
         loginMessage.setRand(mes[6]);
 
         // 5.校验数据库
-        boolean isCheck = service.checkDevice(mes[1], vertifMes);
+        boolean isCheck = service.checkDevice(SERIAL, vertifMes);
 
         // 6.验证数据无误后写入loginMessage
-        service.loginMessageSave(loginMessage);
+        if (isCheck){
+            service.loginMessageSave(loginMessage);
+            log.info("【设备登陆】" + SERIAL + "设备登陆成功");
+            return SUCCESS;
+        }else {
+            log.error("【设备登陆】设备号或验证码错误");
+            return FAILD;
+        }
 
-        return message;
     }
 
     /**
-     * @Author: John
+     * @Author: John,zhuoshouyi
      * @Description: 从设备中接收心跳消息
      * @Date:  2019/8/4 23:49
      * @param: message 报文消息
@@ -99,53 +125,57 @@ public class RecDeviceSMSController {
      */
     @RequestMapping("/recDeviceBeat")
     public String recDeviceBeat(@RequestParam("message") String message) {
+
         logger.info("======从设备端接收到的心跳消息为：" + message);
 
-
-        // 2.数据校验,心跳数据为7个字段
+        // 1.数据校验,心跳数据为7个字段
         String[] beat = message.split("#");
         if (beat.length!=7){
             log.error("【心跳】字段数量不正确");
-            return "字段数量不正确";
+            return "字段数量不正确,无法解析";
         }
 
+        // 传入参数
+        final String FRAME = beat[0];
+        final String MESNO = beat[1];
+        final String SERIAL = beat[4];
+        final String EXESTATUS = beat[5];
+
+        // 返回值
+        final String NOLOGIN = FRAME + "#" + SERIAL + "#notlogin";
+        final String SUCCESS = FRAME + "#" + MESNO + "#" + SERIAL + "#OK";
+        final String FAILD = FRAME + "#"+ MESNO + "#" + SERIAL + "#ERROR";
 
         // 3.先把messge里面的内容解析成bean方便调用
         try {
             BeatMessage beatMessageBean = new BeatMessage();
-            beatMessageBean.setFrame(beat[0]);
-            beatMessageBean.setMesNo(beat[1]);
+            beatMessageBean.setFrame(FRAME);
+            beatMessageBean.setMesNo(MESNO);
             beatMessageBean.setMesDate(new Date(Integer.valueOf(beat[2].substring(0,4))-1900,
                     Integer.valueOf(beat[2].substring(5,7))-1, Integer.valueOf(beat[2].substring(8,10)),
                     Integer.valueOf(beat[2].substring(11,13)), Integer.valueOf(beat[2].substring(13,15)),
                     Integer.valueOf(beat[2].substring(15,17))));
             beatMessageBean.setDeviceModel(beat[3]);
-            beatMessageBean.setSerial(beat[4]);
-            beatMessageBean.setExeStatus(beat[5].charAt(0));
+            beatMessageBean.setSerial(SERIAL);
+            beatMessageBean.setExeStatus(EXESTATUS.charAt(0));
             beatMessageBean.setIp(beat[6]);
 
             // 校验字段
             if (!Pattern.matches(PATTERN1, beatMessageBean.getSerial())){
                 log.error("【心跳】设备号不正确");
-                return "设备号不正确";
+                return FAILD;
             }
 
             // 调用登陆验证
             if (!service.checkLogin(beatMessageBean.getSerial())){
                 log.error("【心跳】登陆验证信息错误");
-                return "登陆验证信息错误.";
+                return NOLOGIN;
             }
-
-
-            logger.info("【心跳】==========收到的心跳内容是"+beatMessageBean.toString());
-            logger.info("【心跳】==========需要返回这样的格式的消息：0*FF#001#T42683512#OK");
-            String returnStr = beatMessageBean.getFrame()+"#"+beatMessageBean.getMesNo()+"#"+beatMessageBean.getSerial()+"#OK";
-            logger.info("【心跳】==========真实返回的内容为："+returnStr);
 
             // 4.将心跳信息入库
             service.beatMessageSave(beatMessageBean);
+            return SUCCESS;
 
-            return returnStr;
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("【心跳】===========系统异常");
@@ -158,62 +188,72 @@ public class RecDeviceSMSController {
 
 
     /**
-     * @Author: John
+     * @Author: John,zhuoshouyi
      * @Description: 从设备中接收警告信息
      * @Date:  2019/8/4 23:50
      * @param: message 报文消息
-     *      0*FF#001#2019-07-22T092312#SK01#SQZN001#1#192.168.1.2003
+     *      0*10#001#2019-07-22T092312#ML16#T42683512#1280*720#123,54,480,320#1#192.168.1.200
      * @return: 0*10#001#SQZN001#OK
      */
     @RequestMapping("/recDeviceWarn")
     public String recDeviceWarn(@RequestParam("message") String message) {
         logger.info("======从设备端接收到的告警消息为："+message);
 
-//        // 1.调用登陆验证
-
         // 2.数据校验,告警数据为9个字段
-        String[] beat = message.split("#");
-        if (beat.length!=9){
-            log.error("【心跳】字段数量不正确");
-            return "字段数量不正确";
+        String[] warn = message.split("#");
+        if (warn.length!=9){
+            log.error("【告警】字段数量不正确");
+            return "字段数量不正确,无法解析";
         }
 
+        // 传入参数
+        final String FRAME = warn[0];
+        final String MESNO = warn[1];
+        final String MESDATE = warn[2];
+        final String SERIAL = warn[4];
+
+        // 返回值
+        final String NOLOGIN = FRAME + "#" + SERIAL + "#notlogin";
+        final String SUCCESS = FRAME + "#" + MESNO + "#" + SERIAL + "#OK";
+        final String FAILD = FRAME + "#"+ MESNO + "#" + SERIAL + "#ERROR";
+
         try {
-            String[] warn = message.split("#");
             WarningMessage warningMessageBean = new WarningMessage();
-            warningMessageBean.setFrame(warn[0]);
-            warningMessageBean.setMesNo(warn[1]);
-            warningMessageBean.setMesDate(new Date(Integer.valueOf(warn[2].substring(0,4))-1900,
-                    Integer.valueOf(warn[2].substring(5,7))-1, Integer.valueOf(warn[2].substring(8,10)),
-                    Integer.valueOf(warn[2].substring(11,13)), Integer.valueOf(warn[2].substring(13,15)),
-                    Integer.valueOf(warn[2].substring(15,17))));
+            warningMessageBean.setFrame(FRAME);
+            warningMessageBean.setMesNo(MESNO);
+            warningMessageBean.setMesDate(new Date(Integer.valueOf(MESDATE.substring(0,4))-1900,
+                    Integer.valueOf(MESDATE.substring(5,7))-1, Integer.valueOf(MESDATE.substring(8,10)),
+                    Integer.valueOf(MESDATE.substring(11,13)), Integer.valueOf(MESDATE.substring(13,15)),
+                    Integer.valueOf(MESDATE.substring(15,17))));
             warningMessageBean.setDeviceModel(warn[3]);
-            warningMessageBean.setSerial(warn[4]);
+            warningMessageBean.setSerial(SERIAL);
             warningMessageBean.setVideoResolution(warn[5]);
             warningMessageBean.setTargetLocation(warn[6]);
             warningMessageBean.setExeStatus(warn[7]);
             warningMessageBean.setIp(warn[8]);
-            logger.info("【告警】==========收到的告警内容是"+warningMessageBean.toString());
-            logger.info("【告警】==========需要返回这样的格式的消息：0*10#001#T42683512#OK");
-            String returnStr = warningMessageBean.getFrame()+"#"+warningMessageBean.getMesNo()+"#"+warningMessageBean.getSerial()+"#OK";
-            logger.info("【告警】==========真实返回的内容为："+returnStr);
+            warningMessageBean.setEventId(SERIAL + "_" + MESDATE);
+            // 通过 serial 查找此设备的分组名和设备名
+            List<String> stringList = service.findGroupNameAndDeviceName(SERIAL);
+            warningMessageBean.setGroupName(stringList.get(0));
+            warningMessageBean.setDeviceName(stringList.get(1));
 
             // 校验字段
             if (!Pattern.matches(PATTERN1, warningMessageBean.getSerial())){
                 log.error("【告警】设备号不正确");
-                return "设备号不正确";
+                return FAILD;
             }
 
             // 调用登陆验证
             if (!service.checkLogin(warningMessageBean.getSerial())){
                 log.error("【告警】登陆验证信息错误");
-                return "登陆验证信息错误.";
+                return NOLOGIN;
             }
 
             // 4.将告警信息入库
             service.warningMessageSave(warningMessageBean);
 
-            return returnStr;
+            return SUCCESS;
+
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("【告警】===========系统异常");
@@ -222,35 +262,73 @@ public class RecDeviceSMSController {
     }
 
 
-    public static void main(String[] args) throws UnsupportedEncodingException {
+    /**
+     * 设备登陆信息解密方法
+     *
+     * @param serialEncode
+     * @param rand
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public String loginMessageDecode(String serialEncode, Integer rand) throws UnsupportedEncodingException {
 
         StringBuilder resultStr = new StringBuilder();
 
-        //测试十六进制每一位都减3
-        //ABCDEF ==》 414243444546(16)
-        String recCode = "444546474849";
-        //取到报文里面的随机数中的第三位数：
-        int random = 3;
-        //转成十进制
-        int randomHex = Integer.valueOf(String.valueOf(random), 16);
+        // 将验证码转成16进制数
+        String hexSerialEncode = HEXUtil.encode(serialEncode);
 
-        //01、将十六进制拆出来
-        ArrayList<String> allHex16 = HEXUtil.splitByBytes(recCode, 2);
+        // 将验证码的十六进制拆出来
+        ArrayList<String> allHex16 = HEXUtil.splitByBytes(hexSerialEncode, 2);
 
-
-        //02、对每一个十六进制进行逆运算，减去random值
+        // 对每一个十六进制进行逆运算，减去rand值
         for (String everyHex16 : allHex16) {
             //十六进制转十进制
             int tempC = Integer.valueOf(everyHex16, 16);
             //将加密前加的那个随机数减回去，得到加密前的报文的十进制
-            int resultC = tempC - randomHex;
+            int resultC = tempC - rand;
             //再将得到的加密前的十进制转成十六进制
             String resultHex = Integer.toHexString(resultC);
             resultStr.append(resultHex);
-            System.out.println("==========resultHex:"+resultHex);
-            System.out.println("==========resultStr:"+resultStr);
+//            System.out.println("==========resultHex:"+resultHex);
+//            System.out.println("==========resultStr:"+resultStr);
         }
-        System.out.println("============转回字符串："+HEXUtil.decode(resultStr.toString()));
+
+        // 转回字符串
+        String result = HEXUtil.decode(resultStr.toString());
+        return result;
+    }
+
+
+    public static void main(String[] args) throws UnsupportedEncodingException {
+
+//        StringBuilder resultStr = new StringBuilder();
+//
+//        //测试十六进制每一位都减3
+//        //ABCDEF ==》 414243444546(16)
+//
+//        String recCode = "444546474849";
+//        //取到报文里面的随机数中的第三位数：
+//        int random = 3;
+//        //转成十进制
+//        int randomHex = Integer.valueOf(String.valueOf(random), 16);
+//
+//        //01、将十六进制拆出来
+//        ArrayList<String> allHex16 = HEXUtil.splitByBytes(recCode, 2);
+//
+//
+//        //02、对每一个十六进制进行逆运算，减去random值
+//        for (String everyHex16 : allHex16) {
+//            //十六进制转十进制
+//            int tempC = Integer.valueOf(everyHex16, 16);
+//            //将加密前加的那个随机数减回去，得到加密前的报文的十进制
+//            int resultC = tempC - randomHex;
+//            //再将得到的加密前的十进制转成十六进制
+//            String resultHex = Integer.toHexString(resultC);
+//            resultStr.append(resultHex);
+//            System.out.println("==========resultHex:"+resultHex);
+//            System.out.println("==========resultStr:"+resultStr);
+//        }
+//        System.out.println("============转回字符串："+HEXUtil.decode(resultStr.toString()));
 
 
 

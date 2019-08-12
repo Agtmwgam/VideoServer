@@ -2,7 +2,6 @@ package com.tw.dao;
 
 import com.tw.entity.Device;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.beans.Transient;
@@ -26,6 +25,8 @@ public interface DeviceDao {
     Integer updateDevice(Device device);
 
     Device getDeviceById(Map<String, Object> param);
+
+    Device getDeviceBySerial(String serial);
 
     List<Device> getDeviceByCodition(Device device);
 }

@@ -57,6 +57,17 @@
             isValid = #{isValid}
     </select>
 
+    <select id="getDeviceBySerial" parameterType="java.lang.String" resultType="com.tw.entity.Device">
+        SELECT
+            *
+        FROM
+            device
+        WHERE
+            serial = #{serial}
+        AND
+            isValid = '1'
+    </select>
+
     
     <!-- 根据条件查询device -->
     <select id="getDeviceByCodition" parameterType="com.tw.entity.Device" resultType="com.tw.entity.Device">

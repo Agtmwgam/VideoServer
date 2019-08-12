@@ -1,7 +1,9 @@
 package com.tw.test.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.tw.util.HEXUtil;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 /**
  * @Author: haizhi
@@ -12,23 +14,36 @@ import java.util.Date;
  */
 public class test {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws UnsupportedEncodingException {
 
-        SimpleDateFormat FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String serialEncode = "DDDDDD";
 
-        String beat="2019-07-22T092312";
-        System.out.println(Integer.valueOf(beat.substring(0,4)));
-        System.out.println(Integer.valueOf(beat.substring(5,7)));
-        System.out.println(Integer.valueOf(beat.substring(8,10)));
-        System.out.println(Integer.valueOf(beat.substring(11,13)));
-        System.out.println(Integer.valueOf(beat.substring(13,15)));
-        System.out.println(Integer.valueOf(beat.substring(15,17)));
-        Date date = new Date(Integer.valueOf(beat.substring(0,4))-1900,
-                Integer.valueOf(beat.substring(5,7))-1, Integer.valueOf(beat.substring(8,10)),
-                Integer.valueOf(beat.substring(11,13)), Integer.valueOf(beat.substring(13,15)),
-                Integer.valueOf(beat.substring(15,17)));
+        int rand = 3;
 
-        System.out.println(FMT.format(date));
+        StringBuilder resultStr = new StringBuilder();
+
+        // 将验证码转成16进制数
+        String hexSerialEncode = HEXUtil.encode(serialEncode);
+
+        // 将验证码的十六进制拆出来
+        ArrayList<String> allHex16 = HEXUtil.splitByBytes(hexSerialEncode, 2);
+
+        // 对每一个十六进制进行逆运算，减去rand值
+        for (String everyHex16 : allHex16) {
+            //十六进制转十进制
+            int tempC = Integer.valueOf(everyHex16, 16);
+            //将加密前加的那个随机数减回去，得到加密前的报文的十进制
+            int resultC = tempC - rand;
+            //再将得到的加密前的十进制转成十六进制
+            String resultHex = Integer.toHexString(resultC);
+            resultStr.append(resultHex);
+//            System.out.println("==========resultHex:"+resultHex);
+//            System.out.println("==========resultStr:"+resultStr);
+        }
+
+        // 转回字符串
+        String result = HEXUtil.decode(resultStr.toString());
+        System.out.println("result:" + result);
 
     }
 

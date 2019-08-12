@@ -7,8 +7,8 @@
     <!-- 告警数据入库 -->
     <insert id="saveWarningMessage" parameterType="com.tw.entity.WarningMessage">
         insert into warningMessage
-        (frame,mesNo,mesDate,groupName,deviceName,deviceModel,serial,videoResolution,targetLocation,exeStatus,ip)
-        values(#{frame},#{mesNo},#{mesDate},#{groupName},#{deviceName},#{deviceModel},#{serial},#{videoResolution},#{targetLocation},#{exeStatus},#{ip})
+        (frame,mesNo,mesDate,groupName,deviceName,deviceModel,serial,videoResolution,targetLocation,exeStatus,ip,eventId)
+        values(#{frame},#{mesNo},#{mesDate},#{groupName},#{deviceName},#{deviceModel},#{serial},#{videoResolution},#{targetLocation},#{exeStatus},#{ip},#{eventId})
     </insert>
 
 

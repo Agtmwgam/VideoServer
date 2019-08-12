@@ -22,6 +22,9 @@
 			<if test="nickName!=null and nickName!=''">
 				and nickName=#{nickName}
 			</if>
+			<if test="phoneNumber !=null and phoneNumber !=''">
+				and phoneNumber =#{phoneNumber}
+			</if>
 			<if test="password !=null and password !=''">
 				and password =#{password}
 			</if>
@@ -30,6 +33,17 @@
 			</if>
 			<if test="isValid!=null and isValid!=''">
 				and isValid=#{isValid}
+			</if>
+		</where>
+	</select>
+
+	<!-- 根据传入的信息查找对应的用户信息 -->
+	<select id="fuzzyQueryUser" parameterType="com.tw.entity.VUser"
+			resultType="com.tw.entity.VUser">
+		select * from vUser
+		<where>
+			<if test="phoneNumber !=null and phoneNumber !=''">
+				 phoneNumber LIKE '%${phoneNumber}%'
 			</if>
 		</where>
 	</select>

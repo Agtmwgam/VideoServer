@@ -122,6 +122,17 @@ public class RegisterController {
             return response;
         }
 
+        //校验该用户是否已注册
+        VUser user2 = new VUser();
+        user2.setPhoneNumber(phoneNumber);
+        user2.setPassword(password);
+
+        if ( userService.queryUser(user2) != null) {
+            response.setMessage("The user is exist!");
+            response.setCode(CODE_ERROR);
+            return response;
+        }
+
         // 验证码校验
 //        短信是否为空
         if (StringUtils.isBlank(requestMap.get("msgNum").toString())) {
@@ -132,17 +143,6 @@ public class RegisterController {
         //  调用短信验证码验证接口
         response = messageService.validateNum(requestMap);
         if (response.getCode() == CODE_ERROR) {
-            return response;
-        }
-
-        //校验该用户是否已注册
-        VUser user2 = new VUser();
-        user2.setPhoneNumber(phoneNumber);
-        user2.setPassword(password);
-
-        if ( userService.queryUser(user2) != null) {
-            response.setMessage("The user is exist!");
-            response.setCode(CODE_ERROR);
             return response;
         }
 

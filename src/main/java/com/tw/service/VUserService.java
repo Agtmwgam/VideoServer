@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author liutianwen
  * @Description:
@@ -32,10 +34,23 @@ public class VUserService {
 		}
 	}
 
-//	寻找用户
+//	查找用户
 	@Transactional
 	public VUser queryUser(VUser user) {
 		return vUserDao.queryUser(user);
+	}
+
+	//模糊查找用户
+	@Transactional
+	public List<VUser> fuzzyQueryUser(VUser user) {
+		List<VUser> userList=null;
+		try {
+			userList=vUserDao.fuzzyQueryUser(user);
+		}catch (Exception e){
+			log.error("查询用户错误！");
+			log.error(e.toString());
+		}
+		return userList;
 	}
 
 	//更新客户

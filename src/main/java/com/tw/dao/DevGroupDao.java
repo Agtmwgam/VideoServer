@@ -19,4 +19,6 @@ public interface DevGroupDao {
     DevGroup getDevGroupById(int devGroupId);
 
     List<DevGroup> getDevGroupByGroupName(String devGroupName);
+
+    DevGroup getDevGroupBySerial(String serial);
 }
