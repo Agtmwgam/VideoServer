@@ -154,14 +154,16 @@
         <if test="isValid != '\0' ">
             AND isValid = #{isValid}
         </if>
-        ORDER BY createTime desc
+        ORDER BY
+            createTime
+        DESC
         LIMIT
-        #{start}, #{pageSize}
+            #{start}, #{pageSize}
     </select>
 
 
     <!-- 根据设备序列号、设备型号和设备的生产日期进行模糊搜索 -->
-    <select id="getDeviceLikeCondition" parameterType="com.tw.entity.Device" resultType="com.tw.entity.Device">
+    <select id="getDeviceLikeCondition" parameterType="java.util.Map" resultType="com.tw.entity.Device">
         SELECT
             a.*
         FROM
@@ -171,13 +173,18 @@
         AND
             a.isValid = '1'
         <if test="serial != null and serial != ''">
-            AND a.serial like #{serial}
+            AND a.serial like "%"#{serial}"%"
         </if>
         <if test="deviceType != null and deviceType != ''">
-            AND a.deviceType like #{deviceType}
+            AND a.deviceType like "%"#{deviceType}"%"
         </if>
         <if test="productDate != null and productDate != ''">
-            AND a.productDate like #{productDate}
+            AND a.productDate like "%"#{productDate}"%"
         </if>
+        ORDER BY
+            a.createTime
+        DESC
+        LIMIT
+            #{start}, #{pageSize}
     </select>
 </mapper>

@@ -64,7 +64,14 @@ public class DeviceService {
     }
 
 
-    public List<Device> getDeviceLikeCondition(Device device) {
-        return deviceDao.getDeviceLikeCondition(device);
+    public List<Device> getDeviceLikeCondition(Device device, int pageNo, int pageSize) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("start", (pageNo-1) * pageSize);
+        param.put("pageSize", pageSize);
+        param.put("serial", device.getSerial());
+        param.put("deviceType", device.getDeviceType());
+        param.put("produceDate", device.getProductDate());
+        param.put("isValid ", '1');
+        return deviceDao.getDeviceLikeCondition(param);
     }
 }

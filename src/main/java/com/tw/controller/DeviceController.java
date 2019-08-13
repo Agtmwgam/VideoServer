@@ -201,9 +201,12 @@ public class DeviceController {
      * @return:
      */
     @PostMapping("/getDeviceLikeCondition")
-    public ResponseInfo getDeviceLikeCondition(Device device) {
+    public ResponseInfo getDeviceLikeCondition(Device device, @RequestParam(value = "pageNo") int pageNo, @RequestParam(value = "pageSize") int pageSize) {
         ResponseInfo responseInfo = new ResponseInfo();
-        List<Device> deviceList = deviceService.getDeviceLikeCondition(device);
+        responseInfo.setPageNo(pageNo);
+        responseInfo.setPageSize(pageSize);
+
+        List<Device> deviceList = deviceService.getDeviceLikeCondition(device, pageNo, pageSize);
         if (deviceList != null && deviceList.size() > 0) {
             responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
             responseInfo.setMessage("get device by condition success!");

@@ -32,5 +32,5 @@ public interface DeviceDao {
 
     List<Device> getDeviceByCodition(Device device);
 
-    List<Device> getDeviceLikeCondition(Device device);
+    List<Device> getDeviceLikeCondition(Map<String, Object> param);
 }
