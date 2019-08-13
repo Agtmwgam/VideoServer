@@ -299,6 +299,10 @@ public class RecDeviceSMSController {
 
     public static void main(String[] args) throws UnsupportedEncodingException {
 
+//        String testText = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//        System.out.println(HEXUtil.decode("============"+testText));
+//
+//
 //        StringBuilder resultStr = new StringBuilder();
 //
 //        //测试十六进制每一位都减3
@@ -327,7 +331,7 @@ public class RecDeviceSMSController {
 //            System.out.println("==========resultStr:"+resultStr);
 //        }
 //        System.out.println("============转回字符串："+HEXUtil.decode(resultStr.toString()));
-
+//
 
 
     }
