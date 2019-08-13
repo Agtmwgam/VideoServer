@@ -54,7 +54,7 @@ public class RecDeviceSMSController {
         // 1.校验字段数量
         if (mes.length != 7){
             log.error("【设备登陆】字段数量不正确");
-            return "字段数量不正确,无法解析";
+            return "response: 字段数量不正确,无法解析";
         }
 
         // 传入参数
@@ -64,9 +64,9 @@ public class RecDeviceSMSController {
         final String RAND = mes[6];
 
         // 返回值
-        final String NOLOGIN = FRAME + "#" + SERIAL + "#notlogin";
-        final String SUCCESS = FRAME + "#" + SERIAL + "#OK";
-        final String FAILD = FRAME + "#" + SERIAL + "#ERROR";
+        final String NOLOGIN = "response: " + FRAME + "#" + SERIAL + "#notlogin";
+        final String SUCCESS = "response: " + FRAME + "#" + SERIAL + "#OK";
+        final String FAILD = "response: " + FRAME + "#" + SERIAL + "#ERROR";
 
         // 2.解密
         int rand = Integer.valueOf(RAND.substring(2, 3));
@@ -133,7 +133,7 @@ public class RecDeviceSMSController {
         String[] beat = message.split("#");
         if (beat.length!=7){
             log.error("【心跳】字段数量不正确");
-            return "字段数量不正确,无法解析";
+            return "response: 字段数量不正确,无法解析";
         }
 
         // 传入参数
@@ -143,9 +143,9 @@ public class RecDeviceSMSController {
         final String EXESTATUS = beat[5];
 
         // 返回值
-        final String NOLOGIN = FRAME + "#" + SERIAL + "#notlogin";
-        final String SUCCESS = FRAME + "#" + MESNO + "#" + SERIAL + "#OK";
-        final String FAILD = FRAME + "#"+ MESNO + "#" + SERIAL + "#ERROR";
+        final String NOLOGIN = "response: " + FRAME + "#" + SERIAL + "#notlogin";
+        final String SUCCESS = "response: " + FRAME + "#" + MESNO + "#" + SERIAL + "#OK";
+        final String FAILD = "response: " + FRAME + "#"+ MESNO + "#" + SERIAL + "#ERROR";
 
         // 3.先把messge里面的内容解析成bean方便调用
         try {
@@ -177,7 +177,7 @@ public class RecDeviceSMSController {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("【心跳】===========系统异常");
-            return "java后台系统异常=======";
+            return "response: java后台系统异常=======";
         }
 
 
@@ -201,7 +201,7 @@ public class RecDeviceSMSController {
         String[] warn = message.split("#");
         if (warn.length!=9){
             log.error("【告警】字段数量不正确");
-            return "字段数量不正确,无法解析";
+            return "response: 字段数量不正确,无法解析";
         }
 
         // 传入参数
@@ -211,9 +211,9 @@ public class RecDeviceSMSController {
         final String SERIAL = warn[4];
 
         // 返回值
-        final String NOLOGIN = FRAME + "#" + SERIAL + "#notlogin";
-        final String SUCCESS = FRAME + "#" + MESNO + "#" + SERIAL + "#OK";
-        final String FAILD = FRAME + "#"+ MESNO + "#" + SERIAL + "#ERROR";
+        final String NOLOGIN = "response: " + FRAME + "#" + SERIAL + "#notlogin";
+        final String SUCCESS = "response: " + FRAME + "#" + MESNO + "#" + SERIAL + "#OK";
+        final String FAILD = "response: " + FRAME + "#"+ MESNO + "#" + SERIAL + "#ERROR";
 
         try {
             WarningMessage warningMessageBean = new WarningMessage();
@@ -254,7 +254,7 @@ public class RecDeviceSMSController {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("【告警】===========系统异常");
-            return "java后台系统异常=======";
+            return "response: java后台系统异常=======";
         }
     }
 
