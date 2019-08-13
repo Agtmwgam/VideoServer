@@ -49,12 +49,9 @@ public class DeviceController {
      * @return:
      */
     @PostMapping("/addDevice")
-    public ResponseInfo addDevice(@RequestBody Device device, HttpServletRequest httpServletRequest) {
+    public ResponseInfo addDevice(@RequestBody Device device) {
 
         ResponseInfo responseInfo = new ResponseInfo();
-
-        // 1.校验用户身份
-        UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
 
         //查询数据库中是否已经存在该设备，感觉设备号和验证码检测
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
