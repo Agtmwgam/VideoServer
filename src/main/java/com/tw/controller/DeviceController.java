@@ -163,11 +163,14 @@ public class DeviceController {
      * @param: device
      * @return:
      */
-    @GetMapping("/getDeviceByCodition")
-    public ResponseInfo getDeviceByCodition(Device device) {
+    @GetMapping("/getDeviceByCondition")
+    public ResponseInfo getDeviceByCodition(Device device, @RequestParam(value = "pageNo") int pageNo, @RequestParam(value = "pageSize") int pageSize) {
         ResponseInfo response = new ResponseInfo();
+        response.setPageNo(pageNo);
+        response.setPageSize(pageSize);
+
         Map<String, Object> resultMap = new HashMap<>();
-        List<Device> devices = deviceService.getDeviceByCodition(device);
+        List<Device> devices = deviceService.getDeviceByCoditionPage(device, pageNo, pageSize);
         for (Device device1 : devices) {
             System.out.println("===:"+device1.toString());
         }
@@ -176,6 +179,7 @@ public class DeviceController {
             resultMap.put("total", totle);
             resultMap.put("list", devices);
             response.setCode(ResponseInfo.CODE_SUCCESS);
+            response.setTotal(devices.size());
             response.setData(resultMap);
             response.setMessage("getDeviceByCondition success!");
         } else {
@@ -185,6 +189,32 @@ public class DeviceController {
             response.setData(resultMap);
         }
         return response;
+    }
+
+
+
+    /**
+     * @Author: John
+     * @Description: 根据设备序列号、设备型号和生成日期进行模糊搜索
+     * @Date:  2019/8/13 1:27
+     * @param: device
+     * @return:
+     */
+    @PostMapping("/getDeviceLikeCondition")
+    public ResponseInfo getDeviceLikeCondition(Device device) {
+        ResponseInfo responseInfo = new ResponseInfo();
+        List<Device> deviceList = deviceService.getDeviceLikeCondition(device);
+        if (deviceList != null && deviceList.size() > 0) {
+            responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+            responseInfo.setMessage("get device by condition success!");
+            responseInfo.setData(deviceList);
+            responseInfo.setTotal(deviceList.size());
+        } else {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("get device by condition failed!");
+            responseInfo.setTotal(0);
+        }
+        return responseInfo;
     }
 
 

@@ -39,7 +39,32 @@ public class DeviceService {
         return deviceDao.getDeviceById(param);
     }
 
+
+    public List<Device> getDeviceByCoditionPage(Device device, int pageNo, int pageSize) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("start", (pageNo-1) * pageSize);
+        param.put("pageSize", pageSize);
+        param.put("deviceId", device.getDeviceId());
+        param.put("deviceName", device.getDeviceName());
+        param.put("serial", device.getSerial());
+        param.put("deviceVerifyCode", device.getDeviceVerifyCode());
+        param.put("deviceType", device.getDeviceType());
+        param.put("softVersion", device.getSoftVersion());
+        param.put("productDate", device.getProductDate());
+        param.put("deviceStatus", device.getDeviceStatus());
+        param.put("isOnline", device.getIsOnline());
+        param.put("ipAddress", device.getIpAddress());
+        param.put("isValid", device.getIsValid());
+        return deviceDao.getDeviceByCoditionPage(param);
+    }
+
+
     public List<Device> getDeviceByCodition(Device device) {
         return deviceDao.getDeviceByCodition(device);
+    }
+
+
+    public List<Device> getDeviceLikeCondition(Device device) {
+        return deviceDao.getDeviceLikeCondition(device);
     }
 }

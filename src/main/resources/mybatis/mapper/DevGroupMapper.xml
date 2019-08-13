@@ -5,17 +5,17 @@
 
 
     <!-- 增加devGroup -->
-    <select id="addGroup" parameterType="com.tw.entity.DevGroup">
+    <insert id="addDevGroup" parameterType="com.tw.entity.DevGroup">
         INSERT INTO
             devGroup
             (groupName)
         values
             (#{groupName})
-    </select>
+    </insert>
 
 
     <!-- 删除devGroup -->
-    <update id="id" parameterType="int">
+    <update id="deleteDevGroupById" parameterType="int">
         UPDATE
             devGroup
         SET

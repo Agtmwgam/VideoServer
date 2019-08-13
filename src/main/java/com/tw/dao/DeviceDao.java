@@ -28,5 +28,9 @@ public interface DeviceDao {
 
     Device getDeviceBySerial(String serial);
 
+    List<Device> getDeviceByCoditionPage(Map<String, Object> param);
+
     List<Device> getDeviceByCodition(Device device);
+
+    List<Device> getDeviceLikeCondition(Device device);
 }
