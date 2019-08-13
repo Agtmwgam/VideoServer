@@ -1,12 +1,15 @@
 package com.tw.controller;
 
 import com.tw.config.ConfigProperties;
+import com.tw.service.DeviceService;
 import com.tw.service.MessageService;
+import com.tw.service.VUserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @Author: John
@@ -16,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @return: 
  */
 @RequestMapping("/debug")
-@Controller
+@RestController
 public class DebugController {
 
     @Autowired
@@ -24,6 +27,12 @@ public class DebugController {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private DeviceService deviceService;
+
+    @Autowired
+    private VUserService vUserService;
 
     private static org.apache.log4j.Logger logger = Logger.getLogger(LoginController.class);
 
