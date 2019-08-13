@@ -1,11 +1,10 @@
 package com.tw.dao;
 
-import com.tw.entity.VUser;
+import com.tw.entity.UserDeviceRelate;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 /**
  * @author liutianwen
@@ -14,23 +13,14 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface VUserDao {
+public interface UserDeviceRelateDao {
 
     //新建一个用户
     @Transactional
-    void creatUser(VUser user);
+    void creatUserDevice(UserDeviceRelate udr);
 
-    //查找用户
-    VUser queryUser(VUser user);
-
-    //模糊查找用户
-    List<VUser> fuzzyQueryUser(VUser user);
-
-    //更新客户
-    @Transactional
-    Integer modifyUser(VUser user);
 
     // 逻辑删除用户
-    public Integer delUser(VUser user);
+    public Integer delUserDevice(UserDeviceRelate udr);
 
 }

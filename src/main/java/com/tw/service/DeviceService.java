@@ -2,6 +2,7 @@ package com.tw.service;
 
 import com.tw.dao.DeviceDao;
 import com.tw.entity.Device;
+import com.tw.entity.VUser;
 import com.tw.entity.common.ConstantParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,4 +43,17 @@ public class DeviceService {
     public List<Device> getDeviceByCodition(Device device) {
         return deviceDao.getDeviceByCodition(device);
     }
+
+
+    /**
+     * @author liutianwen
+     * @desc  根据传入vuser信息查看设备号
+     * @param VUser
+     * @return
+     */
+    public List<String> getDeviceByUser(VUser user) {
+        return deviceDao.getDeviceByUser(user);
+    }
+
+
 }

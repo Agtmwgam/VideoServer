@@ -100,4 +100,24 @@
             AND isValid = #{isValid}
         </if>
     </select>
+
+
+    <!-- 根据传入vuser信息条件查询设备号 -->
+    <select id="getDeviceByUser" parameterType="com.tw.entity.VUser" resultType="java.lang.String">
+        SELECT d.serial
+        from vUser v join userDeviceRelate u on v.userID=u.userId
+        join device d on u.deviceId=d.deviceId
+        <where>
+            <if test="phoneNumber != null and phoneNumber !=''">
+                 v.phoneNumber LIKE '%${phoneNumber}%'
+            </if>
+            <if test="userID !=null and userID!=''">
+                and  v.userID like  '%${userID}%'
+            </if>
+            and  v.isValid='1'
+            and  u.isValid='1'
+            and  d.isValid='1'
+        </where>
+
+    </select>
 </mapper>

@@ -133,6 +133,12 @@ public class RegisterController {
             return response;
         }
 
+        if ( userService.queryUser(user2) != null) {
+            response.setMessage("The user is exist!");
+            response.setCode(CODE_ERROR);
+            return response;
+        }
+
         // 验证码校验
 //        短信是否为空
         if (StringUtils.isBlank(requestMap.get("msgNum").toString())) {
