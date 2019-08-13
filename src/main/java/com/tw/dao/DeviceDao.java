@@ -1,9 +1,9 @@
 package com.tw.dao;
 
 import com.tw.entity.Device;
+import com.tw.entity.VUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-
 import java.beans.Transient;
 import java.util.List;
 import java.util.Map;
