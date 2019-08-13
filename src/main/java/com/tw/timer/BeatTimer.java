@@ -86,6 +86,7 @@ public class BeatTimer implements InitializingBean {
                         LoginMessage loginMessage = loginMessageDao.findBySerial(devices.getSerial());
                         if (loginMessage!=null){
                             loginMessage.setIsValid('0');
+                            loginMessage.setUpdateTime(new Date());
                             loginMessageDao.updateIsValidBySerial(loginMessage);
                             log.info("【检查心跳】将 " + devices.getSerial() + " 的登陆信息置为无效");
                         }

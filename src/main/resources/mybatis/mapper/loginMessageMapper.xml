@@ -23,11 +23,48 @@
     <update id="updateIsValidBySerial" parameterType="com.tw.entity.LoginMessage" >
         UPDATE
             loginMessage
-        SET
-            isValid = #{isValid}
+        <set>
+            isValid = #{isValid},
+            updateTime = #{updateTime},
+        </set>
         WHERE
             serial=#{serial}
     </update>
 
+    <!-- 更新登陆信息 -->
+    <update id="modifyLogin" parameterType="com.tw.entity.LoginMessage">
+        update loginMessage
+        <set>
+            <if test="frame != null and frame !=''">
+                frame = #{frame},
+            </if>
+            <if test="serial != null and serial != ''">
+                serial = #{serial},
+            </if>
+            <if test="deviceVerifyCode != null and deviceVerifyCode != ''">
+                deviceVerifyCode = #{deviceVerifyCode},
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+                deviceType = #{deviceType},
+            </if>
+            <if test="softVersion != null and softVersion != ''">
+                softVersion = #{softVersion},
+            </if>
+            <if test="productDate != null and productDate != ''">
+                productDate = #{productDate},
+            </if>
+            <if test="rand != null and rand != ''">
+                rand = #{rand},
+            </if>
+            <if test="updateTime!=null">
+                updateTime=#{updateTime},
+            </if>
+        </set>
+        <where>
+            <if test="serial !=null and serial != ''">
+                serial = #{serial}
+            </if>
+        </where>
+    </update>
 
 </mapper>

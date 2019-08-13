@@ -23,5 +23,7 @@ public interface BeatMessageDao {
     // 根据 serial 找到 device 的信息
     BeatMessage findBySerial(String serial);
 
+    // 更新心跳信息
+    void modifyBeat(BeatMessage beatMessage);
 
 }

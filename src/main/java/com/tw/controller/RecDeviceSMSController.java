@@ -1,5 +1,6 @@
 package com.tw.controller;
 
+import com.tw.convert.String2DateConvert;
 import com.tw.entity.BeatMessage;
 import com.tw.entity.LoginMessage;
 import com.tw.entity.WarningMessage;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -73,21 +73,22 @@ public class RecDeviceSMSController {
         // 十六进制-3
         String vertifMes;
         try {
-            vertifMes = loginMessageDecode(DEVICEVERIFYCODE, rand);
+//            vertifMes = loginMessageDecode(DEVICEVERIFYCODE, rand);
+            vertifMes = DEVICEVERIFYCODE;
 
         }catch (Exception e){
             log.error("【设备登陆】验证码解析错误");
-            return FAILD;
+            return FAILD+"#验证码解析错误";
         }
 
         // 3.校验字段
         if (!Pattern.matches(PATTERN1, SERIAL)){
-            log.error("【设备登陆】设备号不正确");
-            return FAILD;
+            log.error("【设备登陆】设备号格式不正确");
+            return FAILD+"#设备号格式不正确";
         }
         if (!Pattern.matches(PATTERN2, DEVICEVERIFYCODE)){
-            log.error("【设备登陆】设备验证码不正确");
-            return FAILD;
+            log.error("【设备登陆】设备验证码格式不正确");
+            return FAILD+"#设备验证码格式不正确";
         }
 
         // 4.将 message 转换成 loginMessage
@@ -110,7 +111,7 @@ public class RecDeviceSMSController {
             return SUCCESS;
         }else {
             log.error("【设备登陆】设备号或验证码错误");
-            return FAILD;
+            return FAILD+"#设备号或验证码错误";
         }
 
     }
@@ -151,10 +152,7 @@ public class RecDeviceSMSController {
             BeatMessage beatMessageBean = new BeatMessage();
             beatMessageBean.setFrame(FRAME);
             beatMessageBean.setMesNo(MESNO);
-            beatMessageBean.setMesDate(new Date(Integer.valueOf(beat[2].substring(0,4))-1900,
-                    Integer.valueOf(beat[2].substring(5,7))-1, Integer.valueOf(beat[2].substring(8,10)),
-                    Integer.valueOf(beat[2].substring(11,13)), Integer.valueOf(beat[2].substring(13,15)),
-                    Integer.valueOf(beat[2].substring(15,17))));
+            beatMessageBean.setMesDate(String2DateConvert.convert(beat[2]));
             beatMessageBean.setDeviceModel(beat[3]);
             beatMessageBean.setSerial(SERIAL);
             beatMessageBean.setExeStatus(EXESTATUS.charAt(0));
@@ -163,7 +161,7 @@ public class RecDeviceSMSController {
             // 校验字段
             if (!Pattern.matches(PATTERN1, beatMessageBean.getSerial())){
                 log.error("【心跳】设备号不正确");
-                return FAILD;
+                return FAILD+"#设备号不正确";
             }
 
             // 调用登陆验证
@@ -221,10 +219,7 @@ public class RecDeviceSMSController {
             WarningMessage warningMessageBean = new WarningMessage();
             warningMessageBean.setFrame(FRAME);
             warningMessageBean.setMesNo(MESNO);
-            warningMessageBean.setMesDate(new Date(Integer.valueOf(MESDATE.substring(0,4))-1900,
-                    Integer.valueOf(MESDATE.substring(5,7))-1, Integer.valueOf(MESDATE.substring(8,10)),
-                    Integer.valueOf(MESDATE.substring(11,13)), Integer.valueOf(MESDATE.substring(13,15)),
-                    Integer.valueOf(MESDATE.substring(15,17))));
+            warningMessageBean.setMesDate(String2DateConvert.convert(MESDATE));
             warningMessageBean.setDeviceModel(warn[3]);
             warningMessageBean.setSerial(SERIAL);
             warningMessageBean.setVideoResolution(warn[5]);
@@ -234,13 +229,15 @@ public class RecDeviceSMSController {
             warningMessageBean.setEventId(SERIAL + "_" + MESDATE);
             // 通过 serial 查找此设备的分组名和设备名
             List<String> stringList = service.findGroupNameAndDeviceName(SERIAL);
-            warningMessageBean.setGroupName(stringList.get(0));
-            warningMessageBean.setDeviceName(stringList.get(1));
+            if (stringList!=null && stringList.size()==2){
+                warningMessageBean.setGroupName(stringList.get(0));
+                warningMessageBean.setDeviceName(stringList.get(1));
+            }
 
             // 校验字段
             if (!Pattern.matches(PATTERN1, warningMessageBean.getSerial())){
                 log.error("【告警】设备号不正确");
-                return FAILD;
+                return FAILD+"#设备号不正确";
             }
 
             // 调用登陆验证
@@ -275,6 +272,7 @@ public class RecDeviceSMSController {
         StringBuilder resultStr = new StringBuilder();
 
         // 将验证码转成16进制数
+        serialEncode = serialEncode.replace("\\", "\\\\");
         String hexSerialEncode = HEXUtil.encode(serialEncode);
 
         // 将验证码的十六进制拆出来
