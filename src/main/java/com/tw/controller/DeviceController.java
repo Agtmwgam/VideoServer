@@ -5,6 +5,7 @@ import com.tw.entity.DevGroup;
 import com.tw.entity.Device;
 import com.tw.service.DevGroupService;
 import com.tw.service.DeviceService;
+import com.tw.util.HEXUtil;
 import com.tw.util.ResponseInfo;
 import com.tw.util.UserAuthentication;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.Map;
  * @return:
  */
 @RestController
+@RequestMapping("/device")
 public class DeviceController {
 
     @Autowired
@@ -46,12 +49,9 @@ public class DeviceController {
      * @return:
      */
     @PostMapping("/addDevice")
-    public ResponseInfo addDevice(@RequestBody Device device, HttpServletRequest httpServletRequest) {
+    public ResponseInfo addDevice(@RequestBody Device device) {
 
         ResponseInfo responseInfo = new ResponseInfo();
-
-        // 1.校验用户身份
-        UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
 
         //查询数据库中是否已经存在该设备，感觉设备号和验证码检测
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
@@ -144,7 +144,7 @@ public class DeviceController {
             response.setData(resultMap);
             System.out.println("=====device.toString()"+device.toString());
         } else {
-            resultMap.put("totle", 1);
+            resultMap.put("totle", 0);
             response.setCode(ResponseInfo.CODE_ERROR);
             response.setMessage("getDeviceByDeviceId failed!");
             response.setData(resultMap);
@@ -160,11 +160,14 @@ public class DeviceController {
      * @param: device
      * @return:
      */
-    @GetMapping("/getDeviceByCodition")
-    public ResponseInfo getDeviceByCodition(Device device) {
+    @GetMapping("/getDeviceByCondition")
+    public ResponseInfo getDeviceByCodition(Device device, @RequestParam(value = "pageNo") int pageNo, @RequestParam(value = "pageSize") int pageSize) {
         ResponseInfo response = new ResponseInfo();
+        response.setPageNo(pageNo);
+        response.setPageSize(pageSize);
+
         Map<String, Object> resultMap = new HashMap<>();
-        List<Device> devices = deviceService.getDeviceByCodition(device);
+        List<Device> devices = deviceService.getDeviceByCoditionPage(device, pageNo, pageSize);
         for (Device device1 : devices) {
             System.out.println("===:"+device1.toString());
         }
@@ -173,6 +176,8 @@ public class DeviceController {
             resultMap.put("total", totle);
             resultMap.put("list", devices);
             response.setCode(ResponseInfo.CODE_SUCCESS);
+            response.setTotal(devices.size());
+            response.setData(resultMap);
             response.setMessage("getDeviceByCondition success!");
         } else {
             resultMap.put("totle", 0);
@@ -181,6 +186,35 @@ public class DeviceController {
             response.setData(resultMap);
         }
         return response;
+    }
+
+
+
+    /**
+     * @Author: John
+     * @Description: 根据设备序列号、设备型号和生成日期进行模糊搜索
+     * @Date:  2019/8/13 1:27
+     * @param: device
+     * @return:
+     */
+    @PostMapping("/getDeviceLikeCondition")
+    public ResponseInfo getDeviceLikeCondition(Device device, @RequestParam(value = "pageNo") int pageNo, @RequestParam(value = "pageSize") int pageSize) {
+        ResponseInfo responseInfo = new ResponseInfo();
+        responseInfo.setPageNo(pageNo);
+        responseInfo.setPageSize(pageSize);
+
+        List<Device> deviceList = deviceService.getDeviceLikeCondition(device, pageNo, pageSize);
+        if (deviceList != null && deviceList.size() > 0) {
+            responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+            responseInfo.setMessage("get device by condition success!");
+            responseInfo.setData(deviceList);
+            responseInfo.setTotal(deviceList.size());
+        } else {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("get device by condition failed!");
+            responseInfo.setTotal(0);
+        }
+        return responseInfo;
     }
 
 
@@ -193,11 +227,12 @@ public class DeviceController {
      * @return:
      */
     @PostMapping("/addGroup")
-    public ResponseInfo addGroup(@RequestParam(value="groupName", required = true) String groupName, HttpServletRequest httpServletRequest) {
+    public ResponseInfo addGroup(@RequestParam(value="groupName", required = true) String groupName) {
         ResponseInfo response = new ResponseInfo();
         // 1.校验用户身份
-        UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
-        String phoneNumber = userRoleDTO.getPhoneNumber();
+        //UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
+        //String phoneNumber = userRoleDTO.getPhoneNumber();
+        String phoneNumber = "18814373836";
         //如果已经登录成功，就可以添加，否则提示登录
         if (StringUtils.isNotBlank(phoneNumber)) {
             DevGroup devGroup = new DevGroup();
@@ -261,4 +296,50 @@ public class DeviceController {
         }
         return response;
     }
+
+
+
+
+
+
+//    public static void main(String[] args) throws UnsupportedEncodingException {
+//
+//        //假设原密码是这个：
+//        String testText = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//        System.out.println("原密码是："+testText);
+//
+//        //用于拼接加密后的
+//        StringBuilder resultStr = new StringBuilder();
+//
+//        //转成十六进制：
+//        String orgHex = HEXUtil.encode(testText);
+//        System.out.println("原密码字符串转16进制"+ HEXUtil.encode(testText));
+//
+//        //假设报文的第三位随机数是(最大的一个数)
+//        int random = 9;
+//
+//        //对原本的每一个密文加上9
+//
+//        //将十六进制拆出来，每两个十六进制确定一个值
+//        ArrayList<String> allHex16 = HEXUtil.splitByBytes(orgHex, 2);
+//
+//
+//        //02、对每一个十六进制进行逆运算，减去random值
+//        for (String everyHex16 : allHex16) {
+//            //十六进制转十进制
+//            int tempC = Integer.valueOf(everyHex16, 16);
+//            //将加密前加的那个随机数减回去，得到加密前的报文的十进制
+//            int resultC = tempC + random;
+//            //再将得到的加密前的十进制转成十六进制
+//            String resultHex = Integer.toHexString(resultC);
+//            //加密后的十六进制是：
+//            System.out.println(everyHex16+"加密后的十六进制是:"+resultHex);
+//
+//            //添加到结果中
+//            resultStr.append(resultHex);
+//        }
+//        //加密后的十六进制是：
+//        System.out.println("加密后的十六进制resultStr:"+resultStr);
+//        System.out.println("============转回字符串："+HEXUtil.decode(resultStr.toString()));
+//    }
 }

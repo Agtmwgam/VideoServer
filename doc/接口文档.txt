@@ -395,7 +395,6 @@ GET 112.74.77.11:2019/shungkon/picture/getDensityPicture?serial=QSZN001
     "message": "成功",
     "data":
         {
-            "densityPictureName": "",
             "densityPicturePath":"\\picture\\QSZN001_20190803150322.png"
         }
      ]

@@ -2,8 +2,10 @@ package com.tw.timer;
 
 import com.tw.dao.BeatMessageDao;
 import com.tw.dao.DeviceDao;
+import com.tw.dao.LoginMessageDao;
 import com.tw.entity.BeatMessage;
 import com.tw.entity.Device;
+import com.tw.entity.LoginMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class BeatTimer implements InitializingBean {
 
     @Autowired
     DeviceDao deviceDao;
+
+    @Autowired
+    LoginMessageDao loginMessageDao;
 
     // 全局统一时间格式化格式
     SimpleDateFormat FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -73,11 +78,18 @@ public class BeatTimer implements InitializingBean {
                     deviceDao.updateDevice(devices);
                     log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为0");
                 }else {
-                    // 3.如果最近一条心跳信息的分钟差值大于5,就将 device isOnline 置为 0
+                    // 3.如果最近一条心跳信息的分钟差值大于5,就将 device isOnline 置为 0,并且将登陆信息置为无效
                     long difMin = (date.getTime() - beatMessage.getMesDate().getTime()) / (1000 * 60);
                     if (difMin>5){
                         devices.setIsOnline('0');
                         deviceDao.updateDevice(devices);
+                        LoginMessage loginMessage = loginMessageDao.findBySerial(devices.getSerial());
+                        if (loginMessage!=null){
+                            loginMessage.setIsValid('0');
+                            loginMessage.setUpdateTime(new Date());
+                            loginMessageDao.updateIsValidBySerial(loginMessage);
+                            log.info("【检查心跳】将 " + devices.getSerial() + " 的登陆信息置为无效");
+                        }
                         log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为0");
                     }else if (difMin<=5){
                         devices.setIsOnline('1');

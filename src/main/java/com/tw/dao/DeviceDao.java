@@ -1,7 +1,6 @@
 package com.tw.dao;
 
 import com.tw.entity.Device;
-import com.tw.entity.VUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +26,10 @@ public interface DeviceDao {
 
     Device getDeviceById(Map<String, Object> param);
 
+    Device getDeviceBySerial(String serial);
+
+    List<Device> getDeviceByCoditionPage(Map<String, Object> param);
+
     List<Device> getDeviceByCodition(Device device);
 
     /**
@@ -36,4 +39,6 @@ public interface DeviceDao {
      * @return
      */
    List<String> getDeviceByUser(VUser user);
+
+    List<Device> getDeviceLikeCondition(Map<String, Object> param);
 }

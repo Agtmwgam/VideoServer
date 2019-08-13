@@ -1,17 +1,13 @@
 package com.tw.service;
 
-import com.tw.dao.BeatMessageDao;
-import com.tw.dao.DeviceDao;
-import com.tw.dao.LoginMessageDao;
-import com.tw.dao.WarningMessageDao;
-import com.tw.entity.BeatMessage;
-import com.tw.entity.Device;
-import com.tw.entity.LoginMessage;
-import com.tw.entity.WarningMessage;
+import com.tw.dao.*;
+import com.tw.entity.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: zhuoshouyi
@@ -24,13 +20,20 @@ import java.util.HashMap;
 @Slf4j
 public class RecDeviceSMSService {
 
+    @Autowired
     WarningMessageDao warningMessageDao;
 
+    @Autowired
     BeatMessageDao beatMessageDao;
 
+    @Autowired
     LoginMessageDao loginMessageDao;
 
+    @Autowired
     DeviceDao deviceDao;
+
+    @Autowired
+    DevGroupDao devGroupDao;
 
     /**
      * 校验数据库是否与传进来的设备号和验证码一致
@@ -38,36 +41,69 @@ public class RecDeviceSMSService {
      */
     public Boolean checkDevice(String serial, String code){
 
-        HashMap map = new HashMap();
-        map.put(serial, "1");
+        // 获取此设备的信息
+        Device device = deviceDao.getDeviceBySerial(serial);
+        if (device==null){
+            log.error("【登陆校验】此设备信息未录入系统");
+            return false;
+        }
 
-        Device device = deviceDao.getDeviceById(map);
+        // 进行设备的验证码校验
         if (device.getDeviceVerifyCode().equals(code)){
+            log.info("【登陆校验】设备信息正确");
             return true;
         }
         else {
+            log.error("【登陆校验】设备信息与数据库不符");
             return false;
         }
 
     }
 
     /**
-     *
+     * 查询此设备是否有登陆信息
      * @return
      */
     public Boolean checkLogin(String serial){
 
-        // TODO 如何验证登陆信息
-
+        // 1.查看有无登陆信息
         LoginMessage loginMessage = loginMessageDao.findBySerial(serial);
         if (loginMessage==null){
             log.error("【验证登陆信息】此设备无登陆信息");
             return false;
         }else{
-            // TODO 增加失效时间
-            return true;
+            // 2.校验登陆信息是否可用 isValid==1
+            if (loginMessage.getIsValid()=='0'){
+                // 登陆信息不可用
+                log.error("【验证登陆信息】此设备登陆信息已失效,需重新登陆");
+                return false;
+            }else {
+                // 登陆信息可用
+                log.info("【验证登陆信息】此设备登陆通过");
+                return true;
+            }
+        }
+    }
+
+    /**
+     * 获取设备分组名和设备名
+     * @return
+     */
+    public List<String> findGroupNameAndDeviceName(String serial){
+
+        // 获取 deviceName 与 groupName
+        Device device = deviceDao.getDeviceBySerial(serial);
+        DevGroup devGroup = devGroupDao.getDevGroupBySerial(serial);
+
+        List<String> groupNameAndDeviceNameList = new ArrayList<>();
+        if (device!=null){
+            groupNameAndDeviceNameList.add(device.getDeviceName());
+        }
+        if (devGroup!=null){
+            groupNameAndDeviceNameList.add(devGroup.getGroupName());
         }
 
+        return groupNameAndDeviceNameList;
     }
 
     /**
@@ -77,8 +113,21 @@ public class RecDeviceSMSService {
      */
     public Boolean loginMessageSave(LoginMessage loginMessage){
 
-        // 1.将此条登陆信息写入进数据库
-        loginMessageDao.saveLoginMessage(loginMessage);
+        // 查询此设备有无登陆信息
+        LoginMessage message = loginMessageDao.findBySerial(loginMessage.getSerial());
+        if (message==null){
+            // 数据不存在,将此条登陆信息写入进数据库
+            loginMessageDao.saveLoginMessage(loginMessage);
+        }else {
+            // 数据存在,修改
+            loginMessageDao.modifyLogin(loginMessage);
+            // 将 isValid 改为 1
+            LoginMessage lm1 = new LoginMessage();
+            lm1.setSerial(loginMessage.getSerial());
+            lm1.setIsValid('1');
+            loginMessageDao.updateIsValidBySerial(lm1);
+        }
+
         log.info("【登陆信息】登陆信息入库成功");
 
         return true;
@@ -103,15 +152,22 @@ public class RecDeviceSMSService {
      */
     public Boolean beatMessageSave(BeatMessage beatMessage){
 
-        // 1.将此条告警信息插入进数据库
-        beatMessageDao.saveBeatMessage(beatMessage);
-        HashMap deviceMap = new HashMap<>();
-        deviceMap.put(beatMessage.getSerial(), "1");
-        Device device = deviceDao.getDeviceById(deviceMap);
-        device.setDeviceStatus(beatMessage.getExeStatus());
-        device.setIsOnline('1');
-        device.setNewBeatTime(beatMessage.getMesDate());
-        deviceDao.updateDevice(device);
+        // 1.查询数据库是否有此设备的心跳消息
+        BeatMessage message = beatMessageDao.findBySerial(beatMessage.getSerial());
+        if (message==null){
+            // 如果不存在就插入
+            beatMessageDao.saveBeatMessage(beatMessage);
+        }else {
+            // 如果存在就修改
+            beatMessageDao.modifyBeat(beatMessage);
+        }
+
+        // TODO 心跳信息插入后是否立刻更改 device 信息
+//        Device device = deviceDao.getDeviceBySerial(beatMessage.getSerial());
+//        device.setDeviceStatus(beatMessage.getExeStatus());
+//        device.setIsOnline('1');
+//        device.setNewBeatTime(beatMessage.getMesDate());
+//        deviceDao.updateDevice(device);
 
         log.info("【心跳信息】心跳信息入库成功");
 

@@ -18,4 +18,10 @@ public interface LoginMessageDao {
 
     // 根据 serial 找到 device 的信息
     LoginMessage findBySerial(String serial);
+
+    // 根据 serial 修改此设备的 isValid
+    void updateIsValidBySerial(LoginMessage loginMessage);
+
+    // 更新心跳信息
+    void modifyLogin(LoginMessage loginMessage);
 }

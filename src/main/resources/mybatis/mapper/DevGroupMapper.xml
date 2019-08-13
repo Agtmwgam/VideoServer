@@ -5,17 +5,17 @@
 
 
     <!-- 增加devGroup -->
-    <select id="addGroup" parameterType="com.tw.entity.DevGroup">
+    <insert id="addDevGroup" parameterType="com.tw.entity.DevGroup">
         INSERT INTO
             devGroup
             (groupName)
         values
             (#{groupName})
-    </select>
+    </insert>
 
 
     <!-- 删除devGroup -->
-    <update id="id" parameterType="int">
+    <update id="deleteDevGroupById" parameterType="int">
         UPDATE
             devGroup
         SET
@@ -64,5 +64,25 @@
         AND
             isValid = '1'
     </select>
+
+    <!-- 根据 device serial 查询devGroup -->
+    <select id="getDevGroupBySerial" parameterType="String" resultType="com.tw.entity.DevGroup">
+        SELECT
+            g.*
+        FROM
+            devGroup g
+        LEFT JOIN deviceGroupRelate dgr on dgr.groupId = g.groupId
+        LEFT JOIN device d on dgr.deviceId = d.deviceId
+        WHERE
+            d.serial = #{serial}
+        AND
+            g.isValid = '1'
+        AND
+            dgr.isValid = '1'
+        AND
+            d.isValid = '1'
+    </select>
+
+
 
 </mapper>
