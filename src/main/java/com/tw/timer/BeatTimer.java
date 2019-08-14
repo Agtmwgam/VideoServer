@@ -48,6 +48,7 @@ public class BeatTimer implements InitializingBean {
     @Transactional
     public void BeatTimerTest(){
 
+        log.info("==========================================");
         Date date = new Date();
         log.info("【检查心跳】当前时间: " + FMT.format(date));
 

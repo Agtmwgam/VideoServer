@@ -48,13 +48,14 @@ public class RecDeviceSMSController {
     @RequestMapping("/recDeviceLogin")
     public String recDeviceLogin(@RequestParam("message") String message) {
 
+        logger.info("==========================================");
         logger.info("======从设备端接收到的消息为："+message);
         String[] mes = message.split("#");
 
         // 1.校验字段数量
         if (mes.length != 7){
             log.error("【设备登陆】字段数量不正确");
-            return "response: 字段数量不正确,无法解析";
+            return "response: The number of fields is incorrect and cannot be parsed";
         }
 
         // 传入参数
@@ -78,17 +79,18 @@ public class RecDeviceSMSController {
 
         }catch (Exception e){
             log.error("【设备登陆】验证码解析错误");
-            return FAILD+"#验证码解析错误";
+            return FAILD+"#Verification code parsing error";
         }
 
         // 3.校验字段
         if (!Pattern.matches(PATTERN1, SERIAL)){
             log.error("【设备登陆】设备号格式不正确");
-            return FAILD+"#设备号格式不正确";
+            return FAILD+"#Incorrect format of device number";
         }
-        if (!Pattern.matches(PATTERN2, DEVICEVERIFYCODE)){
+        // 使用解密后的验证码进行校验
+        if (!Pattern.matches(PATTERN2, vertifMes)){
             log.error("【设备登陆】设备验证码格式不正确");
-            return FAILD+"#设备验证码格式不正确";
+            return FAILD+"#The format of device verification code is incorrect";
         }
 
         // 4.将 message 转换成 loginMessage
@@ -111,7 +113,7 @@ public class RecDeviceSMSController {
             return SUCCESS;
         }else {
             log.error("【设备登陆】设备号或验证码错误");
-            return FAILD+"#设备号或验证码错误";
+            return FAILD+"#Error in device number or verification number";
         }
 
     }
@@ -127,13 +129,14 @@ public class RecDeviceSMSController {
     @RequestMapping("/recDeviceBeat")
     public String recDeviceBeat(@RequestParam("message") String message) {
 
+        logger.info("==========================================");
         logger.info("======从设备端接收到的心跳消息为：" + message);
 
         // 1.数据校验,心跳数据为7个字段
         String[] beat = message.split("#");
         if (beat.length!=7){
             log.error("【心跳】字段数量不正确");
-            return "response: 字段数量不正确,无法解析";
+            return "response: The number of fields is incorrect and cannot be parsed";
         }
 
         // 传入参数
@@ -161,7 +164,7 @@ public class RecDeviceSMSController {
             // 校验字段
             if (!Pattern.matches(PATTERN1, beatMessageBean.getSerial())){
                 log.error("【心跳】设备号不正确");
-                return FAILD+"#设备号不正确";
+                return FAILD+"#Incorrect equipment number";
             }
 
             // 调用登陆验证
@@ -177,7 +180,7 @@ public class RecDeviceSMSController {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("【心跳】===========系统异常");
-            return "response: java后台系统异常=======";
+            return "response: Java system exception=======";
         }
 
 
@@ -195,13 +198,15 @@ public class RecDeviceSMSController {
      */
     @RequestMapping("/recDeviceWarn")
     public String recDeviceWarn(@RequestParam("message") String message) {
+
+        logger.info("==========================================");
         logger.info("======从设备端接收到的告警消息为："+message);
 
         // 2.数据校验,告警数据为9个字段
         String[] warn = message.split("#");
         if (warn.length!=9){
             log.error("【告警】字段数量不正确");
-            return "response: 字段数量不正确,无法解析";
+            return "response: The number of fields is incorrect and cannot be parsed";
         }
 
         // 传入参数
@@ -237,7 +242,7 @@ public class RecDeviceSMSController {
             // 校验字段
             if (!Pattern.matches(PATTERN1, warningMessageBean.getSerial())){
                 log.error("【告警】设备号不正确");
-                return FAILD+"#设备号不正确";
+                return FAILD+"#Incorrect equipment number";
             }
 
             // 调用登陆验证
@@ -254,7 +259,7 @@ public class RecDeviceSMSController {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("【告警】===========系统异常");
-            return "response: java后台系统异常=======";
+            return "response: Java system exception=======";
         }
     }
 
