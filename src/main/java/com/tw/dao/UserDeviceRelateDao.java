@@ -23,4 +23,13 @@ public interface UserDeviceRelateDao {
     // 逻辑删除用户
     public Integer delUserDevice(UserDeviceRelate udr);
 
+
+    /**
+     * @author liutianwen
+     * @desc  增加用户设备
+     * @param userDeviceRelate
+     * @return
+     */
+    void addUserDevice(UserDeviceRelate userDeviceRelate);
+
 }
