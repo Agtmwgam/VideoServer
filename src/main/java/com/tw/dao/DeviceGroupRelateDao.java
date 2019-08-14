@@ -11,4 +11,8 @@ import java.util.List;
 public interface DeviceGroupRelateDao {
 
     List<DeviceGroupRelate> getDeviceGroupByGroupId(int groupId);
+
+    List<DeviceGroupRelate> getDeviceGroupRelateByCondition(DeviceGroupRelate deviceGroupRelate);
+
+    int addDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate);
 }

@@ -4,6 +4,17 @@
 <mapper namespace="com.tw.dao.DeviceGroupRelateDao">
 
 
+    <!-- 添加对象 -->
+    <insert id="addDeviceGroupRelate" parameterType="com.tw.entity.DeviceGroupRelate">
+        INSERT INTO
+            deviceGroupRelate
+            (groupId, deviceId)
+        VALUES
+            (#{groupId}, #{deviceId})
+    </insert>
+
+
+ <!-- 根据groupId获得对象 -->
     <select id="getDeviceGroupByGroupId" parameterType="int" resultType="com.tw.entity.DeviceGroupRelate">
         SELECT
             a.*
@@ -13,6 +24,24 @@
             isValid = '1'
         AND
             a.groupId = #{groupId}
+    </select>
+
+
+    <!-- 根据条件查询内容 -->
+    <select id="getDeviceGroupRelateByCondition" parameterType="int" resultType="com.tw.entity.DeviceGroupRelate">
+        SELECT
+            a.*
+        FROM
+            deviceGroupRelate a
+        WHERE
+            1=1
+        <if test="groupId != 0">
+            AND groupId = #{groupId}
+        </if>
+        <if test="deviceId != 0">
+            AND deviceId = #{deviceId}
+        </if>
+            AND isValid = '1'
     </select>
 
 </mapper>

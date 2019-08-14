@@ -1,5 +1,6 @@
 package com.tw.controller;
 
+import com.sun.org.apache.regexp.internal.RE;
 import com.tw.dto.DevGroupDTO;
 import com.tw.dto.UserGroupDTO;
 import com.tw.dto.UserRoleDTO;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sun.rmi.log.LogInputStream;
 
+import javax.swing.*;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,7 +94,7 @@ public class DeviceController {
      * @param: deviceId
      * @return:
      */
-    @PostMapping("/deviceId")
+    @PostMapping("/deleteDevice")
     public ResponseInfo deleteDevice(@RequestParam(value = "deviceId") int deviceId) {
         ResponseInfo response = new ResponseInfo();
         int isDel = deviceService.deleteDevice(deviceId);
@@ -360,6 +362,52 @@ public class DeviceController {
         return responseInfo;
     }
 
+
+    /**
+     * @Author: John
+     * @Description:                给设备添加分组
+     * @Date:  2019/8/15 1:49
+     * @param: serial               序列号
+     * @param: deviceVerifyCode     验证码
+     * @param: groupId              组id
+     * @return:
+     */
+    @PostMapping("/addDevGroup")
+    public ResponseInfo addDevGroup(@RequestParam("serial") String serial,
+                            @RequestParam(value = "deviceVerifyCode") String deviceVerifyCode,
+                            @RequestParam(value = "groupId") int groupId) {
+        ResponseInfo responseInfo = new ResponseInfo();
+        Device device = new Device();
+        device.setSerial(serial);
+        device.setDeviceVerifyCode(deviceVerifyCode);
+        device.setIsValid('1');
+        List<Device> deviceList = deviceService.getDeviceByCodition(device);
+        //如果校验通过，说明可以对这个设备进行操作
+        if (deviceList != null && deviceList.size() > 0) {
+            DevGroup devGroup = new DevGroup();
+            DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
+            deviceGroupRelate.setDeviceId(deviceList.get(0).getDeviceId());
+            deviceGroupRelate.setGroupId(groupId);
+            List<DeviceGroupRelate> deviceGroupRelateList =  deviceGroupRelateService.getDeviceGroupRelateByCondition(deviceGroupRelate);
+            if (deviceGroupRelateList != null && deviceGroupRelateList.size() > 0) {
+                responseInfo.setCode(ResponseInfo.CODE_ERROR);
+                responseInfo.setMessage("it's already have this connect!");
+            } else {
+                int isAdd = deviceGroupRelateService.addDeviceGroupRelate(deviceGroupRelate);
+                if (isAdd == 1) {
+                    responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+                    responseInfo.setMessage("add deviceGroupRelate success!");
+                } else {
+                    responseInfo.setCode(ResponseInfo.CODE_ERROR);
+                    responseInfo.setMessage("add deviceGroupRelate failed!");
+                }
+            }
+        } else {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("check the serial and deviceVeifyCode please!");
+        }
+        return responseInfo;
+    }
 
 
 

@@ -16,4 +16,14 @@ public class DeviceGroupRelateService {
     public List<DeviceGroupRelate> getDeviceGroupByGroupId(int groupId) {
         return deviceGroupRelateDao.getDeviceGroupByGroupId(groupId);
     }
+
+
+    //根据条件获得
+    public List<DeviceGroupRelate> getDeviceGroupRelateByCondition(DeviceGroupRelate deviceGroupRelate) {
+        return deviceGroupRelateDao.getDeviceGroupRelateByCondition(deviceGroupRelate);
+    }
+
+    public int addDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate) {
+        return deviceGroupRelateDao.addDeviceGroupRelate(deviceGroupRelate);
+    }
 }
