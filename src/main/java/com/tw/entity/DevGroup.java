@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 public class DevGroup extends BaseEntity {
+
     private int groupId;             //自增主键
     private String groupName;       //组名
 

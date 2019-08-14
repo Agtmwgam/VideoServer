@@ -11,5 +11,6 @@
 		<typeAlias alias="Device" type="com.tw.entity.Device" />
 		<typeAlias alias="DevGroup" type="com.tw.entity.DevGroup" />
 		<typeAlias alias="RootInfo" type="com.tw.entity.RootInfo" />
+		<typeAlias alias="UserDeviceGroupRelate" type="com.tw.entity.UserDeviceGroupRelate" />
 	</typeAliases>
 </configuration>

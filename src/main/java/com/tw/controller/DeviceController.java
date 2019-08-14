@@ -1,10 +1,16 @@
 package com.tw.controller;
 
+import com.tw.dto.DevGroupDTO;
+import com.tw.dto.UserGroupDTO;
 import com.tw.dto.UserRoleDTO;
 import com.tw.entity.DevGroup;
 import com.tw.entity.Device;
+import com.tw.entity.DeviceGroupRelate;
+import com.tw.entity.UserDeviceGroupRelate;
 import com.tw.service.DevGroupService;
+import com.tw.service.DeviceGroupRelateService;
 import com.tw.service.DeviceService;
+import com.tw.service.UserDeviceGroupRelateService;
 import com.tw.util.HEXUtil;
 import com.tw.util.ResponseInfo;
 import com.tw.util.UserAuthentication;
@@ -13,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.rmi.log.LogInputStream;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -37,6 +44,12 @@ public class DeviceController {
     @Autowired
     private DevGroupService devGroupService;
 
+    @Autowired
+    private UserDeviceGroupRelateService userDeviceGroupRelateService;
+
+    @Autowired
+    private DeviceGroupRelateService deviceGroupRelateService;
+
     //日志
     private static Logger logger = Logger.getLogger(DeviceController.class);
 
@@ -44,7 +57,7 @@ public class DeviceController {
     /**
      * @Author: John
      * @Description: 插入device设备信息
-     * @Date:  2019/8/5 22:39
+     * @Date: 2019/8/5 22:39
      * @param: device
      * @return:
      */
@@ -56,7 +69,7 @@ public class DeviceController {
         //查询数据库中是否已经存在该设备，感觉设备号和验证码检测
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
         if (deviceList != null && deviceList.size() > 0) {
-            logger.warn("设备 " + device.getSerial() +" 已经存在！");
+            logger.warn("设备 " + device.getSerial() + " 已经存在！");
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("device already exists！");
             return responseInfo;
@@ -71,14 +84,14 @@ public class DeviceController {
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("add device failed!");
         }
-        return  responseInfo;
+        return responseInfo;
     }
 
 
     /**
      * @Author: John
      * @Description: 删除device设备信息
-     * @Date:  2019/8/5 22:40
+     * @Date: 2019/8/5 22:40
      * @param: deviceId
      * @return:
      */
@@ -86,7 +99,7 @@ public class DeviceController {
     public ResponseInfo deleteDevice(@RequestParam(value = "deviceId") int deviceId) {
         ResponseInfo response = new ResponseInfo();
         int isDel = deviceService.deleteDevice(deviceId);
-        System.out.println("==========删除的结果为："+isDel);
+        System.out.println("==========删除的结果为：" + isDel);
 
         if (isDel == 1) {
             response.setCode(ResponseInfo.CODE_SUCCESS);
@@ -102,7 +115,7 @@ public class DeviceController {
     /**
      * @Author: John
      * @Description: 更新device
-     * @Date:  2019/8/5 22:56
+     * @Date: 2019/8/5 22:56
      * @param: device json对象
      * @return:
      */
@@ -110,7 +123,7 @@ public class DeviceController {
     public ResponseInfo updateDevice(@RequestBody Device device) {
         ResponseInfo response = new ResponseInfo();
         Integer isUpdate = deviceService.updateDevice(device);
-        System.out.println("=======update的结果为："+isUpdate);
+        System.out.println("=======update的结果为：" + isUpdate);
         if (isUpdate == 1) {
             response.setCode(ResponseInfo.CODE_SUCCESS);
             response.setMessage("update device success!");
@@ -125,7 +138,7 @@ public class DeviceController {
     /**
      * @Author: John
      * @Description: 根据deviceId获得device对象
-     * @Date:  2019/8/5 12:51
+     * @Date: 2019/8/5 12:51
      * @param: deviceId
      * @return:
      */
@@ -142,7 +155,7 @@ public class DeviceController {
             response.setCode(ResponseInfo.CODE_SUCCESS);
             response.setMessage("getDeviceByDeviceId success!");
             response.setData(resultMap);
-            System.out.println("=====device.toString()"+device.toString());
+            System.out.println("=====device.toString()" + device.toString());
         } else {
             resultMap.put("totle", 0);
             response.setCode(ResponseInfo.CODE_ERROR);
@@ -156,7 +169,7 @@ public class DeviceController {
     /**
      * @Author: John
      * @Description: 根据条件查询设备列表
-     * @Date:  2019/8/6 0:43
+     * @Date: 2019/8/6 0:43
      * @param: device
      * @return:
      */
@@ -169,7 +182,7 @@ public class DeviceController {
         Map<String, Object> resultMap = new HashMap<>();
         List<Device> devices = deviceService.getDeviceByCoditionPage(device, pageNo, pageSize);
         for (Device device1 : devices) {
-            System.out.println("===:"+device1.toString());
+            System.out.println("===:" + device1.toString());
         }
         if (devices != null) {
             int totle = devices.size();
@@ -189,11 +202,10 @@ public class DeviceController {
     }
 
 
-
     /**
      * @Author: John
      * @Description: 根据设备序列号、设备型号和生成日期进行模糊搜索
-     * @Date:  2019/8/13 1:27
+     * @Date: 2019/8/13 1:27
      * @param: device
      * @return:
      */
@@ -221,13 +233,13 @@ public class DeviceController {
     /**
      * @Author: John
      * @Description: 客户端添加分组接口
-     * @Date:  2019/8/10 21:52
+     * @Date: 2019/8/10 21:52
      * @param: groupName
      * @param: httpServletRequest
      * @return:
      */
     @PostMapping("/addGroup")
-    public ResponseInfo addGroup(@RequestParam(value="groupName", required = true) String groupName) {
+    public ResponseInfo addGroup(@RequestParam(value = "groupName", required = true) String groupName) {
         ResponseInfo response = new ResponseInfo();
         // 1.校验用户身份
         //UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
@@ -257,7 +269,7 @@ public class DeviceController {
     /**
      * @Author: John
      * @Description: 修改设备分组名称
-     * @Date:  2019/8/10 21:56
+     * @Date: 2019/8/10 21:56
      * @param: devGroup
      * @return:
      */
@@ -279,7 +291,7 @@ public class DeviceController {
     /**
      * @Author: John
      * @Description: 删除设备分组接口
-     * @Date:  2019/8/10 21:59
+     * @Date: 2019/8/10 21:59
      * @param: groupId
      * @return:
      */
@@ -297,6 +309,46 @@ public class DeviceController {
         return response;
     }
 
+
+    @GetMapping("/getDeviceByUserId")
+    public List<DevGroupDTO> getDeviceByUserId() {
+        //声明返回的对象
+
+        UserGroupDTO userGroupDTO = new UserGroupDTO();
+
+        List<DevGroupDTO> devGroupDTOList = new ArrayList<>();
+        List<UserGroupDTO> userGroupDTOList = new ArrayList<>();
+
+
+        int userId = 3;
+        //用于放结果的deviceList
+
+        List<DevGroup> devGroupList = new ArrayList<>();
+        Map<String, Object> param = new HashMap<String, Object>();
+        //根据用户id将所有的设备组都查回来
+        List<UserDeviceGroupRelate> userDeviceGroupRelates = userDeviceGroupRelateService.getGroupListByUserId(userId);
+        for (UserDeviceGroupRelate userDeviceGroupRelate : userDeviceGroupRelates) {
+            DevGroupDTO devGroupDTO = new DevGroupDTO();
+
+            //每次都需要重新new一个对象去接查出来的设备信息
+            List<Device> deviceList = new ArrayList<>();
+            int groupId = userDeviceGroupRelate.getGroupId();
+
+            DevGroup devGroup = devGroupService.getDevGroupById(groupId);
+            List<DeviceGroupRelate> deviceGroupList = deviceGroupRelateService.getDeviceGroupByGroupId(groupId);
+            for (DeviceGroupRelate deviceGroup : deviceGroupList) {
+                Device device = deviceService.getDeviceById(deviceGroup.getDeviceId());
+                //将每次的结果添加进去deviceList里面
+                deviceList.add(device);
+            }
+            //每一次结果都放到组里面的设备列表结果集里面
+            devGroupDTO.setDevGroup(devGroup);
+            devGroupDTO.setDeviceList(deviceList);
+            devGroupDTOList.add(devGroupDTO);
+            //userGroupDTOList.add(devGroupDTOList);
+        }
+        return devGroupDTOList;
+    }
 
 
 
