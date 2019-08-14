@@ -308,7 +308,8 @@ public class DeviceController {
 
 
     @GetMapping("/getDeviceByUserId")
-    public UserGroupDTO getDeviceByUserId(@RequestParam(value = "userId") int userId) {
+    public ResponseInfo getDeviceByUserId(@RequestParam(value = "userId") int userId) {
+        ResponseInfo responseInfo = new ResponseInfo();
         //声明返回的对象
         UserGroupDTO userGroupDTO = new UserGroupDTO();
 
@@ -348,7 +349,15 @@ public class DeviceController {
             devGroupDTOList.add(devGroupDTO);
         }
         userGroupDTO.setDevGroupList(devGroupDTOList);
-        return userGroupDTO;
+        if (userGroupDTO != null) {
+            responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+            responseInfo.setData(userGroupDTO);
+            responseInfo.setMessage("Get user's all devices success!");
+        } else {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("Get user's all devices failed!");
+        }
+        return responseInfo;
     }
 
 
