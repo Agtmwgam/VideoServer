@@ -3,6 +3,14 @@
 
 <mapper namespace="com.tw.dao.UserDeviceRelateDao">
 
+	<!-- 添加用户设备 -->
+	<insert id="addUserDevice" parameterType="com.tw.entity.VUser">
+		insert into userDeviceRelate
+		(userId,deviceId)
+		values(#{userId},#{deviceId})
+	</insert>
+
+
 	<!-- 逻辑删除/启用用户设备 -->
 	<update id="delUserDevice" parameterType="com.tw.entity.UserDeviceRelate">
 		update userDeviceRelate

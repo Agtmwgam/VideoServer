@@ -10,7 +10,6 @@ import com.tw.service.UserDeviceRelateService;
 import com.tw.service.VUserService;
 import com.tw.util.ResponseInfo;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jasper.tagplugins.jstl.core.If;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,7 +37,7 @@ public class UserManagementController {
     private UserDeviceRelateService userDeviceRelateService;
 
     @Autowired
-    private DeviceService DeviceService;
+    private DeviceService deviceService;
 
     /**
      * @param requestMap phoneNumber
@@ -60,6 +59,56 @@ public class UserManagementController {
         response.setCode(CODE_SUCCESS);
         response.setData(uAdList);
 
+        return response;
+    }
+
+    /**
+     * @param requestMap phoneNumber  serial  deviceVerifyCode
+     * @return
+     * @Date 2019/8/5 22:21
+     * @Created liutianwen
+     * @Description 增加用户设备
+     */
+    @PostMapping(value = "/addUserDevice")
+    public ResponseInfo addUserDevice(@RequestBody Map<String, Object> requestMap) {
+        ResponseInfo response = new ResponseInfo();
+//       把参数提取出来
+        String phoneNumber = requestMap.get("phoneNumber").toString();
+        String serial = requestMap.get("serial").toString();
+        String deviceVerifyCode = requestMap.get("deviceVerifyCode").toString();
+//       检查phoneNumber  serial  deviceVerifyCode是否为空
+        response = checkPhoneAndSerialAndDeviceVerifyCode(phoneNumber, serial, deviceVerifyCode);
+        if (response.getCode() == CODE_ERROR) {
+            return response;
+        }
+
+        VUser user = new VUser();
+        Device device = new Device();
+        //把参数放入实体类
+        user.setPhoneNumber(phoneNumber);
+        device.setSerial(serial);
+        device.setDeviceVerifyCode(deviceVerifyCode);
+
+
+        user = userService.queryUser(user);
+//      根据条件查询出DeviceId
+        List<Device> deviceList = deviceService.getDeviceByCodition(device);
+        if (deviceList == null) {
+            response.setMessage("The device is not exist!");
+            response.setCode(CODE_ERROR);
+            return response;
+        }
+        for (Device deviceTemp : deviceList) {
+            device.setDeviceId(deviceTemp.getDeviceId());
+        }
+//       通过用户ID和设备ID增加用户设备
+        UserDeviceRelate userDeviceRelate = new UserDeviceRelate();
+        userDeviceRelate.setUserId(user.getUserID());
+        userDeviceRelate.setDeviceId(device.getDeviceId());
+        deviceService.addUserDevice(userDeviceRelate);
+
+        response.setCode(CODE_SUCCESS);
+        response.setMessage("add user's device successfully!");
         return response;
     }
 
@@ -93,7 +142,7 @@ public class UserManagementController {
 
         //查找vUser和deviceId
         vUser = userService.queryUser(vUser);
-        List<Device> deviceList = DeviceService.getDeviceByCodition(device);
+        List<Device> deviceList = deviceService.getDeviceByCodition(device);
         //查找deviceId  tips:因为serial是确定的，所以此处只会找到一个deviceId
         int deviceId = 0;
         for (Device deviceTemp : deviceList) {
@@ -110,7 +159,7 @@ public class UserManagementController {
         int delNum = userDeviceRelateService.delUserDevice(udr);
 
         response.setCode(CODE_SUCCESS);
-        response.setMessage(delNum+"user's  devices were deleted successfull!");
+        response.setMessage(delNum + "user's  devices were deleted successfull!");
 
         return response;
     }
@@ -178,5 +227,33 @@ public class UserManagementController {
 
         return response;
     }
+
+    /**
+     * @return
+     * @Date 2019/8/12 22:21
+     * @Created liutianwen
+     * @Description 校验用户管理中前端返回的参数是否为空
+     */
+    public ResponseInfo checkPhoneAndSerialAndDeviceVerifyCode(String phoneNumber, String serial, String deviceVerifyCode) {
+        ResponseInfo response = new ResponseInfo();
+        if (StringUtils.isBlank(phoneNumber)) {
+            response.setCode("9999");
+            response.setMessage("WEB front phoneNumber can not be empty!");
+            return response;
+        }
+        if (StringUtils.isBlank(serial)) {
+            response.setCode("9999");
+            response.setMessage("WEB front serial can not be empty!");
+            return response;
+        }
+        if (StringUtils.isBlank(deviceVerifyCode)) {
+            response.setCode("9999");
+            response.setMessage("WEB front deviceVerifyCode can not be empty!");
+            return response;
+        }
+
+        return response;
+    }
+
 
 }

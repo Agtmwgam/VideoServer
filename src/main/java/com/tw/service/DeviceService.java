@@ -1,9 +1,12 @@
 package com.tw.service;
 
 import com.tw.dao.DeviceDao;
+import com.tw.dao.UserDeviceRelateDao;
 import com.tw.entity.Device;
+import com.tw.entity.UserDeviceRelate;
 import com.tw.entity.VUser;
 import com.tw.entity.common.ConstantParam;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,11 @@ public class DeviceService {
 
     @Autowired
     private DeviceDao deviceDao;
+
+    @Autowired
+    private UserDeviceRelateDao userDeviceRelateDao;
+
+    private static Logger log = Logger.getLogger(VUserService.class);
 
     public int addDevice(Device device) {
         return deviceDao.addDevice(device);
@@ -80,11 +88,27 @@ public class DeviceService {
     /**
      * @author liutianwen
      * @desc  根据传入vuser信息查看设备号
-     * @param VUser
+     * @param user
      * @return
      */
     public List<String> getDeviceByUser(VUser user) {
         return deviceDao.getDeviceByUser(user);
+    }
+
+
+    /**
+     * @author liutianwen
+     * @desc  增加用户设备
+     * @param userDeviceRelate
+     * @return
+     */
+    public void addUserDevice(UserDeviceRelate userDeviceRelate) {
+        try {
+            userDeviceRelateDao.addUserDevice(userDeviceRelate);
+        }catch (Exception e){
+            log.error("addUserDevice erro:"+e.toString());
+            e.printStackTrace();
+        }
     }
 
 
