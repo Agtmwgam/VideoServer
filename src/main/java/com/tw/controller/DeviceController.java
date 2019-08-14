@@ -3,14 +3,8 @@ package com.tw.controller;
 import com.tw.dto.DevGroupDTO;
 import com.tw.dto.UserGroupDTO;
 import com.tw.dto.UserRoleDTO;
-import com.tw.entity.DevGroup;
-import com.tw.entity.Device;
-import com.tw.entity.DeviceGroupRelate;
-import com.tw.entity.UserDeviceGroupRelate;
-import com.tw.service.DevGroupService;
-import com.tw.service.DeviceGroupRelateService;
-import com.tw.service.DeviceService;
-import com.tw.service.UserDeviceGroupRelateService;
+import com.tw.entity.*;
+import com.tw.service.*;
 import com.tw.util.HEXUtil;
 import com.tw.util.ResponseInfo;
 import com.tw.util.UserAuthentication;
@@ -37,6 +31,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/device")
 public class DeviceController {
+
+    @Autowired
+    private VUserService vUserService;
 
     @Autowired
     private DeviceService deviceService;
@@ -311,20 +308,24 @@ public class DeviceController {
 
 
     @GetMapping("/getDeviceByUserId")
-    public List<DevGroupDTO> getDeviceByUserId() {
+    public UserGroupDTO getDeviceByUserId(@RequestParam(value = "userId") int userId) {
         //声明返回的对象
-
         UserGroupDTO userGroupDTO = new UserGroupDTO();
 
+        //用于存放用户下面的组下面的设备的
         List<DevGroupDTO> devGroupDTOList = new ArrayList<>();
-        List<UserGroupDTO> userGroupDTOList = new ArrayList<>();
 
 
-        int userId = 3;
         //用于放结果的deviceList
-
         List<DevGroup> devGroupList = new ArrayList<>();
         Map<String, Object> param = new HashMap<String, Object>();
+
+        //根据id查回用户信息
+        VUser user = new VUser();
+        user.setUserID(userId);
+        VUser vUser = vUserService.queryUser(user);
+        userGroupDTO.setUser(vUser);
+
         //根据用户id将所有的设备组都查回来
         List<UserDeviceGroupRelate> userDeviceGroupRelates = userDeviceGroupRelateService.getGroupListByUserId(userId);
         for (UserDeviceGroupRelate userDeviceGroupRelate : userDeviceGroupRelates) {
@@ -345,9 +346,9 @@ public class DeviceController {
             devGroupDTO.setDevGroup(devGroup);
             devGroupDTO.setDeviceList(deviceList);
             devGroupDTOList.add(devGroupDTO);
-            //userGroupDTOList.add(devGroupDTOList);
         }
-        return devGroupDTOList;
+        userGroupDTO.setDevGroupList(devGroupDTOList);
+        return userGroupDTO;
     }
 
 

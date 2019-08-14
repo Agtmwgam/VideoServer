@@ -16,7 +16,7 @@
 			resultType="com.tw.entity.VUser">
 		select * from vUser
 		<where>
-			<if test="userID !=null and id!=''">
+			<if test="userID !=null and userID!=''">
 				userID =#{userID}
 			</if>
 			<if test="nickName!=null and nickName!=''">
