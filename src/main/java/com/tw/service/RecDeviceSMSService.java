@@ -99,12 +99,20 @@ public class RecDeviceSMSService {
     public List<String> findGroupNameAndDeviceName(String serial){
 
         // 获取 deviceName 与 groupName
-        Device device = deviceDao.getDeviceBySerial(serial);
+        Device d1 = new Device();
+        d1.setSerial(serial);
+        d1.setIsValid('1');
+        List<Device> deviceList = deviceDao.getDeviceByCodition(d1);
         DevGroup devGroup = devGroupDao.getDevGroupBySerial(serial);
 
         List<String> groupNameAndDeviceNameList = new ArrayList<>();
-        if (device!=null){
-            groupNameAndDeviceNameList.add(device.getDeviceName());
+        if (deviceList==null || deviceList.size()==0){
+            log.error("【设备查询】设备未录入系统");
+            return new ArrayList<>();
+        }else if (deviceList.size()!=1){
+            log.error("【设备查询】数据库错误,有效数据不唯一");
+        }else {
+            groupNameAndDeviceNameList.add(deviceList.get(0).getDeviceName());
         }
         if (devGroup!=null){
             groupNameAndDeviceNameList.add(devGroup.getGroupName());
