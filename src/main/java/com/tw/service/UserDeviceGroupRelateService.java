@@ -13,7 +13,15 @@ public class UserDeviceGroupRelateService {
     @Autowired
     private UserDeviceGroupRelateDao userDeviceGroupRelateDao;
 
+    //添加分组
+    public int addUserDeviceGroupRelate(UserDeviceGroupRelate userDeviceGroupRelate) {
+        return userDeviceGroupRelateDao.addUserDeviceGroupRelate(userDeviceGroupRelate);
+    }
+
+    //根据用户id获得对象
     public List<UserDeviceGroupRelate> getGroupListByUserId(int userId) {
         return userDeviceGroupRelateDao.getGroupListByUserId(userId);
     }
+
+
 }

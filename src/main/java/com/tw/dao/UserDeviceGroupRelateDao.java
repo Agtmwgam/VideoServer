@@ -10,4 +10,5 @@ public interface UserDeviceGroupRelateDao {
 
     List<UserDeviceGroupRelate> getGroupListByUserId(int userId);
 
+    int addUserDeviceGroupRelate(UserDeviceGroupRelate userDeviceGroupRelate);
 }

@@ -115,8 +115,6 @@
                 and  v.userID like  '%${userID}%'
             </if>
             and  v.isValid='1'
-            and  u.isValid='1'
-            and  d.isValid='1'
         </where>
 
     </select>

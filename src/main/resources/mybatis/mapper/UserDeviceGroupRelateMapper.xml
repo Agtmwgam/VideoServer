@@ -4,6 +4,15 @@
 <mapper namespace="com.tw.dao.UserDeviceGroupRelateDao">
 
 
+    <!-- 添加分组关系 -->
+    <insert id="addUserDeviceGroupRelate" parameterType="com.tw.entity.UserDeviceGroupRelate">
+        INSERT INTO
+            userDeviceGroupRelate
+            (userId, groupId)
+        VALUES
+            (#{userId}, #{groupId})
+    </insert>
+
     <!--  根据groupId获得关联表集合 -->
     <select id="getGroupListByUserId" parameterType="int" resultType="com.tw.entity.UserDeviceGroupRelate">
         SELECT

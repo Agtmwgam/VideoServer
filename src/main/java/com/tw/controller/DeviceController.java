@@ -242,20 +242,30 @@ public class DeviceController {
      * @return:
      */
     @PostMapping("/addGroup")
-    public ResponseInfo addGroup(@RequestParam(value = "groupName", required = true) String groupName) {
+    public ResponseInfo addGroup(@RequestParam(value = "groupName", required = true) String groupName, @RequestParam(value = "userId") int userId) {
         ResponseInfo response = new ResponseInfo();
         // 1.校验用户身份
         //UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
         //String phoneNumber = userRoleDTO.getPhoneNumber();
-        String phoneNumber = "18814373836";
+        //String phoneNumber = "18814373836";
         //如果已经登录成功，就可以添加，否则提示登录
-        if (StringUtils.isNotBlank(phoneNumber)) {
+        if (userId > 0) {
             DevGroup devGroup = new DevGroup();
             devGroup.setGroupName(groupName);
             int isAdd = devGroupService.addDevGroup(devGroup);
             if (isAdd == 1) {
-                response.setCode(ResponseInfo.CODE_SUCCESS);
-                response.setMessage("add devGroup success!");
+                //添加到自己的分组中
+                UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
+                userDeviceGroupRelate.setGroupId(devGroup.getGroupId());
+                userDeviceGroupRelate.setUserId(userId);
+                int isAddRelate = userDeviceGroupRelateService.addUserDeviceGroupRelate(userDeviceGroupRelate);
+                if (isAddRelate ==1) {
+                    response.setCode(ResponseInfo.CODE_SUCCESS);
+                    response.setMessage("add devGroup success!");
+                } else {
+                    response.setCode(ResponseInfo.CODE_ERROR);
+                    response.setMessage("add devGroup failed!");
+                }
             } else {
                 response.setCode(ResponseInfo.CODE_ERROR);
                 response.setMessage("add devGroup failed!");
@@ -301,13 +311,25 @@ public class DeviceController {
     @PostMapping("/deleteDeviceGroup")
     public ResponseInfo deleteDeviceGroup(@RequestParam(value = "groupId") int groupId) {
         ResponseInfo response = new ResponseInfo();
-        int isDelete = devGroupService.deleteDevGroupById(groupId);
-        if (isDelete == 1) {
-            response.setCode(ResponseInfo.CODE_SUCCESS);
-            response.setMessage("delete devGroup success!");
+        if (groupId > 0) {
+            //01、删除关联关系表
+            DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
+            deviceGroupRelate.setGroupId(groupId);
+            //这里不能够将是否删除关联关系作为决定下面是否运行的条件，因为有可能本来就是为空
+            int isDelRelate = deviceGroupRelateService.deleteByDeviceGroupRelate(deviceGroupRelate);
+
+            //02、删除分组
+            int isDelete = devGroupService.deleteDevGroupById(groupId);
+            if (isDelete == 1) {
+                response.setCode(ResponseInfo.CODE_SUCCESS);
+                response.setMessage("delete devGroup success!");
+            } else {
+                response.setCode(ResponseInfo.CODE_ERROR);
+                response.setMessage("delete devGroup failed!");
+            }
         } else {
             response.setCode(ResponseInfo.CODE_ERROR);
-            response.setMessage("delete devGroup failed!");
+            response.setMessage("groupId is not allow be null!");
         }
         return response;
     }

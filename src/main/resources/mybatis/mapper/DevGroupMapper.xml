@@ -5,7 +5,7 @@
 
 
     <!-- 增加devGroup -->
-    <insert id="addDevGroup" parameterType="com.tw.entity.DevGroup">
+    <insert id="addDevGroup" parameterType="com.tw.entity.DevGroup" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO
             devGroup
             (groupName)
