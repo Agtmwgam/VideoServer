@@ -164,15 +164,18 @@ public class LoginController {
 
         ResponseInfo resResponse = messageService.validateNum(requestMap);
         if (resResponse.getCode() == CODE_SUCCESS) {
-            logger.warn("======短信校验成功");
-            response.setCode(CODE_SUCCESS);
-            response.setMessage(phoneNumber + " registered success!");
+            logger.warn("======短信校验成功，继续监测是否是管理员");
+            Map<String, Object> isRootMap = new HashMap<String, Object>();
+            //默认不是管理员
+            isRootMap.put("isRoot", CODE_ERROR);
             //如果是管理员登录成功，要把管理员的标记添加到data里面
             if (isRootPhone) {
-                Map<String, Object> isRootMap = new HashMap<String, Object>();
                 isRootMap.put("isRoot", CODE_SUCCESS);
-                response.setData(isRootMap);
+
             }
+            response.setData(isRootMap);
+            response.setCode(CODE_SUCCESS);
+            response.setMessage(phoneNumber + " registered success!");
         } else {
             logger.warn("======短信校验失败");
             response.setCode(CODE_ERROR);
