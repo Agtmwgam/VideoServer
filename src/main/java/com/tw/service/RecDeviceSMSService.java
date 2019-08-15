@@ -42,14 +42,21 @@ public class RecDeviceSMSService {
     public Boolean checkDevice(String serial, String code){
 
         // 获取此设备的信息
-        Device device = deviceDao.getDeviceBySerial(serial);
-        if (device==null){
+        Device d1 = new Device();
+        d1.setSerial(serial);
+        d1.setIsValid('1');
+        List<Device> deviceList = deviceDao.getDeviceByCodition(d1);
+
+        if (deviceList==null || deviceList.size()==0){
             log.error("【登陆校验】此设备信息未录入系统");
+            return false;
+        }else if (deviceList.size()!=1){
+            log.error("【登陆校验】数据库存储错误,"+serial+"设备存在重复的有效数据");
             return false;
         }
 
         // 进行设备的验证码校验
-        if (device.getDeviceVerifyCode().equals(code)){
+        if (deviceList.get(0).getDeviceVerifyCode().equals(code)){
             log.info("【登陆校验】设备信息正确");
             return true;
         }

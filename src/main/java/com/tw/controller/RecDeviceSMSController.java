@@ -74,8 +74,8 @@ public class RecDeviceSMSController {
         // 十六进制-3
         String vertifMes;
         try {
-//            vertifMes = loginMessageDecode(DEVICEVERIFYCODE, rand);
-            vertifMes = DEVICEVERIFYCODE;
+            vertifMes = loginMessageDecode(DEVICEVERIFYCODE, rand);
+//            vertifMes = DEVICEVERIFYCODE;
 
         }catch (Exception e){
             log.error("【设备登陆】验证码解析错误");
@@ -275,9 +275,10 @@ public class RecDeviceSMSController {
     public String loginMessageDecode(String serialEncode, Integer rand) throws UnsupportedEncodingException {
 
         StringBuilder resultStr = new StringBuilder();
+        System.out.println("接收到的字符串: " + serialEncode);
 
         // 将验证码转成16进制数
-        serialEncode = serialEncode.replace("\\", "\\\\");
+//        serialEncode = serialEncode.replace("\\", "\\\\");
         String hexSerialEncode = HEXUtil.encode(serialEncode);
 
         // 将验证码的十六进制拆出来
@@ -293,11 +294,12 @@ public class RecDeviceSMSController {
             String resultHex = Integer.toHexString(resultC);
             resultStr.append(resultHex);
 //            System.out.println("==========resultHex:"+resultHex);
-//            System.out.println("==========resultStr:"+resultStr);
         }
+        System.out.println("==========resultStr:"+resultStr);
 
         // 转回字符串
         String result = HEXUtil.decode(resultStr.toString());
+        System.out.println("===========result:"+ result);
         return result;
     }
 
