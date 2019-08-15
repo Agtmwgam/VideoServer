@@ -5,13 +5,16 @@ import com.tw.convert.VUserToVUserAndDeviceDTOConvert;
 import com.tw.dao.DeviceDao;
 import com.tw.dao.VUserDao;
 import com.tw.dto.UserAndDeviceSerialDTO;
+import com.tw.entity.Device;
 import com.tw.entity.VUser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liutianwen
@@ -61,13 +64,14 @@ public class VUserService {
 
     //模糊查找用户详情(用户管理界面)
     @Transactional
-    public List<UserAndDeviceSerialDTO> fuzzyQueryUserAndDeviceList(VUser user) {
+    public List<UserAndDeviceSerialDTO> fuzzyQueryUserAndDeviceList(VUser user, int pageNo, int pageSize) {
         List<VUser> userList = null;
         List<String> serialList = null;
         UserAndDeviceSerialDTO uad = new UserAndDeviceSerialDTO();
         List<UserAndDeviceSerialDTO> uAdList = new ArrayList<UserAndDeviceSerialDTO>();
         try {
-            userList = vUserDao.fuzzyQueryUser(user);
+//          模糊搜索用户和设备号（含分页功能）
+            userList = fuzzyQueryUserByPage(user,pageNo, pageSize);
             for (VUser tempUser : userList) {
                 serialList = deviceDao.getDeviceByUser(tempUser);
                 uad = VUserToVUserAndDeviceDTOConvert.convert(tempUser, serialList);
@@ -79,6 +83,19 @@ public class VUserService {
             System.out.println(e.toString());
         }
         return uAdList;
+    }
+
+//  TODO   用户管理分页查询
+    public List<VUser> fuzzyQueryUserByPage(VUser vuser, int pageNo, int pageSize) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("start", (pageNo-1) * pageSize);
+        param.put("pageSize", pageSize);
+        param.put("userId", vuser.getUserID());
+        param.put("nickName", vuser.getNickName());
+        param.put("password", vuser.getPassword());
+        param.put("phoneNumber", vuser.getPhoneNumber());
+
+        return vUserDao.fuzzyQueryUserByPage(param);
     }
 
 

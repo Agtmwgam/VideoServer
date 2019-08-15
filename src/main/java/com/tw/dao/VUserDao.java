@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liutianwen
@@ -25,6 +26,9 @@ public interface VUserDao {
 
     //模糊查找用户
     List<VUser> fuzzyQueryUser(VUser user);
+
+    //模糊查找用户分页
+    List<VUser> fuzzyQueryUserByPage(Map<String, Object> param);
 
     //更新客户
     @Transactional

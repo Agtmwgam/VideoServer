@@ -46,7 +46,7 @@ public class BeatTimer implements InitializingBean {
      */
     @Scheduled(cron="0 */1 * * * ?")
     @Transactional
-    public void BeatTimerTest(){
+    synchronized public void BeatTimerTest(){
 
         log.info("==========================================");
         Date date = new Date();

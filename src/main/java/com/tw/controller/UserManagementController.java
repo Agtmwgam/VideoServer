@@ -11,10 +11,9 @@ import com.tw.service.VUserService;
 import com.tw.util.ResponseInfo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,22 +39,37 @@ public class UserManagementController {
     private DeviceService deviceService;
 
     /**
-     * @param requestMap phoneNumber
+     * @param user pageNo pageSize
      * @return
      * @Date 2019/8/5 22:21
      * @Created liutianwen
      * @Description 用户管理 根据用户手机，模糊搜索用户信息和相应绑定的设备号
      */
-    @PostMapping(value = "/getUserInfo")
-    public ResponseInfo getUserInfo(@RequestBody Map<String, Object> requestMap) {
+    @GetMapping (value = "/getUserInfo")
+    public ResponseInfo getUserInfo(VUser user, @RequestParam(value = "pageNo") int pageNo, @RequestParam(value = "pageSize") int pageSize) {
         ResponseInfo response = new ResponseInfo();
-        VUser user = new VUser();
+        response.setPageNo(pageNo);
+        response.setPageSize(pageSize);
+//        VUser user = new VUser();
+//        String phoneNumber = requestMap.get("phoneNumber").toString();
+//        user.setPhoneNumber(phoneNumber);
 
-        String phoneNumber = requestMap.get("phoneNumber").toString();
-        user.setPhoneNumber(phoneNumber);
-
-        //模糊查询用户
-        List<UserAndDeviceSerialDTO> uAdList = userService.fuzzyQueryUserAndDeviceList(user);
+        Map<String, Object> resultMap = new HashMap<>();
+        //模糊查询用户（分页）
+        List<UserAndDeviceSerialDTO> uAdList = userService.fuzzyQueryUserAndDeviceList(user, pageNo, pageSize);
+        if (uAdList != null) {
+            int totle = uAdList.size();
+            resultMap.put("total", totle);
+            resultMap.put("list", uAdList);
+            response.setCode(ResponseInfo.CODE_SUCCESS);
+            response.setTotal(uAdList.size());
+            response.setData(resultMap);
+        } else {
+            resultMap.put("totle", 0);
+            response.setCode(ResponseInfo.CODE_ERROR);
+            response.setMessage("getUserInfo failed!");
+            response.setData(resultMap);
+        }
         response.setCode(CODE_SUCCESS);
         response.setData(uAdList);
 
