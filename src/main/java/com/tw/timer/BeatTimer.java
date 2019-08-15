@@ -48,6 +48,7 @@ public class BeatTimer implements InitializingBean {
     @Transactional
     public void BeatTimerTest(){
 
+        log.info("==========================================");
         Date date = new Date();
         log.info("【检查心跳】当前时间: " + FMT.format(date));
 
@@ -86,6 +87,7 @@ public class BeatTimer implements InitializingBean {
                         LoginMessage loginMessage = loginMessageDao.findBySerial(devices.getSerial());
                         if (loginMessage!=null){
                             loginMessage.setIsValid('0');
+                            loginMessage.setUpdateTime(new Date());
                             loginMessageDao.updateIsValidBySerial(loginMessage);
                             log.info("【检查心跳】将 " + devices.getSerial() + " 的登陆信息置为无效");
                         }

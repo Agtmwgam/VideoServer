@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tw.dao.UserDeviceRelateDao">
+
+	<!-- 添加用户设备 -->
+	<insert id="addUserDevice" parameterType="com.tw.entity.VUser">
+		insert into userDeviceRelate
+		(userId,deviceId)
+		values(#{userId},#{deviceId})
+	</insert>
+
+
+	<!-- 逻辑删除/启用用户设备 -->
+	<update id="delUserDevice" parameterType="com.tw.entity.UserDeviceRelate">
+		update userDeviceRelate
+		<set>
+			<if test="isValid !=null and isValid!=''">
+				isValid = #{isValid}
+			</if>
+		</set>
+		<where>
+			<if test="deviceId !=null and deviceId!=''">
+				deviceId =#{deviceId}
+			</if>
+			<if test="userId !=null and userId!=''">
+				AND userId = #{userId}
+			</if>
+		</where>
+	</update>
+
+</mapper>

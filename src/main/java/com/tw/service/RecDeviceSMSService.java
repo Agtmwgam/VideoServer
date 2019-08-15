@@ -42,14 +42,21 @@ public class RecDeviceSMSService {
     public Boolean checkDevice(String serial, String code){
 
         // 获取此设备的信息
-        Device device = deviceDao.getDeviceBySerial(serial);
-        if (device==null){
+        Device d1 = new Device();
+        d1.setSerial(serial);
+        d1.setIsValid('1');
+        List<Device> deviceList = deviceDao.getDeviceByCodition(d1);
+
+        if (deviceList==null || deviceList.size()==0){
             log.error("【登陆校验】此设备信息未录入系统");
+            return false;
+        }else if (deviceList.size()!=1){
+            log.error("【登陆校验】数据库存储错误,"+serial+"设备存在重复的有效数据");
             return false;
         }
 
         // 进行设备的验证码校验
-        if (device.getDeviceVerifyCode().equals(code)){
+        if (deviceList.get(0).getDeviceVerifyCode().equals(code)){
             log.info("【登陆校验】设备信息正确");
             return true;
         }
@@ -79,7 +86,7 @@ public class RecDeviceSMSService {
                 return false;
             }else {
                 // 登陆信息可用
-                log.error("【验证登陆信息】此设备登陆通过");
+                log.info("【验证登陆信息】此设备登陆通过");
                 return true;
             }
         }
@@ -113,8 +120,21 @@ public class RecDeviceSMSService {
      */
     public Boolean loginMessageSave(LoginMessage loginMessage){
 
-        // 1.将此条登陆信息写入进数据库
-        loginMessageDao.saveLoginMessage(loginMessage);
+        // 查询此设备有无登陆信息
+        LoginMessage message = loginMessageDao.findBySerial(loginMessage.getSerial());
+        if (message==null){
+            // 数据不存在,将此条登陆信息写入进数据库
+            loginMessageDao.saveLoginMessage(loginMessage);
+        }else {
+            // 数据存在,修改
+            loginMessageDao.modifyLogin(loginMessage);
+            // 将 isValid 改为 1
+            LoginMessage lm1 = new LoginMessage();
+            lm1.setSerial(loginMessage.getSerial());
+            lm1.setIsValid('1');
+            loginMessageDao.updateIsValidBySerial(lm1);
+        }
+
         log.info("【登陆信息】登陆信息入库成功");
 
         return true;
@@ -139,8 +159,16 @@ public class RecDeviceSMSService {
      */
     public Boolean beatMessageSave(BeatMessage beatMessage){
 
-        // 1.将此条心跳信息插入进数据库
-        beatMessageDao.saveBeatMessage(beatMessage);
+        // 1.查询数据库是否有此设备的心跳消息
+        BeatMessage message = beatMessageDao.findBySerial(beatMessage.getSerial());
+        if (message==null){
+            // 如果不存在就插入
+            beatMessageDao.saveBeatMessage(beatMessage);
+        }else {
+            // 如果存在就修改
+            beatMessageDao.modifyBeat(beatMessage);
+        }
+
         // TODO 心跳信息插入后是否立刻更改 device 信息
 //        Device device = deviceDao.getDeviceBySerial(beatMessage.getSerial());
 //        device.setDeviceStatus(beatMessage.getExeStatus());

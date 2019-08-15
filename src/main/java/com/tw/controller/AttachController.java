@@ -42,9 +42,14 @@ public class AttachController  {
      * @param file
      * @return
      */
+    @CrossOrigin(origins = "*")
     @PostMapping("/upload")
     @ResponseBody
     public String upload(@RequestParam("file") MultipartFile file) {
+
+        // 解决跨域问题
+//        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+
         log.info("=====/upload上传固件,从前端获取到的文件名=====file:"+file.getOriginalFilename());
         ResponseInfo  responseInfo = new ResponseInfo();
 

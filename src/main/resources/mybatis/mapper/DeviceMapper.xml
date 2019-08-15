@@ -57,17 +57,6 @@
             isValid = #{isValid}
     </select>
 
-    <select id="getDeviceBySerial" parameterType="java.lang.String" resultType="com.tw.entity.Device">
-        SELECT
-            *
-        FROM
-            device
-        WHERE
-            serial = #{serial}
-        AND
-            isValid = '1'
-    </select>
-
     
     <!-- 根据条件查询device -->
     <select id="getDeviceByCodition" parameterType="com.tw.entity.Device" resultType="com.tw.entity.Device">
@@ -110,5 +99,101 @@
         <if test="isValid != '\0' ">
             AND isValid = #{isValid}
         </if>
+    </select>
+
+
+    <!-- 根据传入vuser信息条件查询设备号 -->
+    <select id="getDeviceByUser" parameterType="com.tw.entity.VUser" resultType="java.lang.String">
+        SELECT d.serial
+        from vUser v join userDeviceRelate u on v.userID=u.userId
+        join device d on u.deviceId=d.deviceId
+        <where>
+            <if test="phoneNumber != null and phoneNumber !=''">
+                 v.phoneNumber LIKE '%${phoneNumber}%'
+            </if>
+            <if test="userID !=null and userID!=''">
+                and  v.userID like  '%${userID}%'
+            </if>
+            and  v.isValid='1'
+            and  u.isValid='1'
+            and  d.isValid='1'
+        </where>
+
+    </select>
+
+
+    <!-- 根据条件查询device分页 -->
+    <select id="getDeviceByCoditionPage" parameterType="java.util.Map" resultType="com.tw.entity.Device">
+        SELECT
+        *
+        FROM
+        device
+        WHERE
+        1=1
+        <if test="deviceId != 0">
+            AND deviceId = #{deviceId}
+        </if>
+        <if test="deviceName != null ">
+            AND deviceName = #{deviceName}
+        </if>
+        <if test="serial != null ">
+            AND serial = #{serial}
+        </if>
+        <if test="deviceVerifyCode != null ">
+            AND deviceVerifyCode = #{deviceVerifyCode}
+        </if>
+        <if test="deviceType != null ">
+            AND deviceType = #{deviceType}
+        </if>
+        <if test="softVersion != null ">
+            AND softVersion = #{softVersion}
+        </if>
+        <if test="productDate != null ">
+            AND productDate = #{productDate}
+        </if>
+        <if test="deviceStatus != '\0' ">
+            AND deviceStatus = #{deviceStatus}
+        </if>
+        <if test="isOnline != '\0' ">
+            AND isOnline = #{isOnline}
+        </if>
+        <if test="ipAddress != null ">
+            AND ipAddress = #{ipAddress}
+        </if>
+        <if test="isValid != '\0' ">
+            AND isValid = #{isValid}
+        </if>
+        ORDER BY
+            createTime
+        DESC
+        LIMIT
+            #{start}, #{pageSize}
+    </select>
+
+
+    <!-- 根据设备序列号、设备型号和设备的生产日期进行模糊搜索 -->
+    <select id="getDeviceLikeCondition" parameterType="java.util.Map" resultType="com.tw.entity.Device">
+        SELECT
+            a.*
+        FROM
+            device a
+        WHERE
+            1=1
+        AND
+            a.isValid = '1'
+        <if test="serial != null and serial != ''">
+            AND a.serial like "%"#{serial}"%"
+        </if>
+        <if test="deviceType != null and deviceType != ''">
+            AND a.deviceType like "%"#{deviceType}"%"
+        </if>
+        <if test="productDate != null and productDate != ''">
+            AND a.productDate like "%"#{productDate}"%"
+        </if>
+        ORDER BY
+            a.createTime
+        DESC
+        LIMIT
+            #{start}, #{pageSize}
     </select>
 </mapper>

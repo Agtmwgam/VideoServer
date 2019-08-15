@@ -16,7 +16,7 @@
 			resultType="com.tw.entity.VUser">
 		select * from vUser
 		<where>
-			<if test="userID !=null and id!=''">
+			<if test="userID !=null and userID!=''">
 				userID =#{userID}
 			</if>
 			<if test="nickName!=null and nickName!=''">
@@ -34,6 +34,7 @@
 			<if test="isValid!=null and isValid!=''">
 				and isValid=#{isValid}
 			</if>
+			and isValid='1'
 		</where>
 	</select>
 
@@ -43,8 +44,9 @@
 		select * from vUser
 		<where>
 			<if test="phoneNumber !=null and phoneNumber !=''">
-				 phoneNumber LIKE '%${phoneNumber}%'
+				phoneNumber LIKE '%${phoneNumber}%'
 			</if>
+			and isValid='1'
 		</where>
 	</select>
 
@@ -66,6 +68,29 @@
 		</where>
 	</update>
 
+	<!-- 逻辑删除用户 -->
+	<update id="delUser" parameterType="com.tw.entity.VUser">
+		update vUser
+		<set>
+			<if test="isValid !=null and isValid!=''">
+				isValid = #{isValid}
+			</if>
+		</set>
+		<where>
+			<if test="userID !=null and id!=''">
+				userID =#{userID}
+			</if>
+			<if test="phoneNumber !=null and phoneNumber!=''">
+				AND	phoneNumber = #{phoneNumber}
+			</if>
+			<if test="nickName != null and nickName !=''">
+				AND nickName = #{nickName}
+			</if>
+			<if test="password != null and password != ''">
+				AND password = #{password}
+			</if>
+		</where>
+	</update>
 
 
 </mapper>

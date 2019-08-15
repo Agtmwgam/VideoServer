@@ -30,4 +30,7 @@ public interface VUserDao {
     @Transactional
     Integer modifyUser(VUser user);
 
+    // 逻辑删除用户
+    public Integer delUser(VUser user);
+
 }

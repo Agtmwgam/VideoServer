@@ -2,6 +2,8 @@ package com.tw.entity;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @Author: haizhi
  * @Description:
@@ -35,4 +37,7 @@ public class LoginMessage extends BaseEntity {
 
     // 随机数
     private String rand;
+
+    // 更新时间
+    private Date updateTime = new Date();
 }

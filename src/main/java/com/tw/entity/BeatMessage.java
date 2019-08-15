@@ -44,5 +44,4 @@ public class BeatMessage extends BaseEntity {
     // IP来源
     private String ip;
 
-
 }

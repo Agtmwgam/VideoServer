@@ -20,6 +20,45 @@
         limit 1
     </select>
 
+    <!-- 更新心跳信息 -->
+    <update id="modifyBeat" parameterType="com.tw.entity.BeatMessage">
+        update beatMessage
+        <set>
+            <if test="frame != null and frame !=''">
+                frame = #{frame},
+            </if>
+            <if test="mesNo != null and mesNo != ''">
+                mesNo = #{mesNo},
+            </if>
+            <if test="mesDate != null">
+                mesDate = #{mesDate},
+            </if>
+            <if test="groupName != null and groupName != ''">
+                groupName = #{groupName},
+            </if>
+            <if test="deviceName != null and deviceName != ''">
+                deviceName = #{deviceName},
+            </if>
+            <if test="deviceModel != null and deviceModel != ''">
+                deviceModel = #{deviceModel},
+            </if>
+            <if test="serial != null and serial != ''">
+                serial = #{serial},
+            </if>
+            <if test="exeStatus != null and exeStatus != ''">
+                exeStatus = #{exeStatus},
+            </if>
+            <if test="ip != null and ip != ''">
+                ip = #{ip},
+            </if>
+        </set>
+        <where>
+            <if test="serial !=null and serial != ''">
+                serial = #{serial}
+            </if>
+        </where>
+    </update>
+
 
 
 </mapper>

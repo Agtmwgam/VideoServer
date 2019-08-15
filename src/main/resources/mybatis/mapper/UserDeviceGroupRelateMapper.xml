@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tw.dao.UserDeviceGroupRelateDao">
+
+
+    <!--  根据groupId获得关联表集合 -->
+    <select id="getGroupListByUserId" parameterType="int" resultType="com.tw.entity.UserDeviceGroupRelate">
+        SELECT
+            a.*
+        FROM
+            userDeviceGroupRelate a
+        WHERE
+            a.isValid = '1'
+        AND
+            a.userId = #{userId}
+    </select>
+</mapper>
