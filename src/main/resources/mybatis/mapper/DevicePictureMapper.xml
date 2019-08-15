@@ -4,9 +4,14 @@
 <mapper namespace="com.tw.dao.DevicePictureDao">
 
     <!--返回某台设备一周的热力图-->
-    <select id="getDensityPicture"  resultType="String" >
+    <select id="getDensityPicture"  resultType="com.tw.entity.DevicePicture" >
         SELECT
-        densityPicturePath
+        serial,
+        densityPictureName,
+        densityPicturePath,
+        fileType,
+        createTime,
+        isValid
         FROM
         devicePicture
         WHERE
