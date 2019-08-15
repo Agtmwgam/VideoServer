@@ -335,6 +335,45 @@ public class DeviceController {
     }
 
 
+    /**
+     * @Author: John
+     * @Description: 移动设备的分组
+     * @Date:  2019/8/16 1:34
+     * @param: deviceId 设备id
+     * @param: groupId  分组id
+     * @param: newGroupId  新分组id
+     * @return:
+     */
+    @PostMapping("/moveDeviceGroup")
+    public ResponseInfo moveDeviceGroup(
+            @RequestParam(value = "deviceId") int deviceId,
+            @RequestParam(value = "groupId") int groupId,
+            @RequestParam("newGroupId") int newGroupId) {
+        ResponseInfo responseInfo = new ResponseInfo();
+        DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
+        deviceGroupRelate.setDeviceId(deviceId);
+        deviceGroupRelate.setGroupId(groupId);
+        List<DeviceGroupRelate> deviceGroupRelateList = deviceGroupRelateService.getDeviceGroupRelateByCondition(deviceGroupRelate);
+        if (deviceGroupRelateList != null && deviceGroupRelateList.size() > 0) {
+           DeviceGroupRelate deviceGroupRelateNew = deviceGroupRelateList.get(0);
+           deviceGroupRelateNew.setGroupId(newGroupId);
+           int isUpdate = deviceGroupRelateService.updateDeviceGroupRelateBy(deviceGroupRelateNew);
+           if (isUpdate == 1) {
+               responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+               responseInfo.setMessage("move device to new group success!");
+           } else {
+               responseInfo.setCode(ResponseInfo.CODE_ERROR);
+               responseInfo.setMessage("move device to new group failed!");
+           }
+           return responseInfo;
+        } else {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("move device to new group failed!");
+            return responseInfo;
+        }
+    }
+
+
     @GetMapping("/getDeviceByUserId")
     public ResponseInfo getDeviceByUserId(@RequestParam(value = "userId") int userId) {
         ResponseInfo responseInfo = new ResponseInfo();
