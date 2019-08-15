@@ -13,6 +13,25 @@
             (#{groupId}, #{deviceId})
     </insert>
 
+    <update id="deleteByDeviceGroupRelate" parameterType="com.tw.entity.DeviceGroupRelate">
+        UPDATE
+            deviceGroupRelate a
+        SET
+            isValid = '0'
+        WHERE
+            isValid = '1'
+        <if test="id != 0 and id != null">
+            AND id = #{id}
+        </if>
+        <if test="deviceId != 0 and deviceId != null">
+            AND deviceId = #{deviceId}
+        </if>
+        <if test="groupId != 0 and groupId != null">
+            AND groupId = #{groupId}
+        </if>
+
+    </update>
+
 
  <!-- 根据groupId获得对象 -->
     <select id="getDeviceGroupByGroupId" parameterType="int" resultType="com.tw.entity.DeviceGroupRelate">

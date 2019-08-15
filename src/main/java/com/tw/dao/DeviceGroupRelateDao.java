@@ -15,4 +15,6 @@ public interface DeviceGroupRelateDao {
     List<DeviceGroupRelate> getDeviceGroupRelateByCondition(DeviceGroupRelate deviceGroupRelate);
 
     int addDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate);
+
+    int deleteByDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate);
 }

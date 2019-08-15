@@ -101,6 +101,10 @@ public class DeviceController {
         System.out.println("==========删除的结果为：" + isDel);
 
         if (isDel == 1) {
+            //删除设备信息后，原本的关联关系也要删除
+            DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
+            deviceGroupRelate.setDeviceId(deviceId);
+            int delDevGroup = deviceGroupRelateService.deleteByDeviceGroupRelate(deviceGroupRelate);
             response.setCode(ResponseInfo.CODE_SUCCESS);
             response.setMessage("delete device success!");
         } else {

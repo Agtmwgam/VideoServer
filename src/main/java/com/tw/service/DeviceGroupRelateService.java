@@ -13,6 +13,17 @@ public class DeviceGroupRelateService {
     @Autowired
     private DeviceGroupRelateDao deviceGroupRelateDao;
 
+    //添加设备和组的关联关系
+    public int addDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate) {
+        return deviceGroupRelateDao.addDeviceGroupRelate(deviceGroupRelate);
+    }
+
+    //根据条件删除对象
+    public int deleteByDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate) {
+        return deviceGroupRelateDao.deleteByDeviceGroupRelate(deviceGroupRelate);
+    }
+
+    //根据组id获得对象集合
     public List<DeviceGroupRelate> getDeviceGroupByGroupId(int groupId) {
         return deviceGroupRelateDao.getDeviceGroupByGroupId(groupId);
     }
@@ -23,7 +34,5 @@ public class DeviceGroupRelateService {
         return deviceGroupRelateDao.getDeviceGroupRelateByCondition(deviceGroupRelate);
     }
 
-    public int addDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate) {
-        return deviceGroupRelateDao.addDeviceGroupRelate(deviceGroupRelate);
-    }
+
 }
