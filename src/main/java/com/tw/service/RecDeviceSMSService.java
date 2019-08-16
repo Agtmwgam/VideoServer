@@ -126,7 +126,7 @@ public class RecDeviceSMSService {
      * @param loginMessage
      * @return
      */
-    public Boolean loginMessageSave(LoginMessage loginMessage){
+    synchronized public Boolean loginMessageSave(LoginMessage loginMessage){
 
         // 查询此设备有无登陆信息
         LoginMessage message = loginMessageDao.findBySerial(loginMessage.getSerial());
@@ -152,7 +152,7 @@ public class RecDeviceSMSService {
      * 告警信息处理service
      * @return
      */
-    public Boolean warningMessageSave(WarningMessage warningMessage){
+    synchronized public Boolean warningMessageSave(WarningMessage warningMessage){
 
         // 1.将此条告警信息插入进数据库
         warningMessageDao.saveWarningMessage(warningMessage);
@@ -165,7 +165,7 @@ public class RecDeviceSMSService {
      * 心跳信息处理service
      * @return
      */
-    public Boolean beatMessageSave(BeatMessage beatMessage){
+    synchronized public Boolean beatMessageSave(BeatMessage beatMessage){
 
         // 1.查询数据库是否有此设备的心跳消息
         BeatMessage message = beatMessageDao.findBySerial(beatMessage.getSerial());

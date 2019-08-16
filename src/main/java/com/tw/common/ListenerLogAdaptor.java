@@ -80,14 +80,14 @@ public class ListenerLogAdaptor extends FileAlterationListenerAdaptor {
             logList.setLogNum(logNum);
             String[] dateStr1 = logTimePre.split("-");
             String[] dateStr2 = logTimeSuf.split("-");
-            Date logTime = new Date(Integer.valueOf(dateStr1[0]),
-                    Integer.valueOf(dateStr1[1]),
+            Date logTime = new Date(Integer.valueOf(dateStr1[0])-1900,
+                    Integer.valueOf(dateStr1[1])-1,
                     Integer.valueOf(dateStr1[2]),
                     Integer.valueOf(dateStr2[0]),
                     Integer.valueOf(dateStr2[1]),
                     Integer.valueOf(dateStr2[2]));
             logList.setLogTime(logTime);
-            logList.setLogPath(logPath);
+            logList.setLogPath("http://112.74.77.11:2019/shungkon" + logPath);
             logList.setIsValid(ConstantParam.IS_VALID_YES);
             logListService.addLogList(logList);
         }
