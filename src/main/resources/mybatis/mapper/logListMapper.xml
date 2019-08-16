@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tw.dao.LogListDao">
+
+
+    <!--日志数据入库-->
+    <insert id="addLogList" parameterType="com.tw.entity.LogList">
+        insert into logList(serial,logNum,ipAddress,logName,logTime,logPath) values(#{serial},#{logNum},#{ipAddress},#{logName},#{logTime},#{logPath})
+    </insert>
+
+    <!-- 根据 serial 查询心跳信息 -->
+    <select id="getLogListBySerialPage" parameterType="java.util.Map"  resultType="com.tw.entity.LogList">
+        select * from logList where serial=#{serial} and isValid='1' order by logTime desc limit ${start}, ${pageSize}
+    </select>
+
+    <!--查询总数-->
+    <select id="getTotalBySerial" parameterType="java.util.Map"  resultType="java.lang.Integer">
+        select count(*) from logList where serial=#{serial} and isValid='1' order by logTime desc limit ${start}, ${pageSize}
+    </select>
+
+</mapper>

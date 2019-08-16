@@ -46,13 +46,13 @@ public class BeatTimer implements InitializingBean {
      */
     @Scheduled(cron="0 */1 * * * ?")
     @Transactional
-    public void BeatTimerTest(){
+    synchronized public void BeatTimerTest(){
 
         log.info("==========================================");
         Date date = new Date();
         log.info("【检查心跳】当前时间: " + FMT.format(date));
 
-        // 获取所有 isVaild 为1的设备的 seial
+        // 获取所有 isVaild 为1的设备的 serial
         Device deviceSelect = new Device();
         deviceSelect.setIsValid('1');
         List<Device> deviceList = deviceDao.getDeviceByCodition(deviceSelect);
@@ -69,21 +69,28 @@ public class BeatTimer implements InitializingBean {
 
             // 1.如果没有查找到此设备的心跳信息,就将此设备的 isOnline 置为 0
             if (beatMessage==null){
-                devices.setIsOnline('0');
-                deviceDao.updateDevice(devices);
-                log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为0");
-            }else {
-                // 2.查询此条心跳信息的设备状态,如果为0直接置0,如果为1再进行后续判断
-                if (beatMessage.getExeStatus()=='0'){
+                if (devices.getIsOnline()!='0'){
                     devices.setIsOnline('0');
                     deviceDao.updateDevice(devices);
                     log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为0");
+                }
+            }else {
+                // 2.查询此条心跳信息的设备状态,如果为0直接置0,如果为1再进行后续判断
+                if (beatMessage.getExeStatus()=='0'){
+                    if (devices.getIsOnline()!='0'){
+                        devices.setIsOnline('0');
+                        deviceDao.updateDevice(devices);
+                        log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为0");
+                    }
                 }else {
                     // 3.如果最近一条心跳信息的分钟差值大于5,就将 device isOnline 置为 0,并且将登陆信息置为无效
                     long difMin = (date.getTime() - beatMessage.getMesDate().getTime()) / (1000 * 60);
                     if (difMin>5){
-                        devices.setIsOnline('0');
-                        deviceDao.updateDevice(devices);
+                        if (devices.getIsOnline()!='0'){
+                            devices.setIsOnline('0');
+                            deviceDao.updateDevice(devices);
+                            log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为0");
+                        }
                         LoginMessage loginMessage = loginMessageDao.findBySerial(devices.getSerial());
                         if (loginMessage!=null){
                             loginMessage.setIsValid('0');
@@ -91,11 +98,12 @@ public class BeatTimer implements InitializingBean {
                             loginMessageDao.updateIsValidBySerial(loginMessage);
                             log.info("【检查心跳】将 " + devices.getSerial() + " 的登陆信息置为无效");
                         }
-                        log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为0");
                     }else if (difMin<=5){
-                        devices.setIsOnline('1');
-                        deviceDao.updateDevice(devices);
-                        log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为1");
+                        if (devices.getIsOnline()!='1'){
+                            devices.setIsOnline('1');
+                            deviceDao.updateDevice(devices);
+                            log.info("【检查心跳】将 " + devices.getSerial() + " 的状态置为1");
+                        }
                     }
                 }
             }

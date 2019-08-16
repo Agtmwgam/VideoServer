@@ -1,5 +1,6 @@
 package com.tw;
 
+import com.tw.common.ListenerLogAdaptor;
 import com.tw.common.ListenerPictureAdaptor;
 import com.tw.common.ListenerVideoAdaptor;
 import com.tw.config.FtpConfig;
@@ -33,6 +34,9 @@ public class RunVideoServer {
 
 	@Autowired
 	private ListenerPictureAdaptor listenerPictureAdaptor;
+
+	@Autowired
+	private ListenerLogAdaptor listenerLogAdaptor;
 
 	@Autowired
 	private FtpConfig ftpConfig;
@@ -70,6 +74,7 @@ public class RunVideoServer {
 		//String pictureDir = "D:\\testPicture";//本机测试用
         String videoDir = ftpConfig.getBasePath()+ftpConfig.getVideoPath();//正式环境
         String pictureDir = ftpConfig.getBasePath()+ftpConfig.getPicturePath();//正式环境
+		String logDir = ftpConfig.getBasePath()+ftpConfig.getLogsPath();//正式环境
 
 		// 设置扫描间隔
 		long interval = TimeUnit.SECONDS.toMillis(5);
@@ -88,14 +93,16 @@ public class RunVideoServer {
 		// 不使用过滤器的情况
 		FileAlterationObserver videoObserver = new FileAlterationObserver(new File(videoDir));
 		FileAlterationObserver pictureObserver = new FileAlterationObserver(new File(pictureDir));
+		FileAlterationObserver logObserver = new FileAlterationObserver(new File(logDir));
 
 		// 向监听者添加监听器，并注入业务服务
 		videoObserver.addListener(listenerVideoAdaptor);
 		pictureObserver.addListener(listenerPictureAdaptor);
+		logObserver.addListener(listenerLogAdaptor);
 
 
 		// 创建文件变化监听器
-		FileAlterationMonitor fileAlterationMonitor = new FileAlterationMonitor(interval, videoObserver,pictureObserver);
+		FileAlterationMonitor fileAlterationMonitor = new FileAlterationMonitor(interval, videoObserver,pictureObserver,logObserver);
 		try {
 			// 开启监听
 			fileAlterationMonitor.start();
