@@ -1,5 +1,456 @@
 接口文档
 
+
+//===========================  一、短信注册登录开始  =================================//
+一、
+1、	发送短信的方法（完成）
+接口：
+POST  login/smsSendCode
+参数：
+{"phoneNumber":"18814373836"}
+返回结果：
+正确：
+{
+"code": "0000",
+"message":"send message success!"
+}
+
+错误：
+{
+"code": "9999",
+"message":"it's not correct phoneNumber!"
+}
+
+
+2、	校验短信验证是否正确（完成）
+接口：
+POST  login/smsValidate
+参数：
+{
+	"tamp":"20190810170651",
+	"hash":"3b519e2f857cd82a5180cc9ccc44021a",
+	"msgNum":"314293"
+}
+//===========================  一、短信注册登录结束  =================================//
+
+
+
+
+//===========================  二、设备管理开始  =================================//
+1、	插入device设备信息（完成）
+接口：
+POST  device/addDevice
+参数：
+httpServletRequest
+{
+	"deviceStatus": "1",
+	"deviceName": "测试中文插入",
+	"serial": "2",
+	"deviceVerifyCode": "3",
+	"deviceType": "4",
+	"softVersion": "5",
+	"productDate": "6",
+	"isOnline":"1",
+	"ipAddress": "192.168.30.51"
+}
+对接中问题：接口返回500，接口请求的参数为{"serial":"Q12345678","deviceVerifyCode":"AAAAAA","deviceType":"SK01","softVersion":"","productDate":"20190801"}
+John:已修复，去掉了原本的httpServletRequest参数，重新请求即可。
+
+
+2、	删除device设备信息
+接口：
+POST  device/deleteDevice
+参数：
+{"deviceId":"12345"}
+请求结果：
+正确：
+{
+"code":"0000",
+"message":"delete device success!"
+}
+错误：
+{
+"code":"9999",
+"message":"delete device failed!"
+}
+对接中问题：删除关联关系成功后查询分组列表，列表中原device数据展示为null
+期望操作：将删除后的数据剔除
+图片：​​
+
+
+【==============上面问题已经修复，请验证==============】
+
+3、	更新device（前端无法给到这么多的数据，参数待商榷）
+接口：
+POST  device/updateDevice
+参数：
+
+{
+	"deviceId": 2,
+	"deviceName": "1"
+}
+请求结果：
+true:
+{
+"code":"0000",
+"message":"update device success!"
+}
+false:
+{
+"code":"9999",
+"message":"update device failed!"
+}
+4、	根据deviceId获得device对象（完成）
+接口：
+GET  device/getDeviceByDeviceId
+参数：deviceId=11
+请求结果：
+正确:
+{
+    "code": "0000",
+    "message": "getDeviceByDeviceId success!",
+    "data": {
+        "totle": 1,
+        "device": {
+            "createTime": "2019-08-11T18:31:58.000+0000",
+            "isValid": "1",
+            "usable": "\u0000",
+            "deviceId": 11,
+            "deviceName": "test",
+            "serial": "Q12345678",
+            "deviceVerifyCode": "AAAAAA",
+            "deviceType": "SK01",
+            "softVersion": null,
+            "productDate": "20190731",
+            "deviceStatus": "0",
+            "isOnline": "0",
+            "ipAddress": null,
+            "newBeatTime": null,
+            "oldBeatTime": null
+        }
+    },
+    "pageNo": null,
+    "pageSize": null,
+    "total": null
+}
+错误：
+{
+    "code": "9999",
+    "message": "getDeviceByDeviceId failed!",
+    "data": {
+        "totle": 0
+    },
+    "pageNo": null,
+    "pageSize": null,
+    "total": null
+}
+
+
+5、	根据条件查询设备列表
+接口：
+GET  device/getDeviceByCodition
+参数：
+serial=Q12345678&deviceName=test&pageNo=1&pageSize=10&isValid=1
+请求结果：
+true:
+{
+    "code": "0000",
+    "message": "getDeviceByCondition success!",
+    "data": {
+        "total": 1,
+        "list": [
+            {
+                "createTime": "2019-08-13T15:27:38.000+0000",
+                "isValid": "1",
+                "usable": "\u0000",
+                "deviceId": 11,
+                "deviceName": "test",
+                "serial": "Q12345678",
+                "deviceVerifyCode": "DDDDDD",
+                "deviceType": "SK01",
+                "softVersion": null,
+                "productDate": "20190731",
+                "deviceStatus": "0",
+                "isOnline": "0",
+                "ipAddress": null,
+                "newBeatTime": null,
+                "oldBeatTime": null
+            }
+        ]
+    },
+    "pageNo": 1,
+    "pageSize": 10,
+    "total": 1
+}
+
+false:
+{
+    "code": "0000",
+    "message": "getDeviceByCondition success!",
+    "data": {
+        "total": 0,
+        "list": []
+    },
+    "pageNo": 1,
+    "pageSize": 10,
+    "total": 0
+}
+
+
+
+6、	根据设备信息模糊搜索：（完成）
+接口：
+POST device/getDeviceLikeCondition
+参数：
+{
+  "serial":"w4324",
+  "deviceType":"SK01",
+  "produceDate":"20190731"，
+"pageNo":1
+"pageSize":5
+
+}
+返回数据
+{
+    "code": "0000",
+    "message": "get device by condition success!",
+    "data": [
+        {
+            "createTime": "2019-08-12T15:44:03.000+0000",
+            "isValid": "1",
+            "usable": "\u0000",
+            "deviceId": 12,
+            "deviceName": "TEST12",
+            "serial": "w4324",
+            "deviceVerifyCode": null,
+            "deviceType": "sk3342",
+            "softVersion": null,
+            "productDate": null,
+            "deviceStatus": "0",
+            "isOnline": "0",
+            "ipAddress": null,
+            "newBeatTime": null,
+            "oldBeatTime": null
+        }
+    ],
+    "pageNo": 1,
+    "pageSize": 5,
+    "total": 1
+}
+//===========================  二、设备管理结束  =================================//
+
+
+
+
+//===========================  三、设备组开始  =================================//
+三、
+1、	客户端添加分组接口
+接口：
+POST  device/addGroup
+参数：
+httpServletRequest
+{"groupName":"组名1"}
+请求结果：
+{
+    "code": "0000",
+    "message": "add devGroup success!"
+}
+对接中问题：添加分组成功后，未能在分组列表中查出新增分组
+期望操作：添加分组成功后，查询接口返回该新增分组数据
+
+【==============上面问题已经修复，请验证==============】
+注：目前需要添加一个userId的参数，详细可以语音沟通
+
+
+2、	修改组名（完成）
+接口:
+POST  /device/modifyDeviceGroupName
+参数：
+{
+	"groupId":4,
+	"groupName":"测试修改组名"
+
+}
+请求结果：
+true:
+{
+    "code": "0000",
+    "message": "modify devGroup success!"
+}
+false:
+{
+    "code": "9999",
+    "message": "modify devGroup failed!"
+}
+
+
+3、	删除分组：
+接口：
+POST  /device/deleteDeviceGroup
+请求参数：
+groupId=4
+请求结果：
+true:
+{
+    "code": "0000",
+    "message": "delete devGroup success!"
+}
+false:
+{
+    "code": "9999",
+    "message": "delete devGroup failed!"
+}
+对接中问题：删除分组成功后查询分组列表，列表中原group数据为空
+期望操作：将删除后的该关联数据剔除
+图片：​​
+
+【==============上面问题已经修复，请验证==============】
+
+
+
+4、	移动设备分组：
+接口：
+POST device/moveDeviceGroup
+参数：
+deviceId=21&groupId=6&newGroupId=12
+请求结果：
+true:
+{
+    "code": "0000",
+    "message": "move device to new group success!"
+}
+false:
+{
+    "code": "9999",
+    "message": "move device to new group failed!"
+}
+//===========================  三、设备组结束  =================================//
+
+
+
+
+//===========================  四、根据userId获得名下的所有分组以及分组内的所有设备  =================================//
+1、	根据用户id查回所有的分组以及分组下的设备（完成）
+接口：
+GET   /shungkon/device/getDeviceByUserId
+参数：
+userId=3
+请求结果：
+{
+    "code": "0000",
+    "message": "Get user's all devices success!",
+    "data": {
+        "user": {
+            "createTime": "2019-08-10T09:23:01.000+0000",
+            "isValid": "1",
+            "userID": 3,
+            "password": "abc123456",
+            "phoneNumber": "18814373836"
+        },
+        "devGroupList": [
+            {
+                "devGroup": {
+                    "createTime": "2019-08-13T17:41:28.000+0000",
+                    "isValid": "1",
+                    "groupId": 5,
+                    "groupName": "可用的设备"
+                },
+                "deviceList": [
+                    {
+                        "createTime": "2019-08-13T17:28:27.000+0000",
+                        "isValid": "1",
+                        "deviceId": 3,
+                        "deviceName": "name3",
+                        "serial": "EFGR234",
+                        "deviceVerifyCode": "123",
+                        "deviceType": "1",
+                        "softVersion": "1.0",
+                        "productDate": "20190731",
+                        "deviceStatus": "0",
+                        "isOnline": "0",
+                        "ipAddress": "192.168.30.2",
+                        "newBeatTime": "2019-08-13T17:28:24.000+0000",
+                        "oldBeatTime": "2019-08-13T17:28:26.000+0000"
+                    },
+                    {
+                        "createTime": "2019-08-14T11:49:00.000+0000",
+                        "isValid": "1",
+                        "deviceId": 16,
+                        "deviceName": "test2",
+                        "serial": "T42683512",
+                        "deviceVerifyCode": "ERDFAA",
+                        "deviceType": "",
+                        "softVersion": "T_ML_V0.0.1.exe",
+                        "productDate": "2019-08-12",
+                        "deviceStatus": "0",
+                        "isOnline": "0"
+                    }
+                ]
+            },
+            {
+                "devGroup": {
+                    "createTime": "2019-08-13T17:01:56.000+0000",
+                    "isValid": "1",
+                    "groupId": 2,
+                    "groupName": "testAddGroup"
+                },
+                "deviceList": [
+                    {
+                        "createTime": "2019-08-13T17:28:10.000+0000",
+                        "isValid": "1",
+                        "deviceId": 11,
+                        "deviceName": "test",
+                        "serial": "Q12345678",
+                        "deviceVerifyCode": "DDDDDD",
+                        "deviceType": "SK01",
+                        "softVersion": "rt",
+                        "productDate": "20190731",
+                        "deviceStatus": "0",
+                        "isOnline": "0"
+                    }
+                ]
+            }
+        ]
+    }
+}
+//===========================  四、根据userId获得名下的所有分组以及分组内的所有设备  =================================//
+
+
+
+
+//===========================  五、用户关联设备和分组开始  =================================//
+
+1、	addDevGroup（完成）
+接口：
+POST  /shungkon/device/addDevGroup
+参数：
+serial=w3342&deviceVerifyCode=DDDDDD&groupId=9
+请求结果：
+true:
+{
+    "code": "0000",
+    "message": "add deviceGroupRelate success!"
+}
+
+false:
+{
+    "code": "9999",
+    "message": "it's already have this connect!"
+}
+
+联调中存在问题：
+1.	登录接口暂未获取到data数据​​
+2.	查询设备接口出现两条相同的数据​​
+3.	找不到移动设备分组接口​​
+
+​​
+
+
+//===========================  五、用户关联设备和分组结束  =================================//
+
+//===========================  一、短信注册登录  =================================//
+//===========================  一、短信注册登录  =================================//
+
 发送短信接口
 POST http://112.74.77.11:1060/login/smsSendCode
 

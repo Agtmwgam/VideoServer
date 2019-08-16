@@ -101,6 +101,9 @@ public class LoginController {
      */
     @RequestMapping(value = "/logOnByPwd", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseInfo logOnByPwd(@RequestBody Map<String,Object> requestMap) {
+        //这标记用于标记是否是管理员
+        Map<String, Object> data = new HashMap<>();
+        data.put("isRoot", CODE_ERROR);
         ResponseInfo response = new ResponseInfo();
         //短信校验是通过的情况下才可以登录
         String passWord = (String) requestMap.get("pwd");
@@ -121,11 +124,21 @@ public class LoginController {
             //TODO
             //这里后面要将这个登录状态放到jwt里面，维持这个登录状态
             //TODO
+            //登录成功之后要判断是否是管理员
+            RootInfo rootInfo = new RootInfo();
+            rootInfo.setRootPhone(phoneNumber);
+            rootInfo.setLoginPassword(passWord);
+            List<RootInfo> rootInfos = rootInfoService.getRootInfo(rootInfo);
+            if (rootInfos != null && rootInfos.size() > 0) {
+                data.put("isRoot", CODE_SUCCESS);
+            }
             response.setCode(CODE_SUCCESS);
+            response.setData(data);
             response.setMessage(phoneNumber + " login success!");
             return response;
         }
         response.setCode(CODE_ERROR);
+        response.setData(data);
         response.setMessage("couldn't find this user!");
         return response;
 
