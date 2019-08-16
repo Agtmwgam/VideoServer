@@ -11,7 +11,11 @@
 
     <!-- 根据 serial 查询心跳信息 -->
     <select id="getLogListBySerialPage" parameterType="java.util.Map"  resultType="com.tw.entity.LogList">
-        select * from logList where serial=#{serial} and isValid='1' order by logTime desc limit ${start}, ${pageSize}
+        select *
+        from logList
+        where serial=#{serial} and isValid='1' and (logTime BETWEEN #{startTime} and #{endTime})
+        order by logTime desc
+        limit ${start}, ${pageSize}
     </select>
 
     <!--查询总数-->
