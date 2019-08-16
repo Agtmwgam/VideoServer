@@ -18,10 +18,18 @@ public class DeviceGroupRelateService {
         return deviceGroupRelateDao.addDeviceGroupRelate(deviceGroupRelate);
     }
 
+
     //根据条件删除对象
     public int deleteByDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate) {
         return deviceGroupRelateDao.deleteByDeviceGroupRelate(deviceGroupRelate);
     }
+
+
+    //更新关联关系
+    public int updateDeviceGroupRelateBy(DeviceGroupRelate deviceGroupRelate) {
+        return deviceGroupRelateDao.updateDeviceGroupRelateBy(deviceGroupRelate);
+    }
+
 
     //根据组id获得对象集合
     public List<DeviceGroupRelate> getDeviceGroupByGroupId(int groupId) {

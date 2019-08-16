@@ -101,6 +101,9 @@ public class LoginController {
      */
     @RequestMapping(value = "/logOnByPwd", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseInfo logOnByPwd(@RequestBody Map<String,Object> requestMap) {
+        //这标记用于标记是否是管理员
+        Map<String, Object> data = new HashMap<>();
+        data.put("isRoot", CODE_ERROR);
         ResponseInfo response = new ResponseInfo();
         //短信校验是通过的情况下才可以登录
         String passWord = (String) requestMap.get("pwd");
@@ -121,11 +124,21 @@ public class LoginController {
             //TODO
             //这里后面要将这个登录状态放到jwt里面，维持这个登录状态
             //TODO
+            //登录成功之后要判断是否是管理员
+            RootInfo rootInfo = new RootInfo();
+            rootInfo.setRootPhone(phoneNumber);
+            rootInfo.setLoginPassword(passWord);
+            List<RootInfo> rootInfos = rootInfoService.getRootInfo(rootInfo);
+            if (rootInfos != null && rootInfos.size() > 0) {
+                data.put("isRoot", CODE_SUCCESS);
+            }
             response.setCode(CODE_SUCCESS);
+            response.setData(data);
             response.setMessage(phoneNumber + " login success!");
             return response;
         }
         response.setCode(CODE_ERROR);
+        response.setData(data);
         response.setMessage("couldn't find this user!");
         return response;
 
@@ -164,15 +177,18 @@ public class LoginController {
 
         ResponseInfo resResponse = messageService.validateNum(requestMap);
         if (resResponse.getCode() == CODE_SUCCESS) {
-            logger.warn("======短信校验成功");
-            response.setCode(CODE_SUCCESS);
-            response.setMessage(phoneNumber + " registered success!");
+            logger.warn("======短信校验成功，继续监测是否是管理员");
+            Map<String, Object> isRootMap = new HashMap<String, Object>();
+            //默认不是管理员
+            isRootMap.put("isRoot", CODE_ERROR);
             //如果是管理员登录成功，要把管理员的标记添加到data里面
             if (isRootPhone) {
-                Map<String, Object> isRootMap = new HashMap<String, Object>();
                 isRootMap.put("isRoot", CODE_SUCCESS);
-                response.setData(isRootMap);
+
             }
+            response.setData(isRootMap);
+            response.setCode(CODE_SUCCESS);
+            response.setMessage(phoneNumber + " registered success!");
         } else {
             logger.warn("======短信校验失败");
             response.setCode(CODE_ERROR);

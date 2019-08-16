@@ -29,7 +29,21 @@
         <if test="groupId != 0 and groupId != null">
             AND groupId = #{groupId}
         </if>
+    </update>
 
+
+
+    <!-- 更新关联管理 -->
+    <update id="updateDeviceGroupRelateBy" parameterType="com.tw.entity.DeviceGroupRelate">
+        UPDATE
+            deviceGroupRelate
+        SET
+            deviceId = #{deviceId},
+            groupId = #{groupId}
+        WHERE
+            id = #{id}
+        AND
+            isValid = #{isValid}
     </update>
 
 

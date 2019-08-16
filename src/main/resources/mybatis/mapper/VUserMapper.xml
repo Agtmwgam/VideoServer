@@ -38,6 +38,29 @@
 		</where>
 	</select>
 
+	<!-- 根据条件查询user分页 -->
+	<select id="fuzzyQueryUserByPage" parameterType="java.util.Map" resultType="com.tw.entity.VUser">
+		select * from vUser
+		<where>
+			<if test="phoneNumber !=null and phoneNumber !=''">
+				phoneNumber LIKE '%${phoneNumber}%'
+			</if>
+			<if test="userID !=null and userID!=''">
+				userID =#{userID}
+			</if>
+			<if test="nickName!=null and nickName!=''">
+				and nickName=#{nickName}
+			</if>
+			and isValid='1'
+		</where>
+		ORDER BY
+		createTime
+		DESC
+		LIMIT
+		#{start}, #{pageSize}
+	</select>
+
+
 	<!-- 根据传入的信息查找对应的用户信息 -->
 	<select id="fuzzyQueryUser" parameterType="com.tw.entity.VUser"
 			resultType="com.tw.entity.VUser">
@@ -81,7 +104,7 @@
 				userID =#{userID}
 			</if>
 			<if test="phoneNumber !=null and phoneNumber!=''">
-				AND	phoneNumber = #{phoneNumber}
+				AND phoneNumber = #{phoneNumber}
 			</if>
 			<if test="nickName != null and nickName !=''">
 				AND nickName = #{nickName}
