@@ -219,11 +219,12 @@ public class DeviceController {
         responseInfo.setPageSize(pageSize);
 
         List<Device> deviceList = deviceService.getDeviceLikeCondition(device, pageNo, pageSize);
+        int total = deviceService.getTotalOfCondition(device);
         if (deviceList != null && deviceList.size() > 0) {
             responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
             responseInfo.setMessage("get device by condition success!");
             responseInfo.setData(deviceList);
-            responseInfo.setTotal(deviceList.size());
+            responseInfo.setTotal(total);
         } else {
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("get device by condition failed!");

@@ -116,7 +116,26 @@
             </if>
             and  v.isValid='1'
         </where>
+    </select>
 
+
+    <!-- 根据查询条件获得总数 -->
+    <select id="getTotalOfCondition" parameterType="com.tw.entity.Device" resultType="int">
+        SELECT
+            count(a.deviceId)
+        FROM
+            device a
+        WHERE
+            1=1
+        <if test="serial != null and serial != ''">
+            AND a.serial like "%"#{serial}"%"
+        </if>
+        <if test="deviceType != null and deviceType != ''">
+            AND a.deviceType like "%"#{deviceType}"%"
+        </if>
+        <if test="productDate != null and productDate != ''">
+            AND a.productDate like "%"#{productDate}"%"
+        </if>
     </select>
 
 

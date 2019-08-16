@@ -38,10 +38,10 @@ public interface DeviceDao {
     /**
      * @author liutianwen
      * @desc  根据传入vuser信息查看设备号
-     * @param VUser
+     * @param user
      * @return
      */
     List<String> getDeviceByUser(VUser user);
 
-
+    int getTotalOfCondition(Device device);
 }

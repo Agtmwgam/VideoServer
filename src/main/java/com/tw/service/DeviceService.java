@@ -112,4 +112,8 @@ public class DeviceService {
     }
 
 
+    //根据查询条件获得查询总数
+    public int getTotalOfCondition(Device device) {
+        return deviceDao.getTotalOfCondition(device);
+    }
 }
