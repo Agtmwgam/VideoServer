@@ -2,6 +2,8 @@ package com.tw.entity;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @Author: haizhi
  * @Description: 日志文件实体类
@@ -28,7 +30,7 @@ public class LogList extends BaseEntity {
     private String logName;
 
     // 日志生成时间
-    private String logTime;
+    private Date logTime;
 
     // 日志路径
     private String logPath;

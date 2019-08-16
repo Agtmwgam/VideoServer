@@ -55,6 +55,13 @@ public class LogListController {
 
         // 根据 serial 查询设备日志
         List<LogList> logLists = logListService.getListBySerialPage(logListForm);
+
+        if (startTime.length()!=19 || endTime.length()!=19){
+            response.setCode(ResponseInfo.CODE_ERROR);
+            response.setMessage("startTime or endTime input error!");
+            response.setData(logLists);
+        }
+
         // 查询总数 total
         Integer total = logListService.getTotalBySerial(logListForm);
 
