@@ -127,6 +127,7 @@
             device a
         WHERE
             1=1
+        AND a.isValid = '1'
         <if test="serial != null and serial != ''">
             AND a.serial like "%"#{serial}"%"
         </if>
@@ -211,6 +212,6 @@
             a.createTime
         DESC
         LIMIT
-            #{start}, #{pageSize}
+            #{start}, #{end}
     </select>
 </mapper>
