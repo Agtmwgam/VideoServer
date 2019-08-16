@@ -45,7 +45,7 @@ public class UserManagementController {
      * @Created liutianwen
      * @Description 用户管理 根据用户手机，模糊搜索用户信息和相应绑定的设备号
      */
-    @GetMapping (value = "/getUserInfo")
+    @PostMapping (value = "/getUserInfo")
     public ResponseInfo getUserInfo(VUser user, @RequestParam(value = "pageNo") int pageNo, @RequestParam(value = "pageSize") int pageSize) {
         ResponseInfo response = new ResponseInfo();
         response.setPageNo(pageNo);
