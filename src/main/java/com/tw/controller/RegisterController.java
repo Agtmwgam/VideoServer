@@ -125,7 +125,6 @@ public class RegisterController {
         //校验该用户是否已注册
         VUser user2 = new VUser();
         user2.setPhoneNumber(phoneNumber);
-        user2.setPassword(password);
 
         if ( userService.queryUser(user2) != null) {
             response.setMessage("The user is exist!");
