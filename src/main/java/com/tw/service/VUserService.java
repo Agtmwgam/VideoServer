@@ -89,12 +89,11 @@ public class VUserService {
     public List<VUser> fuzzyQueryUserByPage(VUser vuser, int pageNo, int pageSize) {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("start", (pageNo-1) * pageSize);
-        param.put("pageSize", pageSize);
+        param.put("pageSize", pageSize * pageNo);
         param.put("userId", vuser.getUserID());
         param.put("nickName", vuser.getNickName());
         param.put("password", vuser.getPassword());
         param.put("phoneNumber", vuser.getPhoneNumber());
-
         return vUserDao.fuzzyQueryUserByPage(param);
     }
 
@@ -124,4 +123,13 @@ public class VUserService {
     }
 
 
+    //根据查询条件查总数
+    public int getTotleOfUserAndDevice(VUser user) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userId", user.getUserID());
+        param.put("nickName", user.getNickName());
+        param.put("password", user.getPassword());
+        param.put("phoneNumber", user.getPhoneNumber());
+        return vUserDao.getTotleOfUserAndDevice(param);
+    }
 }

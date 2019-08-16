@@ -37,4 +37,6 @@ public interface VUserDao {
     // 逻辑删除用户
     public Integer delUser(VUser user);
 
+    //根据条件查总数
+    int getTotleOfUserAndDevice(Map<String, Object> param);
 }

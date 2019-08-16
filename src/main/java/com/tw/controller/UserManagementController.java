@@ -46,19 +46,16 @@ public class UserManagementController {
      * @Description 用户管理 根据用户手机，模糊搜索用户信息和相应绑定的设备号
      */
     @PostMapping (value = "/getUserInfo")
-    public ResponseInfo getUserInfo(VUser user, @RequestParam(value = "pageNo") int pageNo, @RequestParam(value = "pageSize") int pageSize) {
+    public ResponseInfo getUserInfo(@RequestBody VUser user, @RequestParam(value = "pageNo") int pageNo, @RequestParam(value = "pageSize") int pageSize) {
         ResponseInfo response = new ResponseInfo();
         response.setPageNo(pageNo);
         response.setPageSize(pageSize);
-//        VUser user = new VUser();
-//        String phoneNumber = requestMap.get("phoneNumber").toString();
-//        user.setPhoneNumber(phoneNumber);
 
         Map<String, Object> resultMap = new HashMap<>();
+        int totle = userService.getTotleOfUserAndDevice(user);
         //模糊查询用户（分页）
         List<UserAndDeviceSerialDTO> uAdList = userService.fuzzyQueryUserAndDeviceList(user, pageNo, pageSize);
         if (uAdList != null) {
-            int totle = uAdList.size();
             resultMap.put("total", totle);
             resultMap.put("list", uAdList);
             response.setCode(ResponseInfo.CODE_SUCCESS);
