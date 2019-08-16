@@ -2,9 +2,11 @@ package com.tw.service;
 
 
 import com.tw.convert.VUserToVUserAndDeviceDTOConvert;
+import com.tw.convert.Vuser2UserDTOConvert;
 import com.tw.dao.DeviceDao;
 import com.tw.dao.VUserDao;
 import com.tw.dto.UserAndDeviceSerialDTO;
+import com.tw.dto.UserDeviceDTO;
 import com.tw.entity.Device;
 import com.tw.entity.VUser;
 import org.apache.log4j.Logger;
@@ -26,6 +28,9 @@ public class VUserService {
 
     @Autowired
     private VUserDao vUserDao;
+
+    @Autowired
+    private DeviceService deviceService;
 
     @Autowired
     private DeviceDao deviceDao;
@@ -64,25 +69,23 @@ public class VUserService {
 
     //模糊查找用户详情(用户管理界面)
     @Transactional
-    public List<UserAndDeviceSerialDTO> fuzzyQueryUserAndDeviceList(VUser user, int pageNo, int pageSize) {
-        List<VUser> userList = null;
-        List<String> serialList = null;
-        UserAndDeviceSerialDTO uad = new UserAndDeviceSerialDTO();
-        List<UserAndDeviceSerialDTO> uAdList = new ArrayList<UserAndDeviceSerialDTO>();
+    public List<UserDeviceDTO> fuzzyQueryUserAndDeviceList(VUser user, int pageNo, int pageSize) {
+        List<UserDeviceDTO> userDeviceDTOList = new ArrayList<>();
         try {
 //          模糊搜索用户和设备号（含分页功能）
-            userList = fuzzyQueryUserByPage(user,pageNo, pageSize);
+            List<VUser> userList = fuzzyQueryUserByPage(user,pageNo, pageSize);
             for (VUser tempUser : userList) {
-                serialList = deviceDao.getDeviceByUser(tempUser);
-                uad = VUserToVUserAndDeviceDTOConvert.convert(tempUser, serialList);
-                uAdList.add(uad);
+                UserDeviceDTO userDeviceDTO = Vuser2UserDTOConvert.convert(tempUser);
+                List<Device> deviceList = vUserDao.getDeviceByUserId(tempUser.getUserID());
+                userDeviceDTO.setDeviceList(deviceList);
+                userDeviceDTOList.add(userDeviceDTO);
             }
         } catch (Exception e) {
             log.error("查询用户错误！");
             log.error(e.toString());
             System.out.println(e.toString());
         }
-        return uAdList;
+        return userDeviceDTOList;
     }
 
 //  TODO   用户管理分页查询

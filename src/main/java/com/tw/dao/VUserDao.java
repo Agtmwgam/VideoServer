@@ -1,5 +1,6 @@
 package com.tw.dao;
 
+import com.tw.entity.Device;
 import com.tw.entity.VUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -39,4 +40,6 @@ public interface VUserDao {
 
     //根据条件查总数
     int getTotleOfUserAndDevice(Map<String, Object> param);
+
+    List<Device> getDeviceByUserId(Integer userID);
 }

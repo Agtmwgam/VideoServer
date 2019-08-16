@@ -136,4 +136,20 @@
 			and isValid='1'
 		</where>
 	</select>
+
+
+	<!-- 根据用户id获得设备列表 -->
+	<select id="getDeviceByUserId" parameterType="int" resultType="com.tw.entity.Device">
+		SELECT
+			a.*
+		FROM device a
+		INNER JOIN
+			userDeviceRelate b
+		ON
+		 	b.deviceId = a.deviceId
+		WHERE
+			a.isValid = '1'
+			AND b.isValid = '1'
+			AND b.userId =#{userId}
+	</select>
 </mapper>

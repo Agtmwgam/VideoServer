@@ -1,6 +1,8 @@
 package com.tw.controller;
 
+import com.tw.convert.Vuser2UserDTOConvert;
 import com.tw.dto.UserAndDeviceSerialDTO;
+import com.tw.dto.UserDeviceDTO;
 import com.tw.entity.Device;
 import com.tw.entity.UserDeviceRelate;
 import com.tw.entity.VUser;
@@ -54,7 +56,7 @@ public class UserManagementController {
         Map<String, Object> resultMap = new HashMap<>();
         int totle = userService.getTotleOfUserAndDevice(user);
         //模糊查询用户（分页）
-        List<UserAndDeviceSerialDTO> uAdList = userService.fuzzyQueryUserAndDeviceList(user, pageNo, pageSize);
+        List<UserDeviceDTO> uAdList = userService.fuzzyQueryUserAndDeviceList(user, pageNo, pageSize);
         if (uAdList != null) {
             resultMap.put("total", totle);
             resultMap.put("list", uAdList);
