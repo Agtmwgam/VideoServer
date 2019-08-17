@@ -12,6 +12,7 @@ public class Vuser2UserDTOConvert {
         userDeviceDTO.setUserID(user.getUserID());
         userDeviceDTO.setPhoneNumber(user.getPhoneNumber());
         userDeviceDTO.setNickName(user.getNickName());
+        userDeviceDTO.setPassword(user.getPassword());
         return userDeviceDTO;
     }
 }

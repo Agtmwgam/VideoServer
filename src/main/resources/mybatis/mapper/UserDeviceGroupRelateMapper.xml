@@ -13,6 +13,19 @@
             (#{userId}, #{groupId})
     </insert>
 
+    <!-- 删除用户和组的关系 -->
+    <update id="delUserGroupRelate" parameterType="com.tw.entity.UserDeviceGroupRelate">
+        UPDATE
+            userDeviceGroupRelate
+        SET
+            isValid = '0'
+        WHERE
+            groupId = #{groupId}
+        AND
+            isValid = '1'
+        </update>
+
+
     <!--  根据groupId获得关联表集合 -->
     <select id="getGroupListByUserId" parameterType="int" resultType="com.tw.entity.UserDeviceGroupRelate">
         SELECT

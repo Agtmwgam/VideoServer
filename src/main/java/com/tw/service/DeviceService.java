@@ -52,7 +52,7 @@ public class DeviceService {
     public List<Device> getDeviceByCoditionPage(Device device, int pageNo, int pageSize) {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("start", (pageNo-1) * pageSize);
-        param.put("pageSize", pageSize);
+        param.put("pageSize", pageSize * pageNo);
         param.put("deviceId", device.getDeviceId());
         param.put("deviceName", device.getDeviceName());
         param.put("serial", device.getSerial());
@@ -115,5 +115,10 @@ public class DeviceService {
     //根据查询条件获得查询总数
     public int getTotalOfCondition(Device device) {
         return deviceDao.getTotalOfCondition(device);
+    }
+
+    //拿到数量
+    public int getCountOfLikCondition(Device device) {
+        return deviceDao.getCountOfLikCondition(device);
     }
 }

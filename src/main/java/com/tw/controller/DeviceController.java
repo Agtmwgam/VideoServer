@@ -62,8 +62,14 @@ public class DeviceController {
      */
     @PostMapping("/addDevice")
     public ResponseInfo addDevice(@RequestBody Device device) {
-
         ResponseInfo responseInfo = new ResponseInfo();
+
+        //默认给一个名字
+        if (device != null) {
+            if (StringUtils.isEmpty(device.getDeviceName()) || StringUtils.isBlank(device.getDeviceName())) {
+                device.setDeviceName("新设备");
+            }
+        }
 
         //查询数据库中是否已经存在该设备，感觉设备号和验证码检测
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
@@ -73,7 +79,6 @@ public class DeviceController {
             responseInfo.setMessage("device already exists！");
             return responseInfo;
         }
-
 
         int isAdd = deviceService.addDevice(device);
         if (isAdd == 1) {
@@ -184,15 +189,15 @@ public class DeviceController {
 
         Map<String, Object> resultMap = new HashMap<>();
         List<Device> devices = deviceService.getDeviceByCoditionPage(device, pageNo, pageSize);
+        int totle = deviceService.getCountOfLikCondition(device);
         for (Device device1 : devices) {
             System.out.println("===:" + device1.toString());
         }
         if (devices != null) {
-            int totle = devices.size();
-            resultMap.put("total", totle);
+            resultMap.put("total", devices.size());
             resultMap.put("list", devices);
             response.setCode(ResponseInfo.CODE_SUCCESS);
-            response.setTotal(devices.size());
+            response.setTotal(totle);
             response.setData(resultMap);
             response.setMessage("getDeviceByCondition success!");
         } else {
@@ -316,8 +321,12 @@ public class DeviceController {
             //01、删除关联关系表
             DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
             deviceGroupRelate.setGroupId(groupId);
+            //删除用户和组的关系
+            UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
+            userDeviceGroupRelate.setGroupId(groupId);
             //这里不能够将是否删除关联关系作为决定下面是否运行的条件，因为有可能本来就是为空
             int isDelRelate = deviceGroupRelateService.deleteByDeviceGroupRelate(deviceGroupRelate);
+            int idDelGroupRelate = userDeviceGroupRelateService.delUserGroupRelate(userDeviceGroupRelate);
 
             //02、删除分组
             int isDelete = devGroupService.deleteDevGroupById(groupId);

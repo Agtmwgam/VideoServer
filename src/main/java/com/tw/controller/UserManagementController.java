@@ -58,10 +58,10 @@ public class UserManagementController {
         //模糊查询用户（分页）
         List<UserDeviceDTO> uAdList = userService.fuzzyQueryUserAndDeviceList(user, pageNo, pageSize);
         if (uAdList != null) {
-            resultMap.put("total", totle);
+            resultMap.put("total", uAdList.size());
             resultMap.put("list", uAdList);
             response.setCode(ResponseInfo.CODE_SUCCESS);
-            response.setTotal(uAdList.size());
+            response.setTotal(totle);
             response.setData(resultMap);
         } else {
             resultMap.put("totle", 0);

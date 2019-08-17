@@ -24,4 +24,8 @@ public class UserDeviceGroupRelateService {
     }
 
 
+    //删除用户和组的关系
+    public int delUserGroupRelate(UserDeviceGroupRelate userDeviceGroupRelate) {
+        return userDeviceGroupRelateDao.delUserGroupRelate(userDeviceGroupRelate);
+    }
 }
