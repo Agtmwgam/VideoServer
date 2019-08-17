@@ -62,8 +62,14 @@ public class DeviceController {
      */
     @PostMapping("/addDevice")
     public ResponseInfo addDevice(@RequestBody Device device) {
-
         ResponseInfo responseInfo = new ResponseInfo();
+
+        //默认给一个名字
+        if (device != null) {
+            if (StringUtils.isEmpty(device.getDeviceName()) || StringUtils.isBlank(device.getDeviceName())) {
+                device.setDeviceName("新设备");
+            }
+        }
 
         //查询数据库中是否已经存在该设备，感觉设备号和验证码检测
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
@@ -73,7 +79,6 @@ public class DeviceController {
             responseInfo.setMessage("device already exists！");
             return responseInfo;
         }
-
 
         int isAdd = deviceService.addDevice(device);
         if (isAdd == 1) {
