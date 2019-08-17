@@ -44,4 +44,6 @@ public interface DeviceDao {
     List<String> getDeviceByUser(VUser user);
 
     int getTotalOfCondition(Device device);
+
+    int getCountOfLikCondition(Device device);
 }

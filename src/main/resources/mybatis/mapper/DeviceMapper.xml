@@ -189,6 +189,50 @@
     </select>
 
 
+    <!-- 根据条件查询device总数 -->
+    <select id="getCountOfLikCondition" parameterType="java.util.Map" resultType="int">
+        SELECT
+            count(deviceId)
+        FROM
+            device
+        WHERE
+            1=1
+        <if test="deviceId != 0">
+            AND deviceId = #{deviceId}
+        </if>
+        <if test="deviceName != null ">
+            AND deviceName = #{deviceName}
+        </if>
+        <if test="serial != null ">
+            AND serial = #{serial}
+        </if>
+        <if test="deviceVerifyCode != null ">
+            AND deviceVerifyCode = #{deviceVerifyCode}
+        </if>
+        <if test="deviceType != null ">
+            AND deviceType = #{deviceType}
+        </if>
+        <if test="softVersion != null ">
+            AND softVersion = #{softVersion}
+        </if>
+        <if test="productDate != null ">
+            AND productDate = #{productDate}
+        </if>
+        <if test="deviceStatus != '\0' ">
+            AND deviceStatus = #{deviceStatus}
+        </if>
+        <if test="isOnline != '\0' ">
+            AND isOnline = #{isOnline}
+        </if>
+        <if test="ipAddress != null ">
+            AND ipAddress = #{ipAddress}
+        </if>
+        <if test="isValid != '\0' ">
+            AND isValid = #{isValid}
+        </if>
+    </select>
+
+
     <!-- 根据设备序列号、设备型号和设备的生产日期进行模糊搜索 -->
     <select id="getDeviceLikeCondition" parameterType="java.util.Map" resultType="com.tw.entity.Device">
         SELECT

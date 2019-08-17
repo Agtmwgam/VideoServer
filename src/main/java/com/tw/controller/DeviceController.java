@@ -184,15 +184,15 @@ public class DeviceController {
 
         Map<String, Object> resultMap = new HashMap<>();
         List<Device> devices = deviceService.getDeviceByCoditionPage(device, pageNo, pageSize);
+        int totle = deviceService.getCountOfLikCondition(device);
         for (Device device1 : devices) {
             System.out.println("===:" + device1.toString());
         }
         if (devices != null) {
-            int totle = devices.size();
-            resultMap.put("total", totle);
+            resultMap.put("total", devices.size());
             resultMap.put("list", devices);
             response.setCode(ResponseInfo.CODE_SUCCESS);
-            response.setTotal(devices.size());
+            response.setTotal(totle);
             response.setData(resultMap);
             response.setMessage("getDeviceByCondition success!");
         } else {
