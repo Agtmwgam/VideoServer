@@ -123,6 +123,8 @@ public class LoginController {
             System.out.println("============登录成功");
             //TODO
             //这里后面要将这个登录状态放到jwt里面，维持这个登录状态
+            int useId = user.getUserID();
+            data.put("userId", useId);
             //TODO
             //登录成功之后要判断是否是管理员
             RootInfo rootInfo = new RootInfo();
@@ -130,6 +132,7 @@ public class LoginController {
             rootInfo.setLoginPassword(passWord);
             List<RootInfo> rootInfos = rootInfoService.getRootInfo(rootInfo);
             if (rootInfos != null && rootInfos.size() > 0) {
+                data.put("userId", 123456789);
                 data.put("isRoot", CODE_SUCCESS);
             }
             response.setCode(CODE_SUCCESS);
@@ -153,10 +156,14 @@ public class LoginController {
      */
     @RequestMapping(value = "/logOnByMsg", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseInfo logOnByMsg(@RequestBody Map<String,Object> requestMap) {
-        ResponseInfo response = new ResponseInfo();
-        //先检测是否在数据库中应有该手机号码了
-        String phoneNumber = (String)requestMap.get("phoneNumber");
         Boolean isRootPhone = false;
+        ResponseInfo response = new ResponseInfo();
+        String phoneNumber = (String)requestMap.get("phoneNumber");
+
+        //现在用户表中查询是否有该用户
+        VUser vUser = new VUser();
+        vUser.setPhoneNumber(phoneNumber);
+        VUser loginUser = vUserService.queryUser(vUser);
 
         //如果管理员列表里面有这个号码的话，有限处理成管理员权限
         RootInfo rootInfo = new RootInfo();
@@ -166,9 +173,7 @@ public class LoginController {
             isRootPhone = true;
         }
 
-        VUser vUser = new VUser();
-        vUser.setPhoneNumber(phoneNumber);
-        if ((vUserService.queryUser(vUser) == null) & !isRootPhone) {
+        if (loginUser == null & !isRootPhone) {
             response.setCode(CODE_ERROR);
             response.setMessage("this phoneNumber:" + phoneNumber + "have not yet registered, please registed first!");
             return response;
@@ -179,11 +184,13 @@ public class LoginController {
             logger.warn("======短信校验成功，继续监测是否是管理员");
             Map<String, Object> isRootMap = new HashMap<String, Object>();
             //默认不是管理员
+            isRootMap.put("userId", loginUser.getUserID());
             isRootMap.put("isRoot", CODE_ERROR);
             //如果是管理员登录成功，要把管理员的标记添加到data里面
             if (isRootPhone) {
                 isRootMap.put("isRoot", CODE_SUCCESS);
-
+                //前端需求，即使是root也要返回一个userId
+                isRootMap.put("userId", 123456789);
             }
             response.setData(isRootMap);
             response.setCode(CODE_SUCCESS);
@@ -195,8 +202,4 @@ public class LoginController {
         }
         return response;
     }
-
-
-    //校验管理员的二次登录密码
-
 }
