@@ -118,17 +118,16 @@
 
 	<!-- 拿到条件内容的总数 -->
 	<select id="getTotleOfUserAndDevice" parameterType="java.util.Map" resultType="int">
-		SELECT
-			count(userID)
-		FROM
+		select
+			count(*)
+		from
 			vUser
 		<where>
-			1=1
 			<if test="phoneNumber !=null and phoneNumber !=''">
-				AND phoneNumber LIKE '%${phoneNumber}%'
+				phoneNumber LIKE '%${phoneNumber}%'
 			</if>
 			<if test="userID !=null and userID!=''">
-				AND userID =#{userID}
+				userID =#{userID}
 			</if>
 			<if test="nickName!=null and nickName!=''">
 				and nickName=#{nickName}
@@ -138,18 +137,54 @@
 	</select>
 
 
+<!--	&lt;!&ndash; 根据用户id获得设备列表 &ndash;&gt;-->
+<!--	<select id="getDeviceByUserId" parameterType="int" resultType="com.tw.entity.Device">-->
+<!--		SELECT-->
+<!--			a.*-->
+<!--		FROM device a-->
+<!--		INNER JOIN-->
+<!--			userDeviceRelate b-->
+<!--		ON-->
+<!--		 	b.deviceId = a.deviceId-->
+<!--		WHERE-->
+<!--			a.isValid = '1'-->
+<!--			AND b.isValid = '1'-->
+<!--			AND b.userId =#{userId}-->
+<!--	</select>-->
+
 	<!-- 根据用户id获得设备列表 -->
 	<select id="getDeviceByUserId" parameterType="int" resultType="com.tw.entity.Device">
 		SELECT
 			a.*
-		FROM device a
+		FROM
+			device a
 		INNER JOIN
-			userDeviceRelate b
+			deviceGroupRelate b
 		ON
-		 	b.deviceId = a.deviceId
+			b.deviceId = a.deviceId
+		INNER JOIN
+			devGroup c
+		ON
+			c.groupId = b.groupId
+		INNER JOIN
+			userDeviceGroupRelate d
+		ON
+			d.groupId = c.groupId
+		INNER JOIN
+			vUser e
+		ON
+			e.userID = d.userId
 		WHERE
 			a.isValid = '1'
-			AND b.isValid = '1'
-			AND b.userId =#{userId}
+		AND
+			b.isValid = '1'
+		AND
+			c.isValid = '1'
+		AND
+			d.isValid = '1'
+		AND
+			e.isValid = '1'
+		AND
+			e.userID = #{userId}
 	</select>
 </mapper>
