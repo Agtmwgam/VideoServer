@@ -43,21 +43,26 @@ public class HeatDataService {
             String[] location = targetLocation.split(",");
             //解析目标位置，每条message信息里面包括四个值message.x, message.y, message.width, message.height
             //x代表目标出现的横坐标，x代表目标出现的纵坐标，width，height分别为目标矩形的高和宽
-            int x = Integer.parseInt(location[0]);
+            int x = Integer.parseInt(location[0]);  //12,52,20,20
             int y = Integer.parseInt(location[1]);
             int width = Integer.parseInt(location[2]);
             int height = Integer.parseInt(location[3]);
 
             for (i = x; i < x + width; i = i + 1) {
                 for (j = y; j < y + height; j = j + 1) {
-                        data[i][j] = data[i][j] + 1;
-                       /* System.out.println("points.push({x:"+i+",y:"+j+",value:"+data[i][j]+"});");
-                        Point p=new Point(i,j,data[i][j]);//将x,y,权重值存入点对象中
-                        pointlist.add(p);*/
+                    data[i][j] = data[i][j] + 1;
                 }
             }
         }
 
+
+        /*for (i = 0; i < ROW; i = i + 1) {
+            for (j = 0; j < COL; j = j + 1) {
+                if(data[i][j]!=0) {
+                    System.out.println(i + "\t" + j + "\t" + data[i][j]);
+                }
+            }
+        }*/
 
         //获取数组里的最大值，进行归一化，最终结果：data最大值为255，最小值为0
         int maxvalue = data[0][0];
@@ -74,11 +79,15 @@ public class HeatDataService {
             return  null;
         }
 
+        System.out.println("COL"+COL);
         for (i = 0; i < ROW; i = i + 1) {
             for (j = 0; j < COL; j = j + 1) {
                 data[i][j] = Math.round(data[i][j] / maxvalue * 255); //round取整数，或者用mod函数取余数
+
                 if(data[i][j] !=0){
                    // log.info("points.push({x:" + i + ",y:" + j + ",value:" + data[i][j] + "});");
+
+                   System.out.println("x:" + i + ",y:" + j + ",value:" + data[i][j] + "");
                 }
             }
         }
@@ -100,16 +109,19 @@ public class HeatDataService {
         }
 
 
-        Point p =new Point(0,0,0);
         for (i=FSIZE; i<ROW-FSIZE; i=i+1)
         {
             for (j=FSIZE; j<COL-FSIZE; j=j+1)
             {
                 data[i][j] = data2[i][j]; //将平滑滤波结果返回给data
-                p = new Point(i, j, data2[i][j]);//将x,y,权重值存入点对象中
-                pointlist.add(p);
-                if(data[i][j] !=0){
-                    log.info("points.push({x:" + i + ",y:" + j + ",value:" + data[i][j] + "});");
+
+            }
+        }
+
+        for (i = 0; i < ROW; i = i + 1) {
+            for (j = 0; j < COL; j = j + 1) {
+                if(data[i][j]!=0) {
+                   // System.out.println(i + "\t" + j + "\t" + data[i][j]);
                 }
             }
         }
