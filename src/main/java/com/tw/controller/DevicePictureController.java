@@ -40,55 +40,29 @@ public class DevicePictureController {
      * @return
      */
     @GetMapping("/getDensityPicture")
-    public String getDensityPicture(@RequestParam(value = "serial") String serial) {
+    public String getDensityPicture(@RequestParam(value = "serial") String serial
+            , @RequestParam(value = "pageSize", required = false) Integer pageSize
+            , @RequestParam(value = "pageNo", required = false) Integer pageNo) {
         log.info("=====/getDensityPicture从前端获取到的参数是=====serial:"+serial);
         ResponseInfo response = new ResponseInfo();
         Map<String, Object> resultMap = new HashMap<>();
         List<DevicePicture> list = devicePictureService.getDensityPicture(serial);
-        if (list != null) {
+        if (list.size()>=0) {
+            int total = list.size();
+            response.setPageSize(pageSize);
+            response.setPageNo(pageNo);
+            response.setTotal(total);
             response.setCode(ResponseInfo.CODE_SUCCESS);
-            response.setData(list);
             response.setMessage("getDensityPicture success!");
-        } else {
+            response.setData(list);
+        }
+        else {
             response.setCode(ResponseInfo.CODE_ERROR);
             response.setMessage("getDensityPicture failed!");
 
         }
         return JsonMapperUtil.toJsonString(response);
     }
-
-
-    /***
-     * @description 密度分析图详情接口
-     * @param serial
-     * @return
-     */
-    @GetMapping("/getDensityPictureData")
-    public String getDensityPictureData(@RequestParam(value = "serial") String serial) {
-        log.info("=====/caculateHeatData从前端获取到的参数是=====serial:" + serial);
-
-        ResponseInfo response = new ResponseInfo();
-        List<String> dataset=devicePictureService.getDensityPictureData(serial);
-        if(dataset==null){
-            log.info("=====/caculateHeatData:告警消息数据集为空=====serial:" + serial);
-            response.setCode(ResponseInfo.CODE_ERROR);
-            response.setMessage("caculateHeatData failed!");
-        }
-        List<Point>  points = heatDataService.caculateHeatData(dataset);
-        if (points != null) {
-            response.setCode(ResponseInfo.CODE_SUCCESS);
-            response.setData(points);
-            response.setMessage("caculateHeatData success!");
-        } else {
-            response.setCode(ResponseInfo.CODE_ERROR);
-            response.setMessage("caculateHeatData failed!");
-
-        }
-        return JsonMapperUtil.toJsonString(response);
-
-    }
-
-
 
 
 

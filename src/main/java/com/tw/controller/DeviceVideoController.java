@@ -77,11 +77,12 @@ public class DeviceVideoController {
             , @RequestParam(value = "pageNo", required = false) Integer pageNo) {
         log.info("=====/getWarningInfoList从前端获取到的参数是=====serial:"+serial);
         ResponseInfo response = new ResponseInfo();
+        Map<String, Object> resultMap = new HashMap<>();
         List<DeviceVideo> list = deviceVideoService.getWarningInfoList(serial,pageSize,pageNo);
         for (DeviceVideo device1 : list) {
             System.out.println("===:"+device1.toString());
         }
-        if (list != null) {
+        if (list.size()>=0) {
             int total = list.size();
             response.setPageSize(pageSize);
             response.setPageNo(pageNo);
@@ -89,7 +90,8 @@ public class DeviceVideoController {
             response.setCode(ResponseInfo.CODE_SUCCESS);
             response.setMessage("getWarningInfoList success!");
             response.setData(list);
-        } else {
+        }
+        else {
             response.setCode(ResponseInfo.CODE_ERROR);
             response.setMessage("getWarningInfoList failed!");
 
