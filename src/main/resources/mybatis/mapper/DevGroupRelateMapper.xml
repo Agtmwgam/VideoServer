@@ -47,6 +47,21 @@
     </update>
 
 
+    <!-- 删除设备和组的关联关系 -->
+    <update id="deleteDeviceGroupRelate" parameterType="com.tw.entity.DeviceGroupRelate">
+        UPDATE
+            deviceGroupRelate
+        SET
+            isValid = '0'
+        WHERE
+            groupId = #{groupId}
+        AND
+            deviceId = #{deviceId}
+        AND
+            isValid = '1'
+    </update>
+
+
  <!-- 根据groupId获得对象 -->
     <select id="getDeviceGroupByGroupId" parameterType="int" resultType="com.tw.entity.DeviceGroupRelate">
         SELECT

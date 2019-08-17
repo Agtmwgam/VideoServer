@@ -43,4 +43,7 @@ public class DeviceGroupRelateService {
     }
 
 
+    public int deleteDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate) {
+        return deviceGroupRelateDao.deleteDeviceGroupRelate(deviceGroupRelate);
+    }
 }

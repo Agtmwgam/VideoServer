@@ -344,6 +344,27 @@ public class DeviceController {
         return response;
     }
 
+    /**
+     * @Author: John
+     * @Description: 删除组和设备的关联关系
+     * @Date:  2019/8/17 22:45
+     * @param: 组和设备关联关系对象
+     * @return: responseInfo 标准返回类
+     */
+    @PostMapping("/deleteDeviceGroupRelate")
+    public ResponseInfo deleteDeviceGroupRelate(@RequestBody DeviceGroupRelate deviceGroupRelate) {
+        ResponseInfo responseInfo = new ResponseInfo();
+        int isDelete = deviceGroupRelateService.deleteDeviceGroupRelate(deviceGroupRelate);
+        if (isDelete == 1) {
+            responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+            responseInfo.setMessage("delete deviceGroupRelate success!");
+        } else {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("delete deviceGroupRelate failed!");
+        }
+        return responseInfo;
+    }
+
 
     /**
      * @Author: John
