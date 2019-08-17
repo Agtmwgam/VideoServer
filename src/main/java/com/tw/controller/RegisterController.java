@@ -23,7 +23,6 @@ import static com.tw.util.ResponseInfo.CODE_SUCCESS;
  * @Created by liutianwen
  */
 @RestController
-@RequestMapping("/shungkon/")
 public class RegisterController {
 
     @Autowired
@@ -50,6 +49,7 @@ public class RegisterController {
      * @return
      * @Date 2019/8/5 22:21
      * @Created liutianwen
+     * @param  phoneNumber password msgNum hash tamp
      * @Description 用户注册
      */
     @PostMapping(value = "toRegister", headers = "Accept=application/json")
@@ -126,6 +126,11 @@ public class RegisterController {
         VUser user2 = new VUser();
         user2.setPhoneNumber(phoneNumber);
 
+        if(userService.queryRootByphoneNumber(phoneNumber)!=null){
+            response.setMessage("The user is exist!");
+            response.setCode(CODE_ERROR);
+            return response;
+        }
         if ( userService.queryUser(user2) != null) {
             response.setMessage("The user is exist!");
             response.setCode(CODE_ERROR);

@@ -1,13 +1,13 @@
 package com.tw.service;
 
 
-import com.tw.convert.VUserToVUserAndDeviceDTOConvert;
 import com.tw.convert.Vuser2UserDTOConvert;
 import com.tw.dao.DeviceDao;
+import com.tw.dao.RootInfoDao;
 import com.tw.dao.VUserDao;
-import com.tw.dto.UserAndDeviceSerialDTO;
 import com.tw.dto.UserDeviceDTO;
 import com.tw.entity.Device;
+import com.tw.entity.RootInfo;
 import com.tw.entity.VUser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,9 @@ public class VUserService {
     @Autowired
     private DeviceDao deviceDao;
 
+    @Autowired
+    private RootInfoDao rootInfoDao;
+
     private static Logger log = Logger.getLogger(VUserService.class);
 
     // 新建一个用户
@@ -52,6 +55,11 @@ public class VUserService {
     @Transactional
     public VUser queryUser(VUser user) {
         return vUserDao.queryUser(user);
+    }
+
+    @Transactional
+    public RootInfo queryRootByphoneNumber(String phoneNumber) {
+        return rootInfoDao.queryRootByphoneNumber(phoneNumber);
     }
 
     //模糊查找用户

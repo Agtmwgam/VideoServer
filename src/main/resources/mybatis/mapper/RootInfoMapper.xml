@@ -21,4 +21,10 @@
 
 	</select>
 
+	<!-- 根据手机号查询管理员用户 -->
+	<select id="queryRootByphoneNumber" parameterType="java.lang.String"
+			resultType="com.tw.entity.RootInfo">
+		select * from  rootInfo where rootPhone =#{rootPhone}
+	</select>
+
 </mapper>
