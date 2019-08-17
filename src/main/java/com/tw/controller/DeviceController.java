@@ -316,8 +316,12 @@ public class DeviceController {
             //01、删除关联关系表
             DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
             deviceGroupRelate.setGroupId(groupId);
+            //删除用户和组的关系
+            UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
+            userDeviceGroupRelate.setGroupId(groupId);
             //这里不能够将是否删除关联关系作为决定下面是否运行的条件，因为有可能本来就是为空
             int isDelRelate = deviceGroupRelateService.deleteByDeviceGroupRelate(deviceGroupRelate);
+            int idDelGroupRelate = userDeviceGroupRelateService.delUserGroupRelate(userDeviceGroupRelate);
 
             //02、删除分组
             int isDelete = devGroupService.deleteDevGroupById(groupId);
