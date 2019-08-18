@@ -2,6 +2,7 @@ package com.tw.controller;
 
 import com.sun.org.apache.regexp.internal.RE;
 import com.tw.dto.DevGroupDTO;
+import com.tw.dto.MoveGroupDTO;
 import com.tw.dto.UserGroupDTO;
 import com.tw.dto.UserRoleDTO;
 import com.tw.entity.*;
@@ -376,10 +377,12 @@ public class DeviceController {
      * @return:
      */
     @PostMapping("/moveDeviceGroup")
-    public ResponseInfo moveDeviceGroup(
-            @RequestParam(value = "deviceId") int deviceId,
-            @RequestParam(value = "groupId") int groupId,
-            @RequestParam("newGroupId") int newGroupId) {
+    public ResponseInfo moveDeviceGroup(@RequestBody MoveGroupDTO moveGroupDTO) {
+
+        int deviceId = moveGroupDTO.getDeviceId();
+        int groupId = moveGroupDTO.getGroupId();
+        int newGroupId = moveGroupDTO.getNewGroupId();
+
         ResponseInfo responseInfo = new ResponseInfo();
         DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
         deviceGroupRelate.setDeviceId(deviceId);
