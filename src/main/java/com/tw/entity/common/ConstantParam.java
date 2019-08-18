@@ -27,4 +27,7 @@ public class ConstantParam {
 //    验证码不能为空
     public static final String VALID_CODE_EMPTY = "verify code can not be empty!";
 
+
+//   页面展示字段
+    public static final String MY_DEVICE_GROUP = "我的分组";
 }

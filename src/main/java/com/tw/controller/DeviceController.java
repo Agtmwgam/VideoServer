@@ -259,6 +259,13 @@ public class DeviceController {
         if (userId > 0) {
             DevGroup devGroup = new DevGroup();
             devGroup.setGroupName(groupName);
+
+//            检查设备组名是否重复   --by liutianwen
+            if(devGroupService.getDevGroupByGroupName(groupName).size()!=0){
+                response.setCode(ResponseInfo.CODE_ERROR);
+                response.setMessage("The group name already exists!");
+            }
+
             int isAdd = devGroupService.addDevGroup(devGroup);
             if (isAdd == 1) {
                 //添加到自己的分组中

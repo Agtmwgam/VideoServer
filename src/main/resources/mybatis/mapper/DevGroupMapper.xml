@@ -7,8 +7,8 @@
     <!-- 增加devGroup -->
     <insert id="addDevGroup" parameterType="com.tw.entity.DevGroup" useGeneratedKeys="true" keyProperty="groupId">
         INSERT INTO
-            devGroup
-            (groupName)
+            deviceGroup
+            (deviceGroupName)
         values
             (#{groupName})
     </insert>
@@ -17,7 +17,7 @@
     <!-- 删除devGroup -->
     <update id="deleteDevGroupById" parameterType="int">
         UPDATE
-            devGroup
+            deviceGroup
         SET
             isValid = '0'
         WHERE
@@ -30,9 +30,9 @@
     <!-- 修改devGroup -->
     <update id="updateDevGroup" parameterType="com.tw.entity.DevGroup">
         UPDATE
-            devGroup
+            deviceGroup
         SET
-            groupName = #{groupName}
+            deviceGroupName = #{groupName}
         WHERE
             groupId = #{groupId}
         AND
@@ -45,7 +45,7 @@
         SELECT
             *
         FROM
-            devGroup
+            deviceGroup
         WHERE
             groupId = #{groupId}
         AND
@@ -58,9 +58,9 @@
         SELECT
             *
         FROM
-            devGroup
+            deviceGroup
         WHERE
-            groupName = #{groupName}
+            deviceGroupName = #{groupName}
         AND
             isValid = '1'
     </select>
@@ -70,7 +70,7 @@
         SELECT
             g.*
         FROM
-            devGroup g
+            deviceGroup g
         LEFT JOIN deviceGroupRelate dgr on dgr.groupId = g.groupId
         LEFT JOIN device d on dgr.deviceId = d.deviceId
         WHERE

@@ -57,11 +57,6 @@ public class VUserService {
         return vUserDao.queryUser(user);
     }
 
-    @Transactional
-    public RootInfo queryRootByphoneNumber(String phoneNumber) {
-        return rootInfoDao.queryRootByphoneNumber(phoneNumber);
-    }
-
     //模糊查找用户
     @Transactional
     public List<VUser> fuzzyQueryUser(VUser user) {

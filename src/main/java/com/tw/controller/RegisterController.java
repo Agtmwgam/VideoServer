@@ -1,15 +1,18 @@
 package com.tw.controller;
 
+import com.tw.entity.DevGroup;
+import com.tw.entity.RootInfo;
+import com.tw.entity.UserDeviceGroupRelate;
 import com.tw.entity.VUser;
 import com.tw.entity.common.ConstantParam;
-import com.tw.service.MessageService;
-import com.tw.service.VUserService;
+import com.tw.service.*;
 import com.tw.util.PhoneUtil;
 import com.tw.util.ResponseInfo;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
@@ -31,10 +34,19 @@ public class RegisterController {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private DevGroupService devGroupService;
+
+    @Autowired
+    private UserDeviceGroupRelateService userDeviceGroupRelateService;
+
+    @Autowired
+    private RootInfoService rootInfoService;
+
     //声明一个Logger，这个是static的方式
     private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    @RequestMapping(value = "sendeMessage")
+    @RequestMapping(value = "/sendMessage")
     public ResponseInfo sendeMessage(@RequestBody String phoneNumber) {
 //        phoneNumber="18210081211";
         ResponseInfo  responseInfo=new ResponseInfo();
@@ -49,10 +61,11 @@ public class RegisterController {
      * @return
      * @Date 2019/8/5 22:21
      * @Created liutianwen
-     * @param  phoneNumber password msgNum hash tamp
+     * @param  requestMap phoneNumber password msgNum hash tamp
      * @Description 用户注册
      */
-    @PostMapping(value = "toRegister", headers = "Accept=application/json")
+    @PostMapping(value = "/toRegister", headers = "Accept=application/json")
+    @Transactional
         public ResponseInfo createUser(@RequestBody Map<String,Object> requestMap) {
         ResponseInfo response=new ResponseInfo();
         VUser user=new VUser();
@@ -67,6 +80,29 @@ public class RegisterController {
 
         //创建用户
         userService.creatUser(user);
+        user=userService.queryUser(user);
+//        给客户添加默认分组
+        DevGroup devGroup=new DevGroup();
+        devGroup.setGroupName(ConstantParam.MY_DEVICE_GROUP);
+        int isAdd = devGroupService.addDevGroup(devGroup);
+//        添加关联关系
+        if (isAdd == 1) {
+            //添加到自己的分组中
+            UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
+            userDeviceGroupRelate.setGroupId(devGroup.getGroupId());
+            userDeviceGroupRelate.setUserId(user.getUserID());
+            int isAddRelate = userDeviceGroupRelateService.addUserDeviceGroupRelate(userDeviceGroupRelate);
+            if (isAddRelate ==1) {
+                response.setCode(ResponseInfo.CODE_SUCCESS);
+                response.setMessage("add default devGroup success!");
+            } else {
+                response.setCode(ResponseInfo.CODE_ERROR);
+                response.setMessage("add default devGroup failed!");
+            }
+        } else {
+            response.setCode(ResponseInfo.CODE_ERROR);
+            response.setMessage("add default devGroup failed!");
+        }
         response.setCode(CODE_SUCCESS);
         response.setMessage(" Registered successfully!");
 
@@ -125,8 +161,9 @@ public class RegisterController {
         //校验该用户是否已注册
         VUser user2 = new VUser();
         user2.setPhoneNumber(phoneNumber);
-
-        if(userService.queryRootByphoneNumber(phoneNumber)!=null){
+        RootInfo rootInfo=new RootInfo();
+        rootInfo.setRootPhone(phoneNumber);
+        if(rootInfoService.getRootInfo(rootInfo).size()!=0){
             response.setMessage("The user is exist!");
             response.setCode(CODE_ERROR);
             return response;
@@ -137,24 +174,19 @@ public class RegisterController {
             return response;
         }
 
-        if ( userService.queryUser(user2) != null) {
-            response.setMessage("The user is exist!");
-            response.setCode(CODE_ERROR);
-            return response;
-        }
 
         // 验证码校验
 //        短信是否为空
-        if (StringUtils.isBlank(requestMap.get("msgNum").toString())) {
-            response.setCode("9999");
-            response.setMessage("The msgNum can not be empty!");
-            return response;
-        }
-        //  调用短信验证码验证接口
-        response = messageService.validateNum(requestMap);
-        if (response.getCode() == CODE_ERROR) {
-            return response;
-        }
+//        if (StringUtils.isBlank(requestMap.get("msgNum").toString())) {
+//            response.setCode("9999");
+//            response.setMessage("The msgNum can not be empty!");
+//            return response;
+//        }
+//        //  调用短信验证码验证接口
+//        response = messageService.validateNum(requestMap);
+//        if (response.getCode() == CODE_ERROR) {
+//            return response;
+//        }
 
         response.setCode(CODE_SUCCESS);
         return response;
