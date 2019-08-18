@@ -17,7 +17,7 @@ public class StringArr2BeatMessageConvert {
 //        beatMessage.setFrame(mes[0]);
 //        beatMessage.setMesNo(mes[1]);
 //        beatMessage.setMesDate(mes[2]);
-//        beatMessage.setGroupName(mes[3]);
+//        beatMessage.setDeviceGroupName(mes[3]);
 //        beatMessage.setDeviceName(mes[4]);
 //        beatMessage.setDeviceModel(mes[5]);
 //        beatMessage.setSerial(mes[6]);

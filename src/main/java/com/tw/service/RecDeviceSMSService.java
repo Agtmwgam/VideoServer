@@ -98,12 +98,12 @@ public class RecDeviceSMSService {
      */
     public List<String> findGroupNameAndDeviceName(String serial){
 
-        // 获取 deviceName 与 groupName
+        // 获取 deviceName 与 deviceGroupName
         Device d1 = new Device();
         d1.setSerial(serial);
         d1.setIsValid('1');
         List<Device> deviceList = deviceDao.getDeviceByCodition(d1);
-        DevGroup devGroup = devGroupDao.getDevGroupBySerial(serial);
+        DeviceGroup deviceGroup = devGroupDao.getDevGroupBySerial(serial);
 
         List<String> groupNameAndDeviceNameList = new ArrayList<>();
         if (deviceList==null || deviceList.size()==0){
@@ -114,8 +114,8 @@ public class RecDeviceSMSService {
         }else {
             groupNameAndDeviceNameList.add(deviceList.get(0).getDeviceName());
         }
-        if (devGroup!=null){
-            groupNameAndDeviceNameList.add(devGroup.getGroupName());
+        if (deviceGroup !=null){
+            groupNameAndDeviceNameList.add(deviceGroup.getDeviceGroupName());
         }
 
         return groupNameAndDeviceNameList;

@@ -5,7 +5,7 @@
 
 
     <!-- 增加devGroup -->
-    <insert id="addDevGroup" parameterType="com.tw.entity.DevGroup" useGeneratedKeys="true" keyProperty="groupId">
+    <insert id="addDevGroup" parameterType="com.tw.entity.DeviceGroup" useGeneratedKeys="true" keyProperty="groupId">
         INSERT INTO
             deviceGroup
             (deviceGroupName)
@@ -28,7 +28,7 @@
 
 
     <!-- 修改devGroup -->
-    <update id="updateDevGroup" parameterType="com.tw.entity.DevGroup">
+    <update id="updateDevGroup" parameterType="com.tw.entity.DeviceGroup">
         UPDATE
             deviceGroup
         SET
@@ -41,7 +41,7 @@
 
 
     <!-- 根据devGroupId查询devGroup -->
-    <select id="getDevGroupById" parameterType="int" resultType="com.tw.entity.DevGroup">
+    <select id="getDevGroupById" parameterType="int" resultType="com.tw.entity.DeviceGroup">
         SELECT
             *
         FROM
@@ -54,7 +54,7 @@
 
 
     <!-- 根据devGroupName查询devGroup -->
-    <select id="getDevGroupByGroupName" parameterType="String" resultType="com.tw.entity.DevGroup">
+    <select id="getDevGroupByGroupName" parameterType="String" resultType="com.tw.entity.DeviceGroup">
         SELECT
             *
         FROM
@@ -66,7 +66,7 @@
     </select>
 
     <!-- 根据 device serial 查询devGroup -->
-    <select id="getDevGroupBySerial" parameterType="String" resultType="com.tw.entity.DevGroup">
+    <select id="getDevGroupBySerial" parameterType="String" resultType="com.tw.entity.DeviceGroup">
         SELECT
             g.*
         FROM

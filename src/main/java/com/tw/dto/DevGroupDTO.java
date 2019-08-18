@@ -1,6 +1,6 @@
 package com.tw.dto;
 
-import com.tw.entity.DevGroup;
+import com.tw.entity.DeviceGroup;
 import com.tw.entity.Device;
 import lombok.Data;
 
@@ -16,6 +16,6 @@ import java.util.List;
 @Data
 public class DevGroupDTO {
 
-    private DevGroup devGroup;          //原本的的组的信息
+    private DeviceGroup deviceGroup;          //原本的的组的信息
     private List<Device> deviceList;    //设备组集合
 }

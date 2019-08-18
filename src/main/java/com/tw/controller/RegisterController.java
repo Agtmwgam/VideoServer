@@ -1,6 +1,6 @@
 package com.tw.controller;
 
-import com.tw.entity.DevGroup;
+import com.tw.entity.DeviceGroup;
 import com.tw.entity.RootInfo;
 import com.tw.entity.UserDeviceGroupRelate;
 import com.tw.entity.VUser;
@@ -82,26 +82,26 @@ public class RegisterController {
         userService.creatUser(user);
         user=userService.queryUser(user);
 //        给客户添加默认分组
-        DevGroup devGroup=new DevGroup();
-        devGroup.setGroupName(ConstantParam.MY_DEVICE_GROUP);
-        int isAdd = devGroupService.addDevGroup(devGroup);
+        DeviceGroup deviceGroup =new DeviceGroup();
+        deviceGroup.setDeviceGroupName(ConstantParam.MY_DEVICE_GROUP);
+        int isAdd = devGroupService.addDevGroup(deviceGroup);
 //        添加关联关系
         if (isAdd == 1) {
             //添加到自己的分组中
             UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
-            userDeviceGroupRelate.setGroupId(devGroup.getGroupId());
+            userDeviceGroupRelate.setDeviceGroupId(deviceGroup.getDeviceGroupId());
             userDeviceGroupRelate.setUserId(user.getUserID());
             int isAddRelate = userDeviceGroupRelateService.addUserDeviceGroupRelate(userDeviceGroupRelate);
             if (isAddRelate ==1) {
                 response.setCode(ResponseInfo.CODE_SUCCESS);
-                response.setMessage("add default devGroup success!");
+                response.setMessage("add default deviceGroup success!");
             } else {
                 response.setCode(ResponseInfo.CODE_ERROR);
-                response.setMessage("add default devGroup failed!");
+                response.setMessage("add default deviceGroup failed!");
             }
         } else {
             response.setCode(ResponseInfo.CODE_ERROR);
-            response.setMessage("add default devGroup failed!");
+            response.setMessage("add default deviceGroup failed!");
         }
         response.setCode(CODE_SUCCESS);
         response.setMessage(" Registered successfully!");

@@ -1,24 +1,16 @@
 package com.tw.controller;
 
-import com.sun.org.apache.regexp.internal.RE;
 import com.tw.dto.DevGroupDTO;
 import com.tw.dto.MoveGroupDTO;
 import com.tw.dto.UserGroupDTO;
-import com.tw.dto.UserRoleDTO;
 import com.tw.entity.*;
 import com.tw.service.*;
-import com.tw.util.HEXUtil;
 import com.tw.util.ResponseInfo;
-import com.tw.util.UserAuthentication;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.rmi.log.LogInputStream;
 
-import javax.swing.*;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -244,12 +236,12 @@ public class DeviceController {
      * @Author: John
      * @Description: 客户端添加分组接口
      * @Date: 2019/8/10 21:52
-     * @param: groupName
+     * @param: deviceGroupName
      * @param: httpServletRequest
      * @return:
      */
     @PostMapping("/addGroup")
-    public ResponseInfo addGroup(@RequestParam(value = "groupName", required = true) String groupName, @RequestParam(value = "userId") int userId) {
+    public ResponseInfo addGroup(@RequestParam(value = "deviceGroupName", required = true) String groupName, @RequestParam(value = "userId") int userId) {
         ResponseInfo response = new ResponseInfo();
         // 1.校验用户身份
         //UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
@@ -257,8 +249,8 @@ public class DeviceController {
         //String phoneNumber = "18814373836";
         //如果已经登录成功，就可以添加，否则提示登录
         if (userId > 0) {
-            DevGroup devGroup = new DevGroup();
-            devGroup.setGroupName(groupName);
+            DeviceGroup deviceGroup = new DeviceGroup();
+            deviceGroup.setDeviceGroupName(groupName);
 
 //            检查设备组名是否重复   --by liutianwen
             if(devGroupService.getDevGroupByGroupName(groupName).size()!=0){
@@ -266,23 +258,23 @@ public class DeviceController {
                 response.setMessage("The group name already exists!");
             }
 
-            int isAdd = devGroupService.addDevGroup(devGroup);
+            int isAdd = devGroupService.addDevGroup(deviceGroup);
             if (isAdd == 1) {
                 //添加到自己的分组中
                 UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
-                userDeviceGroupRelate.setGroupId(devGroup.getGroupId());
+                userDeviceGroupRelate.setDeviceGroupId(deviceGroup.getDeviceGroupId());
                 userDeviceGroupRelate.setUserId(userId);
                 int isAddRelate = userDeviceGroupRelateService.addUserDeviceGroupRelate(userDeviceGroupRelate);
                 if (isAddRelate ==1) {
                     response.setCode(ResponseInfo.CODE_SUCCESS);
-                    response.setMessage("add devGroup success!");
+                    response.setMessage("add deviceGroup success!");
                 } else {
                     response.setCode(ResponseInfo.CODE_ERROR);
-                    response.setMessage("add devGroup failed!");
+                    response.setMessage("add deviceGroup failed!");
                 }
             } else {
                 response.setCode(ResponseInfo.CODE_ERROR);
-                response.setMessage("add devGroup failed!");
+                response.setMessage("add deviceGroup failed!");
             }
             return response;
         } else {
@@ -297,19 +289,19 @@ public class DeviceController {
      * @Author: John
      * @Description: 修改设备分组名称
      * @Date: 2019/8/10 21:56
-     * @param: devGroup
+     * @param: deviceGroup
      * @return:
      */
     @PostMapping("/modifyDeviceGroupName")
-    public ResponseInfo modifyDeviceGroupName(@RequestBody DevGroup devGroup) {
+    public ResponseInfo modifyDeviceGroupName(@RequestBody DeviceGroup deviceGroup) {
         ResponseInfo response = new ResponseInfo();
-        int isUpdate = devGroupService.updateDevGroup(devGroup);
+        int isUpdate = devGroupService.updateDevGroup(deviceGroup);
         if (isUpdate == 1) {
             response.setCode(ResponseInfo.CODE_SUCCESS);
-            response.setMessage("modify devGroup success!");
+            response.setMessage("modify deviceGroup success!");
         } else {
             response.setCode(ResponseInfo.CODE_ERROR);
-            response.setMessage("modify devGroup failed!");
+            response.setMessage("modify deviceGroup failed!");
         }
         return response;
     }
@@ -319,7 +311,7 @@ public class DeviceController {
      * @Author: John
      * @Description: 删除设备分组接口
      * @Date: 2019/8/10 21:59
-     * @param: groupId
+     * @param: deviceGroupId
      * @return:
      */
     @PostMapping("/deleteDeviceGroup")
@@ -331,7 +323,7 @@ public class DeviceController {
             deviceGroupRelate.setGroupId(groupId);
             //删除用户和组的关系
             UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
-            userDeviceGroupRelate.setGroupId(groupId);
+            userDeviceGroupRelate.setDeviceGroupId(groupId);
             //这里不能够将是否删除关联关系作为决定下面是否运行的条件，因为有可能本来就是为空
             int isDelRelate = deviceGroupRelateService.deleteByDeviceGroupRelate(deviceGroupRelate);
             int idDelGroupRelate = userDeviceGroupRelateService.delUserGroupRelate(userDeviceGroupRelate);
@@ -340,14 +332,14 @@ public class DeviceController {
             int isDelete = devGroupService.deleteDevGroupById(groupId);
             if (isDelete == 1) {
                 response.setCode(ResponseInfo.CODE_SUCCESS);
-                response.setMessage("delete devGroup success!");
+                response.setMessage("delete deviceGroup success!");
             } else {
                 response.setCode(ResponseInfo.CODE_ERROR);
-                response.setMessage("delete devGroup failed!");
+                response.setMessage("delete deviceGroup failed!");
             }
         } else {
             response.setCode(ResponseInfo.CODE_ERROR);
-            response.setMessage("groupId is not allow be null!");
+            response.setMessage("deviceGroupId is not allow be null!");
         }
         return response;
     }
@@ -379,7 +371,7 @@ public class DeviceController {
      * @Description: 移动设备的分组
      * @Date:  2019/8/16 1:34
      * @param: deviceId 设备id
-     * @param: groupId  分组id
+     * @param: deviceGroupId  分组id
      * @param: newGroupId  新分组id
      * @return:
      */
@@ -424,9 +416,8 @@ public class DeviceController {
         //用于存放用户下面的组下面的设备的
         List<DevGroupDTO> devGroupDTOList = new ArrayList<>();
 
-
         //用于放结果的deviceList
-        List<DevGroup> devGroupList = new ArrayList<>();
+        List<DeviceGroup> devGroupList = new ArrayList<>();
         Map<String, Object> param = new HashMap<String, Object>();
 
         //根据id查回用户信息
@@ -442,9 +433,9 @@ public class DeviceController {
 
             //每次都需要重新new一个对象去接查出来的设备信息
             List<Device> deviceList = new ArrayList<>();
-            int groupId = userDeviceGroupRelate.getGroupId();
+            int groupId = userDeviceGroupRelate.getDeviceGroupId();
 
-            DevGroup devGroup = devGroupService.getDevGroupById(groupId);
+            DeviceGroup devGroup = devGroupService.getDevGroupById(groupId);
             List<DeviceGroupRelate> deviceGroupList = deviceGroupRelateService.getDeviceGroupByGroupId(groupId);
             for (DeviceGroupRelate deviceGroup : deviceGroupList) {
                 Device device = deviceService.getDeviceById(deviceGroup.getDeviceId());
@@ -452,7 +443,7 @@ public class DeviceController {
                 deviceList.add(device);
             }
             //每一次结果都放到组里面的设备列表结果集里面
-            devGroupDTO.setDevGroup(devGroup);
+            devGroupDTO.setDeviceGroup(devGroup);
             devGroupDTO.setDeviceList(deviceList);
             devGroupDTOList.add(devGroupDTO);
         }
@@ -475,7 +466,7 @@ public class DeviceController {
      * @Date:  2019/8/15 1:49
      * @param: serial               序列号
      * @param: deviceVerifyCode     验证码
-     * @param: groupId              组id
+     * @param: deviceGroupId              组id
      * @return:
      */
     @PostMapping("/addDevGroup")
@@ -490,7 +481,7 @@ public class DeviceController {
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
         //如果校验通过，说明可以对这个设备进行操作
         if (deviceList != null && deviceList.size() > 0) {
-            DevGroup devGroup = new DevGroup();
+            DeviceGroup deviceGroup = new DeviceGroup();
             DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
             deviceGroupRelate.setDeviceId(deviceList.get(0).getDeviceId());
             deviceGroupRelate.setGroupId(groupId);

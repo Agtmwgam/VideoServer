@@ -8,10 +8,9 @@ package com.tw.entity;
  */
 public class UserDeviceGroupRelate extends BaseEntity{
 
-    private int id;         //自增主键
-    private int userId;     //用户id
-    private int groupId;    //设备分组id
-
+    private int id;             //自增主键
+    private int userId;         //用户id
+    private int deviceGroupId;   //设备分组id
 
     public int getId() {
         return id;
@@ -29,20 +28,20 @@ public class UserDeviceGroupRelate extends BaseEntity{
         this.userId = userId;
     }
 
-    public int getGroupId() {
-        return groupId;
+    public int getDeviceGroupId() {
+        return deviceGroupId;
     }
 
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
+    public void setDeviceGroupId(int deviceGroupId) {
+        this.deviceGroupId = deviceGroupId;
     }
 
     @Override
     public String toString() {
-        return "UserDeviceGroupRelaRelate{" +
+        return "UserDeviceGroupRelate{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", groupId=" + groupId +
+                ", deviceGroupId=" + deviceGroupId +
                 '}';
     }
 }

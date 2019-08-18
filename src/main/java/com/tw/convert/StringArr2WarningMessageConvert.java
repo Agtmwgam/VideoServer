@@ -17,7 +17,7 @@ public class StringArr2WarningMessageConvert {
 //        warningMessage.setFrame(mes[0]);
 //        warningMessage.setMesNo(mes[1]);
 //        warningMessage.setMesDate(mes[2]);
-//        warningMessage.setGroupName(mes[3]);
+//        warningMessage.setDeviceGroupName(mes[3]);
 //        warningMessage.setDeviceName(mes[4]);
 //        warningMessage.setDeviceModel(mes[5]);
 //        warningMessage.setSerial(mes[6]);

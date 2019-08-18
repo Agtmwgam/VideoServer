@@ -1,7 +1,7 @@
 package com.tw.service;
 
 import com.tw.dao.DevGroupDao;
-import com.tw.entity.DevGroup;
+import com.tw.entity.DeviceGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +14,15 @@ public class DevGroupService {
     private DevGroupDao devGroupDao;
 
     //添加
-    public int addDevGroup(DevGroup devGroup) {
-        return devGroupDao.addDevGroup(devGroup);
+    public int addDevGroup(DeviceGroup deviceGroup) {
+        return devGroupDao.addDevGroup(deviceGroup);
 
     }
 
 
     //修改
-    public int updateDevGroup(DevGroup devGroup) {
-        return devGroupDao.updateDevGroup(devGroup);
+    public int updateDevGroup(DeviceGroup deviceGroup) {
+        return devGroupDao.updateDevGroup(deviceGroup);
     }
 
 
@@ -33,13 +33,13 @@ public class DevGroupService {
 
 
     //根据id查找
-    public DevGroup getDevGroupById(int devGroupId) {
+    public DeviceGroup getDevGroupById(int devGroupId) {
         return devGroupDao.getDevGroupById(devGroupId);
     }
 
 
     //根据groupName查找
-    public List<DevGroup> getDevGroupByGroupName(String devGroupName) {
+    public List<DeviceGroup> getDevGroupByGroupName(String devGroupName) {
         return devGroupDao.getDevGroupByGroupName(devGroupName);
     }
 }

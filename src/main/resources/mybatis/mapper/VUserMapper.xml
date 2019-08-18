@@ -163,7 +163,7 @@
 		ON
 			b.deviceId = a.deviceId
 		INNER JOIN
-			devGroup c
+			deviceGroup c
 		ON
 			c.groupId = b.groupId
 		INNER JOIN

@@ -1,6 +1,6 @@
 package com.tw.dao;
 
-import com.tw.entity.DevGroup;
+import com.tw.entity.DeviceGroup;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -10,15 +10,15 @@ import java.util.List;
 @Repository
 public interface DevGroupDao {
 
-    int addDevGroup(DevGroup devGroup);
+    int addDevGroup(DeviceGroup deviceGroup);
 
     int deleteDevGroupById(int devGroupId);
 
-    int updateDevGroup(DevGroup devGroup);
+    int updateDevGroup(DeviceGroup deviceGroup);
 
-    DevGroup getDevGroupById(int devGroupId);
+    DeviceGroup getDevGroupById(int devGroupId);
 
-    List<DevGroup> getDevGroupByGroupName(String devGroupName);
+    List<DeviceGroup> getDevGroupByGroupName(String devGroupName);
 
-    DevGroup getDevGroupBySerial(String serial);
+    DeviceGroup getDevGroupBySerial(String serial);
 }
