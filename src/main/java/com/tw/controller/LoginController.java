@@ -105,17 +105,32 @@ public class LoginController {
         Map<String, Object> data = new HashMap<>();
         data.put("isRoot", CODE_ERROR);
         ResponseInfo response = new ResponseInfo();
-        //短信校验是通过的情况下才可以登录
+
         String passWord = (String) requestMap.get("pwd");
+        String phoneNumber = (String)requestMap.get("phoneNumber");
         if (StringUtils.isBlank(passWord)) {
             response.setCode(CODE_ERROR);
             response.setMessage("PassWord couldn't be null!");
             return response;
         }
-        //如果密码不为空，就校验
-        String phoneNumber = (String)requestMap.get("phoneNumber");
+
+        //如果密码不为空，就校验，优先检测是否是管理员账号
+        RootInfo rootInfo = new RootInfo();
+        rootInfo.setRootPhone(phoneNumber);
+        rootInfo.setLoginPassword(passWord);
+        List<RootInfo> rootInfos = rootInfoService.getRootInfo(rootInfo);
+        if (rootInfos != null && rootInfos.size() > 0) {
+            data.put("userId", 123456789);
+            data.put("isRoot", CODE_SUCCESS);
+            response.setCode(CODE_SUCCESS);
+            response.setData(data);
+            response.setMessage(phoneNumber + " login success!");
+            return response;
+        }
+
+        //如果密码不为空，就继续校验是否是普通用户
         VUser vUser = new VUser();
-        vUser.setPassword(phoneNumber);
+        vUser.setPhoneNumber(phoneNumber);
         vUser.setPassword(passWord);
         VUser user = vUserService.queryUser(vUser);
         if (user != null) {
@@ -127,14 +142,6 @@ public class LoginController {
             data.put("userId", useId);
             //TODO
             //登录成功之后要判断是否是管理员
-            RootInfo rootInfo = new RootInfo();
-            rootInfo.setRootPhone(phoneNumber);
-            rootInfo.setLoginPassword(passWord);
-            List<RootInfo> rootInfos = rootInfoService.getRootInfo(rootInfo);
-            if (rootInfos != null && rootInfos.size() > 0) {
-                data.put("userId", 123456789);
-                data.put("isRoot", CODE_SUCCESS);
-            }
             response.setCode(CODE_SUCCESS);
             response.setData(data);
             response.setMessage(phoneNumber + " login success!");

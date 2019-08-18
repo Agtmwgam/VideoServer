@@ -4,27 +4,23 @@
 <mapper namespace="com.tw.dao.RootInfoDao">
 
 
-	<!-- 根据条件查询是否存在该数据 -->
-	<select id="getRootInfo" parameterType="com.tw.entity.RootInfo" resultType="com.tw.entity.RootInfo">
-		SELECT
-			*
-		FROM
-			rootInfo
-		WHERE
-			1=1
-		<if test="rootPhone != null">
-			AND rootPhone = #{rootPhone}
-		</if>
-		<if test="secondPassword != null">
-			AND secondPassword = #{secondPassword}
-		</if>
-
-	</select>
-
-	<!-- 根据手机号查询管理员用户 -->
-	<select id="queryRootByphoneNumber" parameterType="java.lang.String"
-			resultType="com.tw.entity.RootInfo">
-		select * from  rootInfo where rootPhone =#{rootPhone}
-	</select>
+    <!-- 根据条件查询是否存在该数据 -->
+    <select id="getRootInfo" parameterType="com.tw.entity.RootInfo" resultType="com.tw.entity.RootInfo">
+        SELECT
+        *
+        FROM
+        rootInfo
+        WHERE
+        1=1
+        <if test="rootPhone != null">
+            AND rootPhone = #{rootPhone}
+        </if>
+        <if test="loginPassword !=null">
+            AND loginPassword = #{loginPassword}
+        </if>
+        <if test="secondPassword != null">
+            AND secondPassword = #{secondPassword}
+        </if>
+    </select>
 
 </mapper>
