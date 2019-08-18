@@ -8,7 +8,7 @@
     <insert id="addDeviceGroupRelate" parameterType="com.tw.entity.DeviceGroupRelate">
         INSERT INTO
             deviceGroupRelate
-            (groupId, deviceId)
+            (deviceGroupId, deviceId)
         VALUES
             (#{groupId}, #{deviceId})
     </insert>
@@ -27,7 +27,7 @@
             AND deviceId = #{deviceId}
         </if>
         <if test="groupId != 0 and groupId != null">
-            AND groupId = #{groupId}
+            AND deviceGroupId = #{groupId}
         </if>
     </update>
 
@@ -39,7 +39,7 @@
             deviceGroupRelate
         SET
             deviceId = #{deviceId},
-            groupId = #{groupId}
+            deviceGroupId = #{groupId}
         WHERE
             id = #{id}
         AND
@@ -54,7 +54,7 @@
         SET
             isValid = '0'
         WHERE
-            groupId = #{groupId}
+            deviceGroupId = #{groupId}
         AND
             deviceId = #{deviceId}
         AND
@@ -71,7 +71,7 @@
         WHERE
             isValid = '1'
         AND
-            a.groupId = #{groupId}
+            a.deviceGroupId = #{groupId}
     </select>
 
 
@@ -84,7 +84,7 @@
         WHERE
             1=1
         <if test="groupId != 0">
-            AND groupId = #{groupId}
+            AND deviceGroupId = #{groupId}
         </if>
         <if test="deviceId != 0">
             AND deviceId = #{deviceId}

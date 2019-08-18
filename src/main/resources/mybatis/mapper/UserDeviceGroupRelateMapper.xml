@@ -8,7 +8,7 @@
     <insert id="addUserDeviceGroupRelate" parameterType="com.tw.entity.UserDeviceGroupRelate">
         INSERT INTO
             userDeviceGroupRelate
-            (userId, groupId)
+            (userId, deviceGroupId)
         VALUES
             (#{userId}, #{groupId})
     </insert>
@@ -20,7 +20,7 @@
         SET
             isValid = '0'
         WHERE
-            groupId = #{groupId}
+            deviceGroupId = #{groupId}
         AND
             isValid = '1'
         </update>

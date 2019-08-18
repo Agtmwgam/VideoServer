@@ -21,7 +21,7 @@
         SET
             isValid = '0'
         WHERE
-            groupId = #{groupId}
+            deviceGroupId = #{groupId}
         AND
             isValid = '1'
     </update>
@@ -34,7 +34,7 @@
         SET
             deviceGroupName = #{groupName}
         WHERE
-            groupId = #{groupId}
+            deviceGroupId = #{groupId}
         AND
             isValid = '1'
     </update>
@@ -47,7 +47,7 @@
         FROM
             deviceGroup
         WHERE
-            groupId = #{groupId}
+            deviceGroupId = #{groupId}
         AND
             isValid = '1'
     </select>
@@ -71,7 +71,7 @@
             g.*
         FROM
             deviceGroup g
-        LEFT JOIN deviceGroupRelate dgr on dgr.groupId = g.groupId
+        LEFT JOIN deviceGroupRelate dgr on dgr.deviceGroupId = g.deviceGroupId
         LEFT JOIN device d on dgr.deviceId = d.deviceId
         WHERE
             d.serial = #{serial}
