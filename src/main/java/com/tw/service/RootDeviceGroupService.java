@@ -1,6 +1,7 @@
 package com.tw.service;
 
 import com.tw.dao.RootDeviceGroupDao;
+import com.tw.entity.Device;
 import com.tw.entity.RootDeviceGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,5 +17,9 @@ public class RootDeviceGroupService {
 
     public List<RootDeviceGroup> getAllRootDeviceGroup() {
         return rootDeviceGroupDao.getAllRootDeviceGroup();
+    }
+
+    public List<Device> getRootDeviceByGroupId(int rootDeviceGroupId) {
+        return rootDeviceGroupDao.getRootDeviceByGroupId(rootDeviceGroupId);
     }
 }

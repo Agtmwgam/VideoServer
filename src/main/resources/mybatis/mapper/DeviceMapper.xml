@@ -73,7 +73,7 @@
         AND
             b.isValid = '1'
         AND
-            b.groupId = #{groupId}
+            b.deviceGroupId = #{groupId}
     </select>
 
     

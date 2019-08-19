@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tw.dao.RootDeviceGroupDao">
+
+    <!-- 获得所有的设备分组 -->
+    <select id="getAllRootDeviceGroup" resultType="com.tw.entity.RootDeviceGroup">
+        SELECT
+            a.*
+        FROM
+            rootDeviceGroup a
+        WHERE
+            a.isValid = '1'
+    </select>
+
+
+    <!-- 根据root的分组id获得设备列表 -->
+    <select id="getRootDeviceByGroupId" parameterType="int" resultType="com.tw.entity.Device">
+        SELECT
+            a.*
+        FROM
+            device a
+        LEFT JOIN
+            rootDeviceGroup b
+        ON
+            b.deviceId = a.deviceId
+        WHERE
+            a.isValid = '1'
+        AND
+            b.isValid = '1'
+        AND
+            b.rootDeviceGroupId = #{groupId}
+    </select>
+</mapper>

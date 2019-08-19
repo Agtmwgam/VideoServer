@@ -40,7 +40,7 @@ public class RootInfoController {
     private static Logger logger = Logger.getLogger(DeviceController.class);
 
 
-    @PostMapping("loginBySecPwd")
+    @PostMapping("/loginBySecPwd")
     public ResponseInfo  loginBySecPwd(@RequestParam("secondPsd") String secondePwd, HttpServletRequest httpServletRequest) {
 
         ResponseInfo response = new ResponseInfo();
