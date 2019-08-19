@@ -9,7 +9,7 @@
         INSERT INTO loginMessage
         (frame,serial,deviceVerifyCode,deviceType,softVersion,productDate,rand)
         VALUES(#{frame},#{serial},#{deviceVerifyCode},#{deviceType},#{softVersion},#{productDate},#{rand})
-        WHERE NOT EXISTS (select * from loginMessage l where l.serial=#{serial})
+--         WHERE NOT EXISTS (select * from loginMessage l where l.serial=#{serial})
     </insert>
 
     <!-- 根据 serial 查询心跳信息 -->
