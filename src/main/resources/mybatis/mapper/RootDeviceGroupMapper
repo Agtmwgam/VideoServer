@@ -3,7 +3,6 @@
 
 <mapper namespace="com.tw.dao.RootDeviceGroupDao">
 
-
     <!-- 获得root账户的所有的设备分组列表 -->
     <select id="getAllRootDeviceGroup" resultType="com.tw.entity.RootDeviceGroup">
         SELECT

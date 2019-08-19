@@ -10,8 +10,5 @@ import java.util.List;
 @Repository
 public interface RootDeviceGroupDao {
 
-
-    public List<RootDeviceGroup> getAllRootDeviceGroup();
-
-
+    List<RootDeviceGroup> getAllRootDeviceGroup();
 }
