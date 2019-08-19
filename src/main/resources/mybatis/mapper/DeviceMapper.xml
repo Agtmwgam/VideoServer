@@ -57,6 +57,25 @@
             isValid = #{isValid}
     </select>
 
+
+    <!-- 根据分组id获得设备列表 -->
+    <select id="getDeviceByGroupId" parameterType="java.lang.Integer" resultType="com.tw.entity.Device">
+        SELECT
+            a.*
+        FROM
+            device a
+        LEFT JOIN
+            deviceGroupRelate b
+        ON
+            b.deviceId = a.deviceId
+        WHERE
+            a.isValid = '1'
+        AND
+            b.isValid = '1'
+        AND
+            b.groupId = #{groupId}
+    </select>
+
     
     <!-- 根据条件查询device -->
     <select id="getDeviceByCodition" parameterType="com.tw.entity.Device" resultType="com.tw.entity.Device">

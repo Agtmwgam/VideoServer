@@ -41,6 +41,11 @@ public class DeviceService {
         return deviceDao.updateDevice(device);
     }
 
+    //根据分组id获得设备列表
+    public List<Device> getDeviceByGroupId(int groupId) {
+        return deviceDao.getDeviceByGroupId(groupId);
+    }
+
     public Device getDeviceById(int deviceId) {
         Map<String, Object> param = new HashMap<>();
         param.put("deviceId", deviceId);

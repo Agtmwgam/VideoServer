@@ -2,6 +2,7 @@ package com.tw.controller;
 
 import com.tw.dto.DevGroupDTO;
 import com.tw.dto.MoveGroupDTO;
+import com.tw.dto.RootDeviceGroupDTO;
 import com.tw.dto.UserGroupDTO;
 import com.tw.entity.*;
 import com.tw.service.*;
@@ -41,6 +42,12 @@ public class DeviceController {
 
     @Autowired
     private DeviceGroupRelateService deviceGroupRelateService;
+
+    @Autowired
+    private RootInfoService rootInfoService;
+
+    @Autowired
+    private RootDeviceGroupService rootDeviceGroupService;
 
     //日志
     private static Logger logger = Logger.getLogger(DeviceController.class);
@@ -408,8 +415,46 @@ public class DeviceController {
 
 
     @GetMapping("/getDeviceByUserId")
-    public ResponseInfo getDeviceByUserId(@RequestParam(value = "userId") int userId) {
+    public ResponseInfo getDeviceByUserId(@RequestParam(value = "userId", required = false) int userId,
+                                          @RequestParam(value = "isRoot", required = false) Boolean isRoot,
+                                          @RequestParam(value = "rootPhone", required = false) String rootPhone,
+                                          @RequestParam(value = "secondPassword", required = false) String secondPassword) {
         ResponseInfo responseInfo = new ResponseInfo();
+        List<RootDeviceGroupDTO> rootDeviceGroupDTOList = new ArrayList<>();
+
+        //如果是管理员的话需要判断二级密码
+        if (isRoot) {
+            if (StringUtils.isEmpty(secondPassword)) {
+                responseInfo.setCode(ResponseInfo.CODE_ERROR);
+                responseInfo.setMessage("secondePassword is null!");
+                return responseInfo;
+            } else {
+                //如果是管理员，并且二级密码不为空的话，就检查二级密码是否正确，正确的话就确定是管理员
+                RootInfo rootInfo = new RootInfo();
+                rootInfo.setRootPhone(rootPhone);
+                rootInfo.setSecondPassword(secondPassword);
+                List<RootInfo> rootInfos = rootInfoService.getRootInfo(rootInfo);
+                //校验通过，说明是管理员的身份
+                if (rootInfos != null && rootInfos.size()> 0) {
+                    //获得所有组，以及所有设备
+                    List<RootDeviceGroup> rootDeviceGroups = rootDeviceGroupService.getAllRootDeviceGroup();
+                    for (RootDeviceGroup deviceGroup : rootDeviceGroups) {
+                        RootDeviceGroupDTO rootDeviceGroupDTO = new RootDeviceGroupDTO();
+                        List<Device> deviceList = deviceService.getDeviceByGroupId(deviceGroup.getRootDeviceGroupId());
+                        rootDeviceGroupDTO.setRootDeviceGroup(deviceGroup);
+                        rootDeviceGroupDTO.setDeviceList(deviceList);
+                        //将对象赋值后，全部添加到返回的数据集合中
+                        rootDeviceGroupDTOList.add(rootDeviceGroupDTO);
+                    }
+                }
+                responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+                responseInfo.setData(rootDeviceGroupDTOList);
+                responseInfo.setMessage("get deviceList by userId success!");
+            }
+        }
+
+
+
         //声明返回的对象
         UserGroupDTO userGroupDTO = new UserGroupDTO();
 

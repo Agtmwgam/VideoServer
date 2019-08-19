@@ -46,4 +46,6 @@ public interface DeviceDao {
     int getTotalOfCondition(Device device);
 
     int getCountOfLikCondition(Device device);
+
+    List<Device> getDeviceByGroupId(int groupId);
 }
