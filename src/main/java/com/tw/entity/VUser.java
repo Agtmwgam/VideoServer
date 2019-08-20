@@ -11,14 +11,12 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=true)
 public class VUser extends BaseEntity {
-    //    用户ID
-    private Integer userID;
-    //    用户昵称
-    private String nickName;
-    //    账户密码
-    private String password;
-    //    手机号
-    private String phoneNumber;
+
+    private Integer userID;     //用户ID
+    private String nickName;    //用户昵称
+    private String password;    //账户密码
+    private String phoneNumber; //手机号
+
 
     public VUser() {
         super();

@@ -10,7 +10,7 @@
             deviceGroup
             (deviceGroupName)
         values
-            (#{groupName})
+            (#{deviceGroupName})
     </insert>
 
 
@@ -32,7 +32,7 @@
         UPDATE
             deviceGroup
         SET
-            deviceGroupName = #{groupName}
+            deviceGroupName = #{deviceGroupName}
         WHERE
             deviceGroupId = #{groupId}
         AND
@@ -47,7 +47,7 @@
         FROM
             deviceGroup
         WHERE
-            deviceGroupId = #{groupId}
+            deviceGroupName = #{groupId}
         AND
             isValid = '1'
     </select>

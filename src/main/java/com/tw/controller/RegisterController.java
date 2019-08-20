@@ -71,7 +71,7 @@ public class RegisterController {
         VUser user=new VUser();
         user.setPhoneNumber(requestMap.get("phoneNumber").toString());
         user.setPassword(requestMap.get("password").toString());
-        user.setNickName(requestMap.get("userName").toString());
+        user.setNickName(requestMap.get("nickName").toString());
 
 //       检查用户注册信息(手机号，密码，验证码)是否正常
         response = checkUserInfo(requestMap);
