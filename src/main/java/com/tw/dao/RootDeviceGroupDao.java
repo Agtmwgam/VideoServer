@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -14,4 +15,10 @@ public interface RootDeviceGroupDao {
     List<RootDeviceGroup> getAllRootDeviceGroup();
 
     List<Device> getRootDeviceByGroupId(int rootDeviceGroupId);
+
+    int addRootGroup(String rootDeviceGroupName);
+
+    int moveRootGroup(Map<String, Object> param);
+
+    String getGroupNameByCondition(int newGroupId);
 }

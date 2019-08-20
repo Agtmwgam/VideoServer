@@ -2,6 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tw.dao.RootDeviceGroupDao">
 
+    <!-- root添加设备分组 -->
+    <insert id="addRootGroup" parameterType="java.lang.String">
+        INSERT INTO
+            rootDeviceGroup
+            (deviceId, rootDeviceGroupId, rootDeviceGroupName)
+        VALUES
+            (0, (select max(a.rootDeviceGroupId) from rootDeviceGroup a where a.isValid = '1') + 1, #{rootDeviceGroupName})
+    </insert>
+
+
+    <!-- 更新root分组 -->
+    <update id="moveRootGroup" parameterType="java.util.Map">
+        UPDATE
+            rootDeviceGroup
+        SET
+            rootDeviceGroupId = #{newGroupId},
+            rootDeviceGroupName = #{newRootGroupName}
+        WHERE
+            rootDeviceGroupId = #{oldGroupId}
+        AND
+            deviceId = #{deviceId}
+        AND
+            isValid = '1'
+    </update>
+
+    <!-- 根据groupId拿到分组名 -->
+    <select id="getGroupNameByCondition" parameterType="int" resultType="java.lang.String">
+        SELECT
+            max(a.rootDeviceGroupName)
+        FROM
+            rootDeviceGroup a
+        WHERE
+            a.deviceId = 0
+        AND
+            a.rootDeviceGroupId = #{newGroupId}
+        AND
+            a.isValid = '1'
+    </select>
+
+
     <!-- 获得所有的设备分组 -->
     <select id="getAllRootDeviceGroup" resultType="com.tw.entity.RootDeviceGroup">
         SELECT

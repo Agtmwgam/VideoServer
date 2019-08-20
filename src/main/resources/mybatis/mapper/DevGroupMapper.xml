@@ -47,7 +47,7 @@
         FROM
             deviceGroup
         WHERE
-            deviceGroupName = #{groupId}
+            deviceGroupId = #{groupId}
         AND
             isValid = '1'
     </select>
@@ -82,7 +82,4 @@
         AND
             d.isValid = '1'
     </select>
-
-
-
 </mapper>
