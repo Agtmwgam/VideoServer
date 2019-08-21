@@ -87,7 +87,7 @@ public class RegisterController {
         deviceGroup.setDeviceGroupName(ConstantParam.MY_DEVICE_GROUP);
         int isAdd = devGroupService.addDevGroup(deviceGroup);
 //        添加关联关系
-        if (isAdd == 1) {
+        if (isAdd > 0) {
             //添加到自己的分组中
             UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
             userDeviceGroupRelate.setDeviceGroupId(deviceGroup.getDeviceGroupId());

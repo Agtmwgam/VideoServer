@@ -125,7 +125,7 @@ public class RootInfoController {
         responseInfo.setData(data);
         if (StringUtils.isNotEmpty(rootDeviceGroupName)) {
             int isAdd = rootDeviceGroupService.addRootGroup(rootDeviceGroupName);
-            if (isAdd == 1) {
+            if (isAdd > 0) {
                 responseInfo.setCode(CODE_SUCCESS);
                 responseInfo.setMessage("add Root deviceGroup success!");
             } else {
@@ -155,7 +155,7 @@ public class RootInfoController {
         responseInfo.setData(data);
         if (rootDeviceGroup != null) {
             int isDelete = rootDeviceGroupService.deleteRootGroup(rootDeviceGroup);
-            if (isDelete == 1) {
+            if (isDelete > 0) {
                 responseInfo.setCode(CODE_SUCCESS);
                 responseInfo.setMessage("delete rootDeviceGroup success!");
             } else {
@@ -187,7 +187,7 @@ public class RootInfoController {
         if (deviceId > 0 && oldGroupId > 0 && newGroupId > 0) {
             String newRootGroupName = rootDeviceGroupService.getGroupNameByCondition(newGroupId);
             int isUpdate = rootDeviceGroupService.moveRootGroup(deviceId, oldGroupId, newGroupId, newRootGroupName);
-            if (isUpdate == 1) {
+            if (isUpdate > 0) {
                 responseInfo.setCode(CODE_SUCCESS);
                 responseInfo.setMessage("move root group success!");
             } else {

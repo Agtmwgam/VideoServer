@@ -58,6 +58,19 @@
     </select>
 
 
+    <!-- 更新设备名称-->
+    <update id="updateDeviceName" parameterType="com.tw.entity.Device">
+        UPDATE
+            device
+        SET
+            deviceName = #{deviceName}
+        WHERE
+            isValid = '1'
+        AND
+            deviceId = #{deviceId}
+    </update>
+
+
     <!-- 根据分组id获得设备列表 -->
     <select id="getDeviceByGroupId" parameterType="java.lang.Integer" resultType="com.tw.entity.Device">
         SELECT

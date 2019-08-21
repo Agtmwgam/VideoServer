@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +82,7 @@ public class DeviceController {
         }
 
         int isAdd = deviceService.addDevice(device);
-        if (isAdd == 1) {
+        if (isAdd > 0) {
             responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
             responseInfo.setMessage("add device success!");
         } else {
@@ -105,7 +106,7 @@ public class DeviceController {
         int isDel = deviceService.deleteDevice(deviceId);
         System.out.println("==========删除的结果为：" + isDel);
 
-        if (isDel == 1) {
+        if (isDel > 0) {
             //删除设备信息后，原本的关联关系也要删除
             DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
             deviceGroupRelate.setDeviceId(deviceId);
@@ -130,14 +131,40 @@ public class DeviceController {
     @PostMapping("/updateDevice")
     public ResponseInfo updateDevice(@RequestBody Device device) {
         ResponseInfo response = new ResponseInfo();
+        //这里只是修改名字，所以这里不能真个类update
         Integer isUpdate = deviceService.updateDevice(device);
         System.out.println("=======update的结果为：" + isUpdate);
-        if (isUpdate == 1) {
+        if (isUpdate > 0) {
             response.setCode(ResponseInfo.CODE_SUCCESS);
             response.setMessage("update device success!");
         } else {
             response.setCode(ResponseInfo.CODE_ERROR);
             response.setMessage("update device failed!");
+        }
+        return response;
+    }
+
+
+    /**
+     * @Author: John
+     * @Description: 更新device名称
+     * @Date: 2019/8/5 22:56
+     * @param: device json对象
+     * @return:
+     */
+    @PostMapping("/modifyDeviceName")
+    public ResponseInfo modifyDeviceName(@RequestBody Device device) {
+        ResponseInfo response = new ResponseInfo();
+        Map<String, Object> data = new HashMap<>();
+        response.setData(data);
+        int isUpdate = deviceService.updateDeviceName(device);
+        System.out.println("=======update的结果为：" + isUpdate);
+        if (isUpdate > 0) {
+            response.setCode(ResponseInfo.CODE_SUCCESS);
+            response.setMessage("modifyDeviceName success!");
+        } else {
+            response.setCode(ResponseInfo.CODE_ERROR);
+            response.setMessage("modifyDeviceName failed!");
         }
         return response;
     }
@@ -266,7 +293,7 @@ public class DeviceController {
             }
 
             int isAdd = devGroupService.addDevGroup(deviceGroup);
-            if (isAdd == 1) {
+            if (isAdd > 0) {
                 //添加到自己的分组中
                 UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
                 userDeviceGroupRelate.setDeviceGroupId(deviceGroup.getDeviceGroupId());
@@ -303,7 +330,7 @@ public class DeviceController {
     public ResponseInfo modifyDeviceGroupName(@RequestBody DeviceGroup deviceGroup) {
         ResponseInfo response = new ResponseInfo();
         int isUpdate = devGroupService.updateDevGroup(deviceGroup);
-        if (isUpdate == 1) {
+        if (isUpdate > 0) {
             response.setCode(ResponseInfo.CODE_SUCCESS);
             response.setMessage("modify deviceGroup success!");
         } else {
@@ -337,7 +364,7 @@ public class DeviceController {
 
             //02、删除分组
             int isDelete = devGroupService.deleteDevGroupById(groupId);
-            if (isDelete == 1) {
+            if (isDelete > 0) {
                 response.setCode(ResponseInfo.CODE_SUCCESS);
                 response.setMessage("delete deviceGroup success!");
             } else {
@@ -362,7 +389,7 @@ public class DeviceController {
     public ResponseInfo deleteDeviceGroupRelate(@RequestBody DeviceGroupRelate deviceGroupRelate) {
         ResponseInfo responseInfo = new ResponseInfo();
         int isDelete = deviceGroupRelateService.deleteDeviceGroupRelate(deviceGroupRelate);
-        if (isDelete == 1) {
+        if (isDelete > 0) {
             responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
             responseInfo.setMessage("delete deviceGroupRelate success!");
         } else {
@@ -398,7 +425,7 @@ public class DeviceController {
            DeviceGroupRelate deviceGroupRelateNew = deviceGroupRelateList.get(0);
            deviceGroupRelateNew.setGroupId(newGroupId);
            int isUpdate = deviceGroupRelateService.updateDeviceGroupRelateBy(deviceGroupRelateNew);
-           if (isUpdate == 1) {
+           if (isUpdate > 0) {
                responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
                responseInfo.setMessage("move device to new group success!");
            } else {
@@ -527,7 +554,7 @@ public class DeviceController {
                 responseInfo.setMessage("it's already have this connect!");
             } else {
                 int isAdd = deviceGroupRelateService.addDeviceGroupRelate(deviceGroupRelate);
-                if (isAdd == 1) {
+                if (isAdd > 0) {
                     responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
                     responseInfo.setMessage("add deviceGroupRelate success!");
                 } else {
