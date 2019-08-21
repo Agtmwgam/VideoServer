@@ -45,4 +45,11 @@ public class RootDeviceGroupService {
     public int deleteRootGroup(RootDeviceGroup rootDeviceGroup) {
         return rootDeviceGroupDao.deleteRootGroup(rootDeviceGroup);
     }
+
+    public int modifyRootDeviceGroupName(int rootDeviceGroupId, String newDeviceGroupName) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("rootDeviceGroupId", rootDeviceGroupId);
+        param.put("newDeviceGroupName", newDeviceGroupName);
+        return rootDeviceGroupDao.modifyRootDeviceGroupName(param);
+    }
 }

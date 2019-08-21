@@ -170,6 +170,13 @@ public class RootInfoController {
     }
 
 
+    /**
+     * @Author: John
+     * @Description: 移动分组
+     * @Date:  2019/8/21 12:56
+     * @param: null
+     * @return:
+     */
     @PostMapping("/moveRootGroup")
     public ResponseInfo moveRootGroup(@RequestParam(value = "deviceId", required = true) int deviceId,
                                       @RequestParam(value = "oldGroupId", required = true) int oldGroupId,
@@ -190,6 +197,32 @@ public class RootInfoController {
         } else {
             responseInfo.setCode(CODE_ERROR);
             responseInfo.setMessage("root move group failed!");
+        }
+        return responseInfo;
+    }
+
+
+    /**
+     * @Author: John
+     * @Description: 修改分组名称
+     * @Date:  2019/8/21 13:08
+     * @param: rootDeviceGroupId 分组的设备组id
+     * @param: newDeviceGroupName 分组名称
+     * @return:
+     */
+    @PostMapping("/modifyRootDeviceGroupName")
+    public ResponseInfo modifyRootDeviceGroupName(@RequestParam(value = "rootDeviceGroupId", required = true) int rootDeviceGroupId,
+                                          @RequestParam(value = "newDeviceGroupName",required = true) String newDeviceGroupName) {
+        ResponseInfo responseInfo = new ResponseInfo();
+        Map<String, Object> data = new HashMap<>();
+        responseInfo.setData(data);
+        int isUpdate = rootDeviceGroupService.modifyRootDeviceGroupName(rootDeviceGroupId, newDeviceGroupName);
+        if (isUpdate > 0) {
+            responseInfo.setCode(CODE_SUCCESS);
+            responseInfo.setMessage("modify groupName success!");
+        } else {
+            responseInfo.setCode(CODE_ERROR);
+            responseInfo.setMessage("modify groupName failed!");
         }
         return responseInfo;
     }

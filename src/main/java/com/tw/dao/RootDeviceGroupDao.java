@@ -23,4 +23,6 @@ public interface RootDeviceGroupDao {
     String getGroupNameByCondition(int newGroupId);
 
     int deleteRootGroup(RootDeviceGroup rootDeviceGroup);
+
+    int modifyRootDeviceGroupName(Map<String, Object> param);
 }

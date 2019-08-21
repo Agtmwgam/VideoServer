@@ -93,4 +93,17 @@
         AND
             b.rootDeviceGroupId = #{groupId}
     </select>
+
+
+    <!-- 根据deviceGroupId更细组名 -->
+    <update id="modifyRootDeviceGroupName" parameterType="java.util.Map">
+        UPDATE
+            rootDeviceGroup
+        SET
+            rootDeviceGroupName = #{newDeviceGroupName}
+        WHERE
+            rootDeviceGroupId = #{rootDeviceGroupId}
+        AND
+            isValid = '1'
+    </update>
 </mapper>
