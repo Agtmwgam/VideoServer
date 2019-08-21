@@ -21,4 +21,6 @@ public interface RootDeviceGroupDao {
     int moveRootGroup(Map<String, Object> param);
 
     String getGroupNameByCondition(int newGroupId);
+
+    int deleteRootGroup(RootDeviceGroup rootDeviceGroup);
 }

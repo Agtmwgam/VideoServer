@@ -41,4 +41,8 @@ public class RootDeviceGroupService {
     public String getGroupNameByCondition(int newGroupId) {
         return rootDeviceGroupDao.getGroupNameByCondition(newGroupId);
     }
+
+    public int deleteRootGroup(RootDeviceGroup rootDeviceGroup) {
+        return rootDeviceGroupDao.deleteRootGroup(rootDeviceGroup);
+    }
 }

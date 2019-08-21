@@ -3,9 +3,18 @@ package com.tw.entity;
 //root用户的设备分组
 public class RootDeviceGroup extends BaseEntity {
 
+    private int id;                     //主键
     private int deviceId;               //设备id
     private int rootDeviceGroupId;      //分组id
     private String rootDeviceGroupName; //分组组名
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getDeviceId() {
         return deviceId;
@@ -35,7 +44,8 @@ public class RootDeviceGroup extends BaseEntity {
     @Override
     public String toString() {
         return "RootDeviceGroup{" +
-                "deviceId=" + deviceId +
+                "id=" + id +
+                ", deviceId=" + deviceId +
                 ", rootDeviceGroupId=" + rootDeviceGroupId +
                 ", rootDeviceGroupName='" + rootDeviceGroupName + '\'' +
                 '}';

@@ -53,6 +53,29 @@
     </select>
 
 
+    <!-- 删除关联关系 -->
+    <update id="deleteRootGroup" parameterType="com.tw.entity.RootDeviceGroup">
+        UPDATE
+            rootDeviceGroup
+        SET
+            isValid = '0'
+        WHERE
+            1=1
+        <if test="id != null and id != 0">
+            AND id = #{id}
+        </if>
+        <if test="deviceId != null and deviceId != 0">
+            AND deviceId = #{deviceId}
+        </if>
+        <if test="rootDeviceGroupId != null and rootDeviceGroupId != 0">
+            AND rootDeviceGroupId = #{rootDeviceGroupId}
+        </if>
+        <if test="rootDeviceGroupName != null and rootDeviceGroupName != 0">
+            AND rootDeviceGroupName = #{rootDeviceGroupName}
+        </if>
+    </update>
+
+
     <!-- 根据root的分组id获得设备列表 -->
     <select id="getRootDeviceByGroupId" parameterType="int" resultType="com.tw.entity.Device">
         SELECT

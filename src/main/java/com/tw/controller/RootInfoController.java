@@ -141,6 +141,35 @@ public class RootInfoController {
     }
 
 
+    /**
+     * @Author: John
+     * @Description: 删除root组与设备的关联管理
+     * @Date:  2019/8/21 7:39
+     * @param: rootDeviceGroup
+     * @return:
+     */
+    @PostMapping("/deleteRootGroup")
+    public ResponseInfo deleteRootGroup(@RequestBody RootDeviceGroup rootDeviceGroup) {
+        ResponseInfo responseInfo = new ResponseInfo();
+        Map<String, Object> data = new HashMap<>();
+        responseInfo.setData(data);
+        if (rootDeviceGroup != null) {
+            int isDelete = rootDeviceGroupService.deleteRootGroup(rootDeviceGroup);
+            if (isDelete == 1) {
+                responseInfo.setCode(CODE_SUCCESS);
+                responseInfo.setMessage("delete rootDeviceGroup success!");
+            } else {
+                responseInfo.setCode(CODE_ERROR);
+                responseInfo.setMessage("delete rootDeviceGroup failed!");
+            }
+        } else {
+            responseInfo.setCode(CODE_ERROR);
+            responseInfo.setMessage("rootDeviceGroup can't not be null!");
+        }
+        return responseInfo;
+    }
+
+
     @PostMapping("/moveRootGroup")
     public ResponseInfo moveRootGroup(@RequestParam(value = "deviceId", required = true) int deviceId,
                                       @RequestParam(value = "oldGroupId", required = true) int oldGroupId,
