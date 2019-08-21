@@ -20,7 +20,7 @@ public interface VUserDao {
 
     //新建一个用户
     @Transactional
-    void creatUser(VUser user);
+    int creatUser(VUser user);
 
     //查找用户
     VUser queryUser(VUser user);

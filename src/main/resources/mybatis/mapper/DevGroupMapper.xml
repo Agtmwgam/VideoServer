@@ -5,7 +5,7 @@
 
 
     <!-- 增加devGroup -->
-    <insert id="addDevGroup" parameterType="com.tw.entity.DeviceGroup" useGeneratedKeys="true" keyProperty="groupId">
+    <insert id="addDevGroup" parameterType="com.tw.entity.DeviceGroup" useGeneratedKeys="true" keyProperty="deviceGroupId">
         INSERT INTO
             deviceGroup
             (deviceGroupName)

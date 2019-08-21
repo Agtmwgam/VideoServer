@@ -5,7 +5,7 @@
 
 
 	<!-- 新建一个用户 -->
-	<insert id="creatUser" parameterType="com.tw.entity.VUser">
+	<insert id="creatUser" parameterType="com.tw.entity.VUser" useGeneratedKeys="true" keyProperty="userID">
 		insert into vUser
 		(phoneNumber, nickName, password)
 		values(#{phoneNumber}, #{nickName}, #{password})
