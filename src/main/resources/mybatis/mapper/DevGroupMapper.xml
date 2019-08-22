@@ -34,7 +34,7 @@
         SET
             deviceGroupName = #{deviceGroupName}
         WHERE
-            deviceGroupId = #{groupId}
+            deviceGroupId = #{deviceGroupId}
         AND
             isValid = '1'
     </update>
