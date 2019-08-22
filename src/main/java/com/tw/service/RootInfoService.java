@@ -17,4 +17,9 @@ public class RootInfoService {
     public List<RootInfo> getRootInfo(RootInfo rootInfo) {
         return rootInfoDao.getRootInfo(rootInfo);
     }
+
+//    新设备加入默认分组   --liutianwen
+    public  Integer addDeviceToDefaultRootDeviceGroup(Integer deviceId){
+        return rootInfoDao.addDeviceToDefaultRootDeviceGroup(deviceId);
+    }
 }

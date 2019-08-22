@@ -10,6 +10,7 @@ import com.tw.util.ResponseInfo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ public class DeviceController {
      * @return:
      */
     @PostMapping("/addDevice")
+    @Transactional
     public ResponseInfo addDevice(@RequestBody Device device) {
         ResponseInfo responseInfo = new ResponseInfo();
 
@@ -81,14 +83,30 @@ public class DeviceController {
         }
 
         int isAdd = deviceService.addDevice(device);
+        Integer isAddRootDeviceGroup =0;
+//        录入设备加入管理员默认分组
+//       判断是否成功录入
         if (isAdd == 1) {
+            //取出deviceID,并把设备放入管理员默认分组中
+            deviceList = deviceService.getDeviceByCodition(device);
+            for (Device device1 : deviceList) {
+                isAddRootDeviceGroup = rootInfoService.addDeviceToDefaultRootDeviceGroup(device1.getDeviceId());
+            }
+        }else{
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device add fail！");
+            return responseInfo;
+        }
+//        判断设备是否成功添加到root设备分组
+        if(isAddRootDeviceGroup==1){
             responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
             responseInfo.setMessage("add device success!");
-        } else {
+            return responseInfo;
+        }else{
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
-            responseInfo.setMessage("add device failed!");
+            responseInfo.setMessage("device add to root device group fail！");
+            return responseInfo;
         }
-        return responseInfo;
     }
 
 

@@ -23,4 +23,12 @@
         </if>
     </select>
 
+    <!-- 新设备加入默认分组 -->
+    <insert id="addDeviceToDefaultRootDeviceGroup" parameterType="com.tw.entity.RootInfo">
+		insert into rootDeviceGroup
+		(deviceId)
+		values
+        (#{deviceId});
+	</insert>
+
 </mapper>
