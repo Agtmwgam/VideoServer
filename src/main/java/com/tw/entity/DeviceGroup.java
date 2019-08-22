@@ -13,14 +13,14 @@ import lombok.Data;
 public class DeviceGroup extends BaseEntity {
 
     private int deviceGroupId;             //自增主键
-    private String DeviceGroupName;       //组名
+    private String deviceGroupName;       //组名
 
 
     @Override
     public String toString() {
         return "DeviceGroup{" +
                 "deviceGroupId=" + deviceGroupId +
-                ", DeviceGroupName='" + DeviceGroupName + '\'' +
+                ", deviceGroupName='" + deviceGroupName + '\'' +
                 '}';
     }
 }

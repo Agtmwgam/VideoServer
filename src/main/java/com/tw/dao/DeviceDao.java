@@ -48,4 +48,6 @@ public interface DeviceDao {
     int getCountOfLikCondition(Device device);
 
     List<Device> getDeviceByGroupId(int groupId);
+
+    int updateDeviceName(Device device);
 }

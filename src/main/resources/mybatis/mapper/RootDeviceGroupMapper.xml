@@ -20,4 +20,110 @@
 		(deviceId)
 		values(#{deviceId})
 	</insert>
+<mapper namespace="com.tw.dao.RootDeviceGroupDao">
+
+    <!-- root添加设备分组 -->
+    <insert id="addRootGroup" parameterType="java.lang.String">
+        INSERT INTO
+            rootDeviceGroup
+            (deviceId, rootDeviceGroupId, rootDeviceGroupName)
+        VALUES
+            (0, (select max(a.rootDeviceGroupId) from rootDeviceGroup a where a.isValid = '1') + 1, #{rootDeviceGroupName})
+    </insert>
+
+
+    <!-- 更新root分组 -->
+    <update id="moveRootGroup" parameterType="java.util.Map">
+        UPDATE
+            rootDeviceGroup
+        SET
+            rootDeviceGroupId = #{newGroupId},
+            rootDeviceGroupName = #{newRootGroupName}
+        WHERE
+            rootDeviceGroupId = #{oldGroupId}
+        AND
+            deviceId = #{deviceId}
+        AND
+            isValid = '1'
+    </update>
+
+    <!-- 根据groupId拿到分组名 -->
+    <select id="getGroupNameByCondition" parameterType="int" resultType="java.lang.String">
+        SELECT
+            max(a.rootDeviceGroupName)
+        FROM
+            rootDeviceGroup a
+        WHERE
+            a.deviceId = 0
+        AND
+            a.rootDeviceGroupId = #{newGroupId}
+        AND
+            a.isValid = '1'
+    </select>
+
+
+    <!-- 获得所有的设备分组 -->
+    <select id="getAllRootDeviceGroup" resultType="com.tw.entity.RootDeviceGroup">
+        SELECT
+            a.*
+        FROM
+            rootDeviceGroup a
+        WHERE
+            a.isValid = '1'
+    </select>
+
+
+    <!-- 删除关联关系 -->
+    <update id="deleteRootGroup" parameterType="com.tw.entity.RootDeviceGroup">
+        UPDATE
+            rootDeviceGroup
+        SET
+            isValid = '0'
+        WHERE
+            1=1
+        <if test="id != null and id != 0">
+            AND id = #{id}
+        </if>
+        <if test="deviceId != null and deviceId != 0">
+            AND deviceId = #{deviceId}
+        </if>
+        <if test="rootDeviceGroupId != null and rootDeviceGroupId != 0">
+            AND rootDeviceGroupId = #{rootDeviceGroupId}
+        </if>
+        <if test="rootDeviceGroupName != null and rootDeviceGroupName != 0">
+            AND rootDeviceGroupName = #{rootDeviceGroupName}
+        </if>
+    </update>
+
+
+    <!-- 根据root的分组id获得设备列表 -->
+    <select id="getRootDeviceByGroupId" parameterType="int" resultType="com.tw.entity.Device">
+        SELECT
+            a.*
+        FROM
+            device a
+        LEFT JOIN
+            rootDeviceGroup b
+        ON
+            b.deviceId = a.deviceId
+        WHERE
+            a.isValid = '1'
+        AND
+            b.isValid = '1'
+        AND
+            b.rootDeviceGroupId = #{groupId}
+    </select>
+
+
+    <!-- 根据deviceGroupId更细组名 -->
+    <update id="modifyRootDeviceGroupName" parameterType="java.util.Map">
+        UPDATE
+            rootDeviceGroup
+        SET
+            rootDeviceGroupName = #{newDeviceGroupName}
+        WHERE
+            rootDeviceGroupId = #{rootDeviceGroupId}
+        AND
+            isValid = '1'
+    </update>
 </mapper>

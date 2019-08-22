@@ -126,4 +126,8 @@ public class DeviceService {
     public int getCountOfLikCondition(Device device) {
         return deviceDao.getCountOfLikCondition(device);
     }
+
+    public int updateDeviceName(Device device) {
+        return deviceDao.updateDeviceName(device);
+    }
 }

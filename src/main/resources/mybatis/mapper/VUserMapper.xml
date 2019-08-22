@@ -5,10 +5,10 @@
 
 
 	<!-- 新建一个用户 -->
-	<insert id="creatUser" parameterType="com.tw.entity.VUser">
+	<insert id="creatUser" parameterType="com.tw.entity.VUser" useGeneratedKeys="true" keyProperty="userID">
 		insert into vUser
-		(phoneNumber, userName, password)
-		values(#{phoneNumber}, #{userName}, #{password})
+		(phoneNumber, nickName, password)
+		values(#{phoneNumber}, #{nickName}, #{password})
 	</insert>
 
 	<!-- 根据传入的信息查找对应的用户信息 -->
@@ -165,11 +165,11 @@
 		INNER JOIN
 			deviceGroup c
 		ON
-			c.groupId = b.groupId
+			c.deviceGroupId = b.deviceGroupId
 		INNER JOIN
 			userDeviceGroupRelate d
 		ON
-			d.groupId = c.groupId
+			d.deviceGroupId = c.deviceGroupId
 		INNER JOIN
 			vUser e
 		ON

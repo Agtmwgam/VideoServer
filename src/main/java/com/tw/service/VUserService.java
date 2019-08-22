@@ -42,12 +42,13 @@ public class VUserService {
 
     // 新建一个用户
     @Transactional
-    public void creatUser(VUser user) {
+    public int creatUser(VUser user) {
         try {
-            vUserDao.creatUser(user);
+            return vUserDao.creatUser(user);
         } catch (Exception e) {
             log.error("创建用户失败！");
             log.error(e.toString());
+            return 0;
         }
     }
 

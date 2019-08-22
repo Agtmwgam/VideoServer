@@ -5,12 +5,12 @@
 
 
     <!-- 增加devGroup -->
-    <insert id="addDevGroup" parameterType="com.tw.entity.DeviceGroup" useGeneratedKeys="true" keyProperty="groupId">
+    <insert id="addDevGroup" parameterType="com.tw.entity.DeviceGroup" useGeneratedKeys="true" keyProperty="deviceGroupId">
         INSERT INTO
             deviceGroup
             (deviceGroupName)
         values
-            (#{groupName})
+            (#{deviceGroupName})
     </insert>
 
 
@@ -32,9 +32,9 @@
         UPDATE
             deviceGroup
         SET
-            deviceGroupName = #{groupName}
+            deviceGroupName = #{deviceGroupName}
         WHERE
-            deviceGroupId = #{groupId}
+            deviceGroupId = #{deviceGroupId}
         AND
             isValid = '1'
     </update>
@@ -82,7 +82,4 @@
         AND
             d.isValid = '1'
     </select>
-
-
-
 </mapper>

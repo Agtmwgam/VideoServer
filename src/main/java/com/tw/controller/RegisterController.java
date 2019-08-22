@@ -71,7 +71,7 @@ public class RegisterController {
         VUser user=new VUser();
         user.setPhoneNumber(requestMap.get("phoneNumber").toString());
         user.setPassword(requestMap.get("password").toString());
-        user.setNickName(requestMap.get("userName").toString());
+        user.setNickName(requestMap.get("nickName").toString());
 
 //       检查用户注册信息(手机号，密码，验证码)是否正常
         response = checkUserInfo(requestMap);
@@ -80,14 +80,17 @@ public class RegisterController {
         }
 
         //创建用户
-        userService.creatUser(user);
-        user=userService.queryUser(user);
+        int isAdd = userService.creatUser(user);
+        //user=userService.queryUser(user);
 //        给客户添加默认分组
         DeviceGroup deviceGroup =new DeviceGroup();
         deviceGroup.setDeviceGroupName(ConstantParam.MY_DEVICE_GROUP);
-        int isAdd = devGroupService.addDevGroup(deviceGroup);
-//        添加关联关系
-        if (isAdd == 1) {
+        int isAddUser = devGroupService.addDevGroup(deviceGroup);
+        if (isAddUser > 0) {
+            logger.warn("======添加用户" + user.getNickName() + "成功！");
+        }
+        //添加关联关系
+        if (isAdd > 0) {
             //添加到自己的分组中
             UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
             userDeviceGroupRelate.setDeviceGroupId(deviceGroup.getDeviceGroupId());

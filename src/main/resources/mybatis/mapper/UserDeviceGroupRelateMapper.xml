@@ -10,7 +10,7 @@
             userDeviceGroupRelate
             (userId, deviceGroupId)
         VALUES
-            (#{userId}, #{groupId})
+            (#{userId}, #{deviceGroupId})
     </insert>
 
     <!-- 删除用户和组的关系 -->
@@ -20,7 +20,7 @@
         SET
             isValid = '0'
         WHERE
-            deviceGroupId = #{groupId}
+            deviceGroupId = #{deviceGroupId}
         AND
             isValid = '1'
         </update>
