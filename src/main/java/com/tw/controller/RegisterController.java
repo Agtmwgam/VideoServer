@@ -181,16 +181,16 @@ public class RegisterController {
 
         // 验证码校验
 //        短信是否为空
-//        if (StringUtils.isBlank(requestMap.get("msgNum").toString())) {
-//            response.setCode("9999");
-//            response.setMessage("The msgNum can not be empty!");
-//            return response;
-//        }
-//        //  调用短信验证码验证接口
-//        response = messageService.validateNum(requestMap);
-//        if (response.getCode() == CODE_ERROR) {
-//            return response;
-//        }
+        if (StringUtils.isBlank(requestMap.get("msgNum").toString())) {
+            response.setCode("9999");
+            response.setMessage("The msgNum can not be empty!");
+            return response;
+        }
+        //  调用短信验证码验证接口
+        response = messageService.validateNum(requestMap);
+        if (response.getCode() == CODE_ERROR) {
+            return response;
+        }
 
         response.setCode(CODE_SUCCESS);
         return response;

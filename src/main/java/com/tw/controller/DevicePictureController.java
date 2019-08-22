@@ -1,7 +1,6 @@
 package com.tw.controller;
 
 import com.tw.entity.DevicePicture;
-import com.tw.entity.Point;
 import com.tw.service.HeatDataService;
 import com.tw.util.JsonMapperUtil;
 import com.tw.service.DevicePictureService;
