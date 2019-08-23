@@ -24,4 +24,6 @@ public interface DeviceGroupRelateDao {
     int updateDeviceGroupRelateBy(DeviceGroupRelate deviceGroupRelate);
 
     int deleteDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate);
+
+    int linkGroupCount(int deviceId);
 }

@@ -48,7 +48,19 @@ public class DeviceGroupRelateService {
     }
 
 
+    //删除关联关系
     public int deleteDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate) {
         return deviceGroupRelateDao.deleteDeviceGroupRelate(deviceGroupRelate);
+    }
+
+
+    //用设备id判断是否已经存在关联关系
+    public Boolean isLinkGroup(int deviceId) {
+        int linkCount = deviceGroupRelateDao.linkGroupCount(deviceId);
+        if (linkCount > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

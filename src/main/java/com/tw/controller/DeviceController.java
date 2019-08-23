@@ -577,7 +577,7 @@ public class DeviceController {
      * @Date: 2019/8/15 1:49
      * @param: serial               序列号
      * @param: deviceVerifyCode     验证码
-     * @param: deviceGroupId              组id
+     * @param: deviceGroupId        组id
      * @return:
      */
     @PostMapping("/addDevGroup")
@@ -592,13 +592,14 @@ public class DeviceController {
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
         //如果校验通过，说明可以对这个设备进行操作
         if (deviceList != null && deviceList.size() > 0) {
+            int deviceId = deviceList.get(0).getDeviceId();
             DeviceGroup deviceGroup = new DeviceGroup();
             DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
-            deviceGroupRelate.setDeviceId(deviceList.get(0).getDeviceId());
+            deviceGroupRelate.setDeviceId(deviceId);
             deviceGroupRelate.setGroupId(groupId);
-//            TODO  设备与用户关系一对一
-            List<DeviceGroupRelate> deviceGroupRelateList = deviceGroupRelateService.getDeviceGroupRelateByCondition(deviceGroupRelate);
-            if (deviceGroupRelateList != null && deviceGroupRelateList.size() > 0) {
+
+            //如果已经存在关联关系
+            if (deviceGroupRelateService.isLinkGroup(deviceId)) {
                 responseInfo.setCode(ResponseInfo.CODE_ERROR);
                 responseInfo.setMessage("it's already have this connect!");
             } else {

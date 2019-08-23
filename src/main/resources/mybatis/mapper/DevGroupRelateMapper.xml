@@ -110,4 +110,17 @@
         AND isValid = '1'
     </select>
 
+
+    <!-- 判断是否已经存在关联关系 -->
+    <select id="linkGroupCount" parameterType="int" resultType="int">
+        SELECT
+            count(id)
+        FROM
+            deviceGroupRelate
+        WHERE
+            isValid = '1'
+        AND
+            deviceId = #{deviceId}
+    </select>
+
 </mapper>
