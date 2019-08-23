@@ -17,6 +17,14 @@ public class ConstantParam {
     public static final char IS_VALID_YES = '1';
     public static final char IS_VALID_NO = '0';
 
+
+    //设备在库状态
+    public static final char DEV_SAVE = '0';        //库存状态
+    public static final char DEV_USE = '1';         //出库状态
+
+    //不能删除的默认分组的名称
+    public static final String DEFAULT_GROUP_NAME = "我的分组";
+
     //    正则表达式
     //    密码要求数字、符号、字母最少2种组合，而且需要8-20位                                    --by liutianwen
     public static final String VERIFYPASSWORD = "(?!^(\\d+|[a-zA-Z]+|[~!@#$%^&*?]+)$)^[\\w~!@#$%^&*?]{8,20}$";

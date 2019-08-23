@@ -82,4 +82,40 @@
         AND
             d.isValid = '1'
     </select>
+
+
+    <!-- 检查对应groupId是否是默认分组 -->
+    <select id="isCanOperate" parameterType="java.util.Map" resultType="int">
+        SELECT
+            count(a.id)
+        FROM
+            deviceGroup a
+        WHERE
+            a.deviceGroupId = #{groupId}
+        AND
+            a.deviceGroupName = #{defaultGroupName}
+        AND
+            a.isValid = '1'
+    </select>
+
+
+    <!-- 查询该用户下面设备名为groupName的数量 -->
+    <select id="getUserDeviceGroup" parameterType="java.util.Map" resultType="int">
+        SELECT
+            count(a.deviceGroupId)
+        FROM
+            deviceGroup a
+        LEFT JOIN
+            userDeviceGroupRelate b
+        ON
+            b.deviceGroupId = a.deviceGroupId
+        WHERE
+            a.deviceGroupName = #{groupName}
+        AND
+            b.userId = #{userId}
+        AND
+            a.isValid = '1'
+        AND
+            b.isValid = '1'
+    </select>
 </mapper>

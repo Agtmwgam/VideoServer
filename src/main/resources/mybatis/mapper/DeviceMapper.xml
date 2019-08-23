@@ -71,6 +71,19 @@
     </update>
 
 
+    <!-- 更新设备的在库状态 -->
+    <update id="updateDeviceStatus" parameterType="java.util.Map">
+        UPDATE
+            device
+        SET
+            deviceStatus = #{status}
+        WHERE
+            deviceId = #{deviceId}
+        AND
+            isValid = '1'
+    </update>
+
+
     <!-- 根据分组id获得设备列表 -->
     <select id="getDeviceByGroupId" parameterType="java.lang.Integer" resultType="com.tw.entity.Device">
         SELECT
@@ -89,34 +102,34 @@
             b.deviceGroupId = #{groupId}
     </select>
 
-    
+
     <!-- 根据条件查询device -->
     <select id="getDeviceByCodition" parameterType="com.tw.entity.Device" resultType="com.tw.entity.Device">
         SELECT
-            *
+        *
         FROM
-            device
+        device
         WHERE
-            1=1
+        1=1
         <if test="deviceId != 0">
             AND deviceId = #{deviceId}
         </if>
-        <if test="deviceName != null and deviceName!=''">
+        <if test="deviceName != null ">
             AND deviceName = #{deviceName}
         </if>
-        <if test="serial != null and serial!=''">
+        <if test="serial != null ">
             AND serial = #{serial}
         </if>
-        <if test="deviceVerifyCode != null and deviceVerifyCode !='' ">
+        <if test="deviceVerifyCode != null ">
             AND deviceVerifyCode = #{deviceVerifyCode}
         </if>
-        <if test="deviceType != null and deviceType != ''">
+        <if test="deviceType != null ">
             AND deviceType = #{deviceType}
         </if>
-        <if test="softVersion != null and softVersion != '' ">
+        <if test="softVersion != null ">
             AND softVersion = #{softVersion}
         </if>
-        <if test="productDate != null and productDate != ''">
+        <if test="productDate != null ">
             AND productDate = #{productDate}
         </if>
         <if test="deviceStatus != '\0' ">
@@ -125,7 +138,7 @@
         <if test="isOnline != '\0' ">
             AND isOnline = #{isOnline}
         </if>
-        <if test="ipAddress != null and ipAddress != '' ">
+        <if test="ipAddress != null ">
             AND ipAddress = #{ipAddress}
         </if>
         <if test="isValid != '\0' ">
@@ -141,7 +154,7 @@
         join device d on u.deviceId=d.deviceId
         <where>
             <if test="phoneNumber != null and phoneNumber !=''">
-                 v.phoneNumber LIKE '%${phoneNumber}%'
+                v.phoneNumber LIKE '%${phoneNumber}%'
             </if>
             <if test="userID !=null and userID!=''">
                 and  v.userID like  '%${userID}%'
@@ -154,11 +167,11 @@
     <!-- 根据查询条件获得总数 -->
     <select id="getTotalOfCondition" parameterType="com.tw.entity.Device" resultType="int">
         SELECT
-            count(a.deviceId)
+        count(a.deviceId)
         FROM
-            device a
+        device a
         WHERE
-            1=1
+        1=1
         AND a.isValid = '1'
         <if test="serial != null and serial != ''">
             AND a.serial like "%"#{serial}"%"
@@ -214,21 +227,21 @@
             AND isValid = #{isValid}
         </if>
         ORDER BY
-            createTime
+        createTime
         DESC
         LIMIT
-            #{start}, #{pageSize}
+        #{start}, #{pageSize}
     </select>
 
 
     <!-- 根据条件查询device总数 -->
     <select id="getCountOfLikCondition" parameterType="java.util.Map" resultType="int">
         SELECT
-            count(deviceId)
+        count(deviceId)
         FROM
-            device
+        device
         WHERE
-            1=1
+        1=1
         <if test="deviceId != 0">
             AND deviceId = #{deviceId}
         </if>
@@ -268,13 +281,32 @@
     <!-- 根据设备序列号、设备型号和设备的生产日期进行模糊搜索 -->
     <select id="getDeviceLikeCondition" parameterType="java.util.Map" resultType="com.tw.entity.Device">
         SELECT
-            a.*
+        a.deviceId,
+        a.deviceName,
+        a.serial,
+        a.deviceVerifyCode,
+        a.deviceType,
+        a.softVersion,
+        a.productDate,
+        max(b.isValid) as deviceStatus,
+        a.isOnline,
+        a.ipAddress,
+        a.newBeatTime,
+        a.oldBeatTime,
+        a.isValid
+
         FROM
-            device a
-        WHERE
-            1=1
+        device a
+        LEFT JOIN
+        deviceGroupRelate b
+        ON
+        b.deviceId = a.deviceId
+        GROUP BY
+        a.deviceId
+        HAVING
+        1=1
         AND
-            a.isValid = '1'
+        a.isValid = '1'
         <if test="serial != null and serial != ''">
             AND a.serial like "%"#{serial}"%"
         </if>
@@ -285,9 +317,9 @@
             AND a.productDate like "%"#{productDate}"%"
         </if>
         ORDER BY
-            a.createTime
+        a.createTime
         DESC
         LIMIT
-            #{start}, #{end}
+        #{start}, #{end}
     </select>
 </mapper>

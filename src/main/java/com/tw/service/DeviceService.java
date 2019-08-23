@@ -130,4 +130,12 @@ public class DeviceService {
     public int updateDeviceName(Device device) {
         return deviceDao.updateDeviceName(device);
     }
+
+    //修改设备的在库状态（库存/出库）,接收参数为 deviceId和status值，如 12，'1'
+    public int updateDeviceStatus(int deviceId, char statuesCode){
+        Map<String, Object> param = new HashMap<>();
+        param.put("deviceId", deviceId);
+        param.put("status", statuesCode);
+        return deviceDao.updateDeviceStatus(param);
+    }
 }

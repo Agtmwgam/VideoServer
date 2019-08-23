@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -21,4 +22,8 @@ public interface DevGroupDao {
     List<DeviceGroup> getDevGroupByGroupName(String devGroupName);
 
     DeviceGroup getDevGroupBySerial(String serial);
+
+    int isCanOperate(Map<String, Object> param);
+
+    int getUserDeviceGroup(Map<String, Object> param);
 }

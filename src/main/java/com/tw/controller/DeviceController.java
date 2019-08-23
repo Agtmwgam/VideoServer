@@ -267,14 +267,14 @@ public class DeviceController {
          */
         @PostMapping("/getDeviceLikeCondition")
         public ResponseInfo getDeviceLikeCondition (Device device,@RequestParam(value = "pageNo") int pageNo,
-        @RequestParam(value = "pageSize") int pageSize){
+                                                    @RequestParam(value = "pageSize") int pageSize){
             ResponseInfo responseInfo = new ResponseInfo();
             responseInfo.setPageNo(pageNo);
             responseInfo.setPageSize(pageSize);
 
             List<Device> deviceList = deviceService.getDeviceLikeCondition(device, pageNo, pageSize);
             int total = deviceService.getTotalOfCondition(device);
-            if (deviceList != null && deviceList.size() > 0) {
+            if (deviceList != null) {
                 responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
                 responseInfo.setMessage("get device by condition success!");
                 responseInfo.setData(deviceList);
@@ -298,7 +298,7 @@ public class DeviceController {
          */
         @PostMapping("/addGroup")
         public ResponseInfo addGroup (@RequestParam(value = "deviceGroupName", required = true) String groupName,
-        @RequestParam(value = "userId") int userId){
+                                      @RequestParam(value = "userId") int userId){
             ResponseInfo response = new ResponseInfo();
             // 1.校验用户身份
             //UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
@@ -309,29 +309,29 @@ public class DeviceController {
                 DeviceGroup deviceGroup = new DeviceGroup();
                 deviceGroup.setDeviceGroupName(groupName);
 
-//            检查设备组名是否重复   --by liutianwen
-                if (devGroupService.getDevGroupByGroupName(groupName).size() != 0) {
-                    response.setCode(ResponseInfo.CODE_ERROR);
-                    response.setMessage("The group name already exists!");
-                }
-
-                int isAdd = devGroupService.addDevGroup(deviceGroup);
-                if (isAdd > 0) {
-                    //添加到自己的分组中
-                    UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
-                    userDeviceGroupRelate.setDeviceGroupId(deviceGroup.getDeviceGroupId());
-                    userDeviceGroupRelate.setUserId(userId);
-                    int isAddRelate = userDeviceGroupRelateService.addUserDeviceGroupRelate(userDeviceGroupRelate);
-                    if (isAddRelate == 1) {
-                        response.setCode(ResponseInfo.CODE_SUCCESS);
-                        response.setMessage("add deviceGroup success!");
+                //检查改用户是否有设备组名重复
+                if(devGroupService.isCanAddGroup(userId, groupName)) {
+                    int isAdd = devGroupService.addDevGroup(deviceGroup);
+                    if (isAdd > 0) {
+                        //添加到自己的分组中
+                        UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
+                        userDeviceGroupRelate.setDeviceGroupId(deviceGroup.getDeviceGroupId());
+                        userDeviceGroupRelate.setUserId(userId);
+                        int isAddRelate = userDeviceGroupRelateService.addUserDeviceGroupRelate(userDeviceGroupRelate);
+                        if (isAddRelate == 1) {
+                            response.setCode(ResponseInfo.CODE_SUCCESS);
+                            response.setMessage("add deviceGroup success!");
+                        } else {
+                            response.setCode(ResponseInfo.CODE_ERROR);
+                            response.setMessage("add deviceGroup failed!");
+                        }
                     } else {
                         response.setCode(ResponseInfo.CODE_ERROR);
                         response.setMessage("add deviceGroup failed!");
                     }
                 } else {
                     response.setCode(ResponseInfo.CODE_ERROR);
-                    response.setMessage("add deviceGroup failed!");
+                    response.setMessage("The current user already owns the group!");
                 }
                 return response;
             } else {
@@ -352,13 +352,20 @@ public class DeviceController {
         @PostMapping("/modifyDeviceGroupName")
         public ResponseInfo modifyDeviceGroupName (@RequestBody DeviceGroup deviceGroup){
             ResponseInfo response = new ResponseInfo();
-            int isUpdate = devGroupService.updateDevGroup(deviceGroup);
-            if (isUpdate > 0) {
-                response.setCode(ResponseInfo.CODE_SUCCESS);
-                response.setMessage("modify deviceGroup success!");
+            int groupId = deviceGroup.getDeviceGroupId();
+            //如果可以操作（不是默认分组）
+            if (devGroupService.isCanOperate(groupId)) {
+                int isUpdate = devGroupService.updateDevGroup(deviceGroup);
+                if (isUpdate > 0) {
+                    response.setCode(ResponseInfo.CODE_SUCCESS);
+                    response.setMessage("modify deviceGroup success!");
+                } else {
+                    response.setCode(ResponseInfo.CODE_ERROR);
+                    response.setMessage("modify deviceGroup failed!");
+                }
             } else {
                 response.setCode(ResponseInfo.CODE_ERROR);
-                response.setMessage("modify deviceGroup failed!");
+                response.setMessage("you can't operate the default group!");
             }
             return response;
         }
@@ -375,24 +382,30 @@ public class DeviceController {
         public ResponseInfo deleteDeviceGroup ( @RequestParam(value = "groupId") int groupId){
             ResponseInfo response = new ResponseInfo();
             if (groupId > 0) {
-                //01、删除关联关系表
-                DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
-                deviceGroupRelate.setGroupId(groupId);
-                //删除用户和组的关系
-                UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
-                userDeviceGroupRelate.setDeviceGroupId(groupId);
-                //这里不能够将是否删除关联关系作为决定下面是否运行的条件，因为有可能本来就是为空
-                int isDelRelate = deviceGroupRelateService.deleteByDeviceGroupRelate(deviceGroupRelate);
-                int idDelGroupRelate = userDeviceGroupRelateService.delUserGroupRelate(userDeviceGroupRelate);
+                if (devGroupService.isCanOperate(groupId)) {
+                    //01、删除关联关系表
+                    DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
+                    deviceGroupRelate.setGroupId(groupId);
+                    //删除用户和组的关系
+                    UserDeviceGroupRelate userDeviceGroupRelate = new UserDeviceGroupRelate();
+                    userDeviceGroupRelate.setDeviceGroupId(groupId);
+                    //这里不能够将是否删除关联关系作为决定下面是否运行的条件，因为有可能本来就是为空
+                    int isDelRelate = deviceGroupRelateService.deleteByDeviceGroupRelate(deviceGroupRelate);
+                    int idDelGroupRelate = userDeviceGroupRelateService.delUserGroupRelate(userDeviceGroupRelate);
 
-                //02、删除分组
-                int isDelete = devGroupService.deleteDevGroupById(groupId);
-                if (isDelete > 0) {
-                    response.setCode(ResponseInfo.CODE_SUCCESS);
-                    response.setMessage("delete deviceGroup success!");
+                    //02、删除分组
+                    int isDelete = devGroupService.deleteDevGroupById(groupId);
+                    if (isDelete > 0) {
+                        response.setCode(ResponseInfo.CODE_SUCCESS);
+                        response.setMessage("delete deviceGroup success!");
+                    } else {
+                        response.setCode(ResponseInfo.CODE_ERROR);
+                        response.setMessage("delete deviceGroup failed!");
+                    }
                 } else {
+                    //如果是默认分组就返回
                     response.setCode(ResponseInfo.CODE_ERROR);
-                    response.setMessage("delete deviceGroup failed!");
+                    response.setMessage("you can't operate the default group!");
                 }
             } else {
                 response.setCode(ResponseInfo.CODE_ERROR);
@@ -410,14 +423,20 @@ public class DeviceController {
          */
         @PostMapping("/deleteDeviceGroupRelate")
         public ResponseInfo deleteDeviceGroupRelate (@RequestBody DeviceGroupRelate deviceGroupRelate){
+            int groupId = deviceGroupRelate.getGroupId();
             ResponseInfo responseInfo = new ResponseInfo();
-            int isDelete = deviceGroupRelateService.deleteDeviceGroupRelate(deviceGroupRelate);
-            if (isDelete > 0) {
-                responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
-                responseInfo.setMessage("delete deviceGroupRelate success!");
+            if (devGroupService.isCanOperate(groupId)) {
+                int isDelete = deviceGroupRelateService.deleteDeviceGroupRelate(deviceGroupRelate);
+                if (isDelete > 0) {
+                    responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+                    responseInfo.setMessage("delete deviceGroupRelate success!");
+                } else {
+                    responseInfo.setCode(ResponseInfo.CODE_ERROR);
+                    responseInfo.setMessage("delete deviceGroupRelate failed!");
+                }
             } else {
                 responseInfo.setCode(ResponseInfo.CODE_ERROR);
-                responseInfo.setMessage("delete deviceGroupRelate failed!");
+                responseInfo.setMessage("you can't operate the default group!");
             }
             return responseInfo;
         }
@@ -464,6 +483,7 @@ public class DeviceController {
         }
 
 
+        //根据用户获得分组
         @GetMapping("/getDeviceByUserId")
         public ResponseInfo getDeviceByUserId ( @RequestParam(value = "userId", required = false) int userId){
             ResponseInfo responseInfo = new ResponseInfo();
@@ -557,8 +577,8 @@ public class DeviceController {
          */
         @PostMapping("/addDevGroup")
         public ResponseInfo addDevGroup (@RequestParam("serial") String serial,
-                @RequestParam(value = "deviceVerifyCode") String deviceVerifyCode,
-        @RequestParam(value = "groupId") int groupId){
+                                         @RequestParam(value = "deviceVerifyCode") String deviceVerifyCode,
+                                         @RequestParam(value = "groupId") int groupId){
             ResponseInfo responseInfo = new ResponseInfo();
             Device device = new Device();
             device.setSerial(serial);

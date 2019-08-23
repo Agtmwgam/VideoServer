@@ -3,24 +3,13 @@
 
 <mapper namespace="com.tw.dao.RootDeviceGroupDao">
 
-	<!-- 获得root账户的所有的设备分组列表 -->
-	<select id="getAllRootDeviceGroup" resultType="com.tw.entity.RootDeviceGroup">
-        SELECT
-            *
-        FROM
-            rootDeviceGroup
-        WHERE
-            isValid = '1'
-    </select>
-
-
 	<!-- 添加用户设备到管理员默认分组 -->
 	<insert id="addDeviceToDefaultRootDeviceGroup" parameterType="java.lang.Integer">
 		insert into rootDeviceGroup
 		(deviceId)
 		values(#{deviceId})
 	</insert>
-<mapper namespace="com.tw.dao.RootDeviceGroupDao">
+
 
     <!-- root添加设备分组 -->
     <insert id="addRootGroup" parameterType="java.lang.String">

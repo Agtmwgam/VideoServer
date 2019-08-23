@@ -1,7 +1,6 @@
 package com.tw.dao;
 
 import com.tw.entity.Device;
-import com.tw.entity.UserDeviceRelate;
 import com.tw.entity.VUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -50,4 +49,6 @@ public interface DeviceDao {
     List<Device> getDeviceByGroupId(int groupId);
 
     int updateDeviceName(Device device);
+
+    int updateDeviceStatus(Map<String, Object> param);
 }
