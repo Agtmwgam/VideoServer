@@ -42,6 +42,11 @@ public class DeviceGroupRelateService {
         return deviceGroupRelateDao.getDeviceGroupRelateByCondition(deviceGroupRelate);
     }
 
+    //根据设备组ID或者设备ID获得设备组与设备的唯一关系（每个设备只能属于同一用户的设备组下）
+    public DeviceGroupRelate getDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate) {
+        return deviceGroupRelateDao.getDeviceGroupRelate(deviceGroupRelate);
+    }
+
 
     public int deleteDeviceGroupRelate(DeviceGroupRelate deviceGroupRelate) {
         return deviceGroupRelateDao.deleteDeviceGroupRelate(deviceGroupRelate);

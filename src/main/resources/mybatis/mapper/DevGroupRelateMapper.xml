@@ -92,4 +92,22 @@
             AND isValid = '1'
     </select>
 
+
+    <!-- 根据设备组ID或者设备ID获得设备组与设备的唯一关系（每个设备只能属于同一用户的设备组下) -->
+    <select id="getDeviceGroupRelate" parameterType="int" resultType="com.tw.entity.DeviceGroupRelate">
+        SELECT
+        a.*
+        FROM
+        deviceGroupRelate a
+        WHERE
+        1=1
+        <if test="groupId != 0">
+            AND deviceGroupId = #{groupId}
+        </if>
+        <if test="deviceId != 0">
+            AND deviceId = #{deviceId}
+        </if>
+        AND isValid = '1'
+    </select>
+
 </mapper>
