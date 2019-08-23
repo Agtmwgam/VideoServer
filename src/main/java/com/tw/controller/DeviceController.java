@@ -517,14 +517,9 @@ public class DeviceController {
             //每次都需要重新new一个对象去接查出来的设备信息
             List<Device> deviceList = new ArrayList<>();
             int groupId = userDeviceGroupRelate.getDeviceGroupId();
-
             DeviceGroup devGroup = devGroupService.getDevGroupById(groupId);
-            List<DeviceGroupRelate> deviceGroupList = deviceGroupRelateService.getDeviceGroupByGroupId(groupId);
-            for (DeviceGroupRelate deviceGroup : deviceGroupList) {
-                Device device = deviceService.getDeviceById(deviceGroup.getDeviceId());
-                //将每次的结果添加进去deviceList里面
-                deviceList.add(device);
-            }
+
+            deviceList = deviceService.getDeviceByGroupId(groupId);
             //每一次结果都放到组里面的设备列表结果集里面
             devGroupDTO.setDeviceGroup(devGroup);
             devGroupDTO.setDeviceList(deviceList);
