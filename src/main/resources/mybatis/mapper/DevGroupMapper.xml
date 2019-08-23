@@ -87,7 +87,7 @@
     <!-- 检查对应groupId是否是默认分组 -->
     <select id="isCanOperate" parameterType="java.util.Map" resultType="int">
         SELECT
-            count(a.id)
+            count(a.deviceGroupId)
         FROM
             deviceGroup a
         WHERE
