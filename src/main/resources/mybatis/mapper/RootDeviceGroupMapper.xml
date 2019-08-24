@@ -111,8 +111,21 @@
         SET
             rootDeviceGroupName = #{newDeviceGroupName}
         WHERE
+            rootDeviceGroupName = #{oldDeviceGroupName}
+        AND
             rootDeviceGroupId = #{rootDeviceGroupId}
         AND
             isValid = '1'
     </update>
+
+
+    <!-- 检查是否已经存在该组名 -->
+    <select id="checkExistGroup" parameterType="java.util.Map" resultType="boolean">
+        <![CDATA[ select count(id) from rootDeviceGroup where rootDeviceGroupName = #{rootGroupName} and isValid = #{isValid} ]]>
+    </select>
+
+    <!-- 检查是否是默认分组 -->
+    <select id="checkIsDefaultGroup" parameterType="java.util.Map" resultType="boolean">
+        <![CDATA[ select count(id) from rootDeviceGroup where id = #{id} and rootDeviceGroupName = #{defaultGroupName} and isValid = #{isValid} ]]>
+    </select>
 </mapper>

@@ -6,7 +6,6 @@ import com.tw.entity.UserDeviceGroupRelate;
 import com.tw.entity.VUser;
 import com.tw.entity.common.ConstantParam;
 import com.tw.service.*;
-import com.tw.util.PhoneUtil;
 import com.tw.util.ResponseInfo;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -139,7 +138,9 @@ public class RegisterController {
             return response;
         }
         //校验前端传过来的手机号码是否是正确的，如果正确就继续，否则就返回格式错误
-        Boolean isValidPhoneNumber = PhoneUtil.isNotValidChinesePhone(phoneNumber);
+        //Boolean isValidPhoneNumber = PhoneUtil.isNotValidChinesePhone(phoneNumber);
+        //只做长度判断
+        Boolean isValidPhoneNumber = (phoneNumber.length() == 11);
         if (!isValidPhoneNumber) {
             logger.error("===============校验手机号码："+phoneNumber+" 失败！");
             response.setCode(CODE_ERROR);
@@ -182,7 +183,7 @@ public class RegisterController {
         // 验证码校验
 //        短信是否为空
         if (StringUtils.isBlank(requestMap.get("msgNum").toString())) {
-            response.setCode("9999");
+            response.setCode(CODE_ERROR);
             response.setMessage("The msgNum can not be empty!");
             return response;
         }
@@ -195,6 +196,4 @@ public class RegisterController {
         response.setCode(CODE_SUCCESS);
         return response;
     }
-
-
 }

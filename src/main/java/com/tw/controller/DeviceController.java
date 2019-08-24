@@ -515,14 +515,9 @@ public class DeviceController {
             //每次都需要重新new一个对象去接查出来的设备信息
             List<Device> deviceList = new ArrayList<>();
             int groupId = userDeviceGroupRelate.getDeviceGroupId();
-
             DeviceGroup devGroup = devGroupService.getDevGroupById(groupId);
-            List<DeviceGroupRelate> deviceGroupList = deviceGroupRelateService.getDeviceGroupByGroupId(groupId);
-            for (DeviceGroupRelate deviceGroup : deviceGroupList) {
-                Device device = deviceService.getDeviceById(deviceGroup.getDeviceId());
-                //将每次的结果添加进去deviceList里面
-                deviceList.add(device);
-            }
+
+            deviceList = deviceService.getDeviceByGroupId(groupId);
             //每一次结果都放到组里面的设备列表结果集里面
             devGroupDTO.setDeviceGroup(devGroup);
             devGroupDTO.setDeviceList(deviceList);
@@ -575,7 +570,7 @@ public class DeviceController {
      * @Date: 2019/8/15 1:49
      * @param: serial               序列号
      * @param: deviceVerifyCode     验证码
-     * @param: deviceGroupId              组id
+     * @param: deviceGroupId        组id
      * @return:
      */
     @PostMapping("/addDevGroup")
@@ -590,13 +585,14 @@ public class DeviceController {
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
         //如果校验通过，说明可以对这个设备进行操作
         if (deviceList != null && deviceList.size() > 0) {
+            int deviceId = deviceList.get(0).getDeviceId();
             DeviceGroup deviceGroup = new DeviceGroup();
             DeviceGroupRelate deviceGroupRelate = new DeviceGroupRelate();
-            deviceGroupRelate.setDeviceId(deviceList.get(0).getDeviceId());
+            deviceGroupRelate.setDeviceId(deviceId);
             deviceGroupRelate.setGroupId(groupId);
-//            TODO  设备与用户关系一对一
-            List<DeviceGroupRelate> deviceGroupRelateList = deviceGroupRelateService.getDeviceGroupRelateByCondition(deviceGroupRelate);
-            if (deviceGroupRelateList != null && deviceGroupRelateList.size() > 0) {
+
+            //如果已经存在关联关系
+            if (deviceGroupRelateService.isLinkGroup(deviceId)) {
                 responseInfo.setCode(ResponseInfo.CODE_ERROR);
                 responseInfo.setMessage("it's already have this connect!");
             } else {

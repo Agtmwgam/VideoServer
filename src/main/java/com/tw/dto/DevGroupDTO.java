@@ -16,6 +16,6 @@ import java.util.List;
 @Data
 public class DevGroupDTO {
 
-    private DeviceGroup deviceGroup;          //原本的的组的信息
+    private DeviceGroup deviceGroup;     //原本的的组的信息
     private List<Device> deviceList;    //设备组集合
 }

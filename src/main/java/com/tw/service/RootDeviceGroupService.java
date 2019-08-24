@@ -3,6 +3,7 @@ package com.tw.service;
 import com.tw.dao.RootDeviceGroupDao;
 import com.tw.entity.Device;
 import com.tw.entity.RootDeviceGroup;
+import com.tw.entity.common.ConstantParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,10 +61,26 @@ public class RootDeviceGroupService {
         return rootDeviceGroupDao.deleteRootGroup(rootDeviceGroup);
     }
 
-    public int modifyRootDeviceGroupName(int rootDeviceGroupId, String newDeviceGroupName) {
+    public int modifyRootDeviceGroupName(int rootDeviceGroupId, String oldDeviceGroupName, String newDeviceGroupName) {
         Map<String, Object> param = new HashMap<>();
         param.put("rootDeviceGroupId", rootDeviceGroupId);
+        param.put("oldDeviceGroupName", oldDeviceGroupName);
         param.put("newDeviceGroupName", newDeviceGroupName);
         return rootDeviceGroupDao.modifyRootDeviceGroupName(param);
+    }
+
+    public Boolean checkExistGroup(String rootDeviceGroupName) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("isValid", ConstantParam.IS_VALID_YES);
+        param.put("rootGroupName", rootDeviceGroupName);
+        return rootDeviceGroupDao.checkExistGroup(param);
+    }
+
+    public Boolean checkIsDefaultGroup(int id) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("isValid", ConstantParam.IS_VALID_YES);
+        param.put("id", id);
+        param.put("defaultGroupName", ConstantParam.DEFAULT_GROUP_NAME);
+        return rootDeviceGroupDao.checkIsDefaultGroup(param);
     }
 }
