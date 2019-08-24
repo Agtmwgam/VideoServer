@@ -27,4 +27,6 @@ public interface RootDeviceGroupDao {
     int modifyRootDeviceGroupName(Map<String, Object> param);
 
     Boolean checkExistGroup(Map<String, Object> param);
+
+    Boolean checkIsDefaultGroup(Map<String, Object> param);
 }

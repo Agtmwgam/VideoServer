@@ -161,6 +161,15 @@ public class RootInfoController {
         ResponseInfo responseInfo = new ResponseInfo();
         Map<String, Object> data = new HashMap<>();
         responseInfo.setData(data);
+        int id = rootDeviceGroup.getId();
+        //检查要删除的是否是默认分组
+        Boolean isDefaultGroup = rootDeviceGroupService.checkIsDefaultGroup(id);
+        if (isDefaultGroup) {
+            responseInfo.setCode(CODE_ERROR);
+            responseInfo.setMessage("you can't delete default group");
+            return responseInfo;
+        }
+        //如果分不为空就执行删除
         if (rootDeviceGroup != null) {
             int isDelete = rootDeviceGroupService.deleteRootGroup(rootDeviceGroup);
             if (isDelete > 0) {
@@ -220,11 +229,19 @@ public class RootInfoController {
      */
     @PostMapping("/modifyRootDeviceGroupName")
     public ResponseInfo modifyRootDeviceGroupName(@RequestParam(value = "rootDeviceGroupId", required = true) int rootDeviceGroupId,
+                                          @RequestParam(value = "oldDeviceGroupName", required = true) String oldDeviceGroupName,
                                           @RequestParam(value = "newDeviceGroupName",required = true) String newDeviceGroupName) {
         ResponseInfo responseInfo = new ResponseInfo();
         Map<String, Object> data = new HashMap<>();
         responseInfo.setData(data);
-        int isUpdate = rootDeviceGroupService.modifyRootDeviceGroupName(rootDeviceGroupId, newDeviceGroupName);
+        //判断修改的组名是否在列表中已经存在,如果已经存在就返回
+        Boolean isExistGroup = rootDeviceGroupService.checkExistGroup(newDeviceGroupName);
+        if (isExistGroup) {
+            responseInfo.setCode(CODE_ERROR);
+            responseInfo.setMessage("new groupName is already exist in list!");
+            return  responseInfo;
+        }
+        int isUpdate = rootDeviceGroupService.modifyRootDeviceGroupName(rootDeviceGroupId, oldDeviceGroupName,newDeviceGroupName);
         if (isUpdate > 0) {
             responseInfo.setCode(CODE_SUCCESS);
             responseInfo.setMessage("modify groupName success!");
