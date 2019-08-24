@@ -115,4 +115,10 @@
         AND
             isValid = '1'
     </update>
+
+
+    <!-- 检查是否已经存在该组名 -->
+    <select id="checkExistGroup" parameterType="java.util.Map" resultType="boolean">
+        <![CDATA[ select count(id) from rootDeviceGroup where rootDeviceGroupName = #{rootGroupName} and isValid = #{isValid} ]]>
+    </select>
 </mapper>

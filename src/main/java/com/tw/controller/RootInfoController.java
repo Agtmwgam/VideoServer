@@ -123,7 +123,15 @@ public class RootInfoController {
         ResponseInfo responseInfo = new ResponseInfo();
         Map<String, Object> data = new HashMap<>();
         responseInfo.setData(data);
+        //判断组名是否已经存在
+        Boolean isExistGroupName = rootDeviceGroupService.checkExistGroup(rootDeviceGroupName);
         if (StringUtils.isNotEmpty(rootDeviceGroupName)) {
+            //如果组名已经存在就返回错误提示
+            if (isExistGroupName) {
+                responseInfo.setCode(CODE_ERROR);
+                responseInfo.setMessage("this groupName is already exist！");
+                return responseInfo;
+            }
             int isAdd = rootDeviceGroupService.addRootGroup(rootDeviceGroupName);
             if (isAdd > 0) {
                 responseInfo.setCode(CODE_SUCCESS);

@@ -3,6 +3,7 @@ package com.tw.service;
 import com.tw.dao.RootDeviceGroupDao;
 import com.tw.entity.Device;
 import com.tw.entity.RootDeviceGroup;
+import com.tw.entity.common.ConstantParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,5 +66,12 @@ public class RootDeviceGroupService {
         param.put("rootDeviceGroupId", rootDeviceGroupId);
         param.put("newDeviceGroupName", newDeviceGroupName);
         return rootDeviceGroupDao.modifyRootDeviceGroupName(param);
+    }
+
+    public Boolean checkExistGroup(String rootDeviceGroupName) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("isValid", ConstantParam.IS_VALID_YES);
+        param.put("rootGroupName", rootDeviceGroupName);
+        return rootDeviceGroupDao.checkExistGroup(param);
     }
 }
