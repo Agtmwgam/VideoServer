@@ -86,7 +86,7 @@ public class DeviceService {
         param.put("end", (pageSize * pageNo));
         param.put("serial", device.getSerial());
         param.put("deviceType", device.getDeviceType());
-        param.put("produceDate", device.getProductDate());
+        param.put("productDate", device.getProductDate());
         param.put("isValid ", '1');
 
 //        模糊查询   --by liutianwen
