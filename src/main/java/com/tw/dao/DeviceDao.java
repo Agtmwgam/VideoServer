@@ -30,6 +30,14 @@ public interface DeviceDao {
 
     List<Device> getDeviceByCoditionPage(Map<String, Object> param);
 
+    /**
+     * @author liutianwen
+     * @desc  根据传入device信息查找device实体
+     * @param user
+     * @return
+     */
+    Device getDeviceInfo(Device device);
+
     List<Device> getDeviceByCodition(Device device);
 
     List<Device> getDeviceLikeCondition(Map<String, Object> param);

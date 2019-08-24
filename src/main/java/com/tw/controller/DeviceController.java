@@ -1,10 +1,7 @@
 package com.tw.controller;
 
 
-import com.tw.dto.DevGroupDTO;
-import com.tw.dto.MoveGroupDTO;
-import com.tw.dto.RootDeviceGroupDTO;
-import com.tw.dto.UserGroupDTO;
+import com.tw.dto.*;
 import com.tw.entity.*;
 import com.tw.service.*;
 import com.tw.util.ResponseInfo;
@@ -57,7 +54,7 @@ public class DeviceController {
 
     /**
      * @Author: John
-     * @Description: 插入device设备信息
+     * @Description: 插入device设备信息（录入设备）
      * @Date: 2019/8/5 22:39
      * @param: device
      * @return:
@@ -270,7 +267,8 @@ public class DeviceController {
         responseInfo.setPageNo(pageNo);
         responseInfo.setPageSize(pageSize);
 
-        List<Device> deviceList = deviceService.getDeviceLikeCondition(device, pageNo, pageSize);
+        // 模糊搜索（加上所属用户）    --by liutianwen
+        List<DeviceAndUserNameDTO> deviceList = deviceService.getDeviceLikeCondition(device, pageNo, pageSize);
         int total = deviceService.getTotalOfCondition(device);
         if (deviceList != null) {
             responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
@@ -573,7 +571,7 @@ public class DeviceController {
 
     /**
      * @Author: John
-     * @Description: 给设备添加分组
+     * @Description: 给设备添加分组（普通用户添加设备）
      * @Date: 2019/8/15 1:49
      * @param: serial               序列号
      * @param: deviceVerifyCode     验证码

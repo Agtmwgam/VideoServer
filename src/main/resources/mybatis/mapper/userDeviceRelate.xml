@@ -29,4 +29,19 @@
 		</where>
 	</update>
 
+	<!-- 根据deviceId找到对应的user -->
+	<select id="getUserByDeviceID" parameterType="java.lang.Integer"
+			resultType="com.tw.entity.VUser">
+		select u.* FROM
+		deviceGroupRelate dgr,userDeviceGroupRelate udr,vUser u
+		<where>
+			dgr.deviceGroupId=udr.deviceGroupId and udr.userId=u.userID
+			and dgr.isValid='1' and udr.isValid='1' and u.isValid='1'
+			<if test="deviceId!=null and deviceId!=''">
+				and dgr.deviceId=#{deviceId}
+			</if>
+		</where>
+	</select>
+
+
 </mapper>

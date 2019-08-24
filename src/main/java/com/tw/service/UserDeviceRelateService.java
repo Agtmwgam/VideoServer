@@ -3,6 +3,7 @@ package com.tw.service;
 
 import com.tw.dao.UserDeviceRelateDao;
 import com.tw.entity.UserDeviceRelate;
+import com.tw.entity.VUser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,10 @@ public class UserDeviceRelateService {
 		return num;
 	}
 
-
-
+	//	根据deviceId找到对应的user
+	@Transactional
+	public VUser getUserByDeviceID(int  deviceId) {
+		return  userDeviceRelateDao.getUserByDeviceID(deviceId);
+	}
 
 }

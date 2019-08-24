@@ -1,7 +1,9 @@
 package com.tw.service;
 
+import com.tw.convert.Device2DeviceAndUserNameDTOConvert;
 import com.tw.dao.DeviceDao;
 import com.tw.dao.UserDeviceRelateDao;
+import com.tw.dto.DeviceAndUserNameDTO;
 import com.tw.entity.Device;
 import com.tw.entity.UserDeviceRelate;
 import com.tw.entity.VUser;
@@ -9,7 +11,7 @@ import com.tw.entity.common.ConstantParam;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +58,7 @@ public class DeviceService {
 
     public List<Device> getDeviceByCoditionPage(Device device, int pageNo, int pageSize) {
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("start", (pageNo-1) * pageSize);
+        param.put("start", (pageNo - 1) * pageSize);
         param.put("pageSize", pageSize * pageNo);
         param.put("deviceId", device.getDeviceId());
         param.put("deviceName", device.getDeviceName());
@@ -77,24 +79,51 @@ public class DeviceService {
         return deviceDao.getDeviceByCodition(device);
     }
 
-
-    public List<Device> getDeviceLikeCondition(Device device, int pageNo, int pageSize) {
+    //模糊查询
+    public List<DeviceAndUserNameDTO> getDeviceLikeCondition(Device device, int pageNo, int pageSize) {
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("start", (pageNo-1) * pageSize);
+        param.put("start", (pageNo - 1) * pageSize);
         param.put("end", (pageSize * pageNo));
         param.put("serial", device.getSerial());
         param.put("deviceType", device.getDeviceType());
         param.put("produceDate", device.getProductDate());
         param.put("isValid ", '1');
-        return deviceDao.getDeviceLikeCondition(param);
+
+//        模糊查询   --by liutianwen
+        //返回前端的信息体
+        List<DeviceAndUserNameDTO> DeviceAndUserNameDTOList = new ArrayList<>();
+        //创建临时对象(主要存放设备信息device和用户名称nickName)
+        VUser user = new VUser();
+        DeviceAndUserNameDTO deviceAndUserNameDTO = new DeviceAndUserNameDTO();
+        try {
+            // 模糊查询出deviceList
+            List<Device> deviceList = deviceDao.getDeviceLikeCondition(param);
+            // 把设备信息device和用户名称nickName对应存放到返回信息体
+            for (Device tempdevice : deviceList) {
+                // 根据deviceId找到唯一对应的nickName
+                Integer deviceId=tempdevice.getDeviceId();
+                user = userDeviceRelateDao.getUserByDeviceID(deviceId);
+                if(user==null){
+                    continue;
+                }
+                deviceAndUserNameDTO = Device2DeviceAndUserNameDTOConvert.convert(tempdevice);
+                deviceAndUserNameDTO.setNickName(user.getNickName());
+                DeviceAndUserNameDTOList.add(deviceAndUserNameDTO);
+            }
+        } catch (Exception e) {
+            log.error("查询用户错误！");
+            log.error(e.toString());
+            e.printStackTrace();
+        }
+        return DeviceAndUserNameDTOList;
     }
 
 
     /**
-     * @author liutianwen
-     * @desc  根据传入vuser信息查看设备号
      * @param user
      * @return
+     * @author liutianwen
+     * @desc 根据传入vuser信息查看设备号
      */
     public List<String> getDeviceByUser(VUser user) {
         return deviceDao.getDeviceByUser(user);
@@ -102,16 +131,16 @@ public class DeviceService {
 
 
     /**
-     * @author liutianwen
-     * @desc  增加用户设备
      * @param userDeviceRelate
      * @return
+     * @author liutianwen
+     * @desc 增加用户设备
      */
     public void addUserDevice(UserDeviceRelate userDeviceRelate) {
         try {
             userDeviceRelateDao.addUserDevice(userDeviceRelate);
-        }catch (Exception e){
-            log.error("addUserDevice erro:"+e.toString());
+        } catch (Exception e) {
+            log.error("addUserDevice erro:" + e.toString());
             e.printStackTrace();
         }
     }
@@ -132,7 +161,7 @@ public class DeviceService {
     }
 
     //修改设备的在库状态（库存/出库）,接收参数为 deviceId和status值，如 12，'1'
-    public int updateDeviceStatus(int deviceId, char statuesCode){
+    public int updateDeviceStatus(int deviceId, char statuesCode) {
         Map<String, Object> param = new HashMap<>();
         param.put("deviceId", deviceId);
         param.put("status", statuesCode);

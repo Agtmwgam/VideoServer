@@ -1,7 +1,10 @@
 package com.tw.dao;
 
+import com.tw.entity.User;
 import com.tw.entity.UserDeviceRelate;
+import com.tw.entity.VUser;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,5 +34,8 @@ public interface UserDeviceRelateDao {
      * @return
      */
     void addUserDevice(UserDeviceRelate userDeviceRelate);
+
+    //	根据deviceId找到对应的user
+    VUser getUserByDeviceID(@Param("deviceId") Integer deviceId);
 
 }
