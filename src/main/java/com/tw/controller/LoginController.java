@@ -3,6 +3,7 @@ package com.tw.controller;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tw.entity.RootInfo;
 import com.tw.entity.VUser;
+import com.tw.entity.common.ConstantParam;
 import com.tw.service.MessageService;
 import com.tw.service.RootInfoService;
 import com.tw.service.VUserService;
@@ -60,7 +61,7 @@ public class LoginController {
 
 //        //校验前端传过来的手机号码是否是正确的，如果正确就继续，否则就返回格式错误
 //        Boolean isValidPhoneNumber = PhoneUtil.isNotValidChinesePhone(phoneNumber);
-        Boolean isValidPhoneNumber = (phoneNumber.length() == 11);
+        Boolean isValidPhoneNumber = phoneNumber.matches(ConstantParam.VERIFYPHONENUMBER);
         if (isValidPhoneNumber) {
             logger.info("===============校验手机号码："+phoneNumber+" 成功！");
             Map<String, Object> resultMap = messageService.publicSendMessage(phoneNumber);

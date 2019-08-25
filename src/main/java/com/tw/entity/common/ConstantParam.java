@@ -29,7 +29,7 @@ public class ConstantParam {
     //    密码要求数字、符号、字母最少2种组合，而且需要8-20位                                    --by liutianwen
     public static final String VERIFYPASSWORD = "(?!^(\\d+|[a-zA-Z]+|[~!@#$%^&*?]+)$)^[\\w~!@#$%^&*?]{8,20}$";
     //    手机号验证                                                                           --by liutianwen
-    public static final String VERIFYPHONENUMBER = "^[1][3,4,5,7,8][0-9]{9}$";
+    public static final String VERIFYPHONENUMBER = "^[1][3,4,5,6,7,8][0-9]{9}$";
 
     //    错误信息
 //    验证码不能为空
