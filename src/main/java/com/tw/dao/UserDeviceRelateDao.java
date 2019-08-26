@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 
 /**
  * @author liutianwen
@@ -23,8 +25,8 @@ public interface UserDeviceRelateDao {
     void creatUserDevice(UserDeviceRelate udr);
 
 
-    // 逻辑删除用户
-    public Integer delUserDevice(UserDeviceRelate udr);
+    // 逻辑删除用户下的设备
+    int delUserDevice(Map<String, Object> param);
 
 
     /**

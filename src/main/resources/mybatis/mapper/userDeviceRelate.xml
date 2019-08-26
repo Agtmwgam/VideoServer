@@ -12,22 +12,21 @@
 
 
 	<!-- 逻辑删除/启用用户设备 -->
-	<update id="delUserDevice" parameterType="com.tw.entity.UserDeviceRelate">
-		update userDeviceRelate
-		<set>
-			<if test="isValid !=null and isValid!=''">
-				isValid = #{isValid}
-			</if>
-		</set>
-		<where>
-			<if test="deviceId !=null and deviceId!=''">
-				deviceId =#{deviceId}
-			</if>
-			<if test="userId !=null and userId!=''">
-				AND userId = #{userId}
-			</if>
-		</where>
+	<update id="delUserDevice" parameterType="java.util.Map">
+		UPDATE
+			deviceGroupRelate a
+		INNER JOIN
+			userDeviceGroupRelate b
+		ON
+			b.deviceGroupId = a.deviceGroupId
+		SET
+			a.isValid = '0'
+		WHERE
+			a.deviceId = #{deviceId}
+		AND
+			b.userId = #{userId}
 	</update>
+
 
 	<!-- 根据deviceId找到对应的user -->
 	<select id="getUserByDeviceID" parameterType="java.lang.Integer"

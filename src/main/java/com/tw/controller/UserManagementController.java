@@ -135,43 +135,19 @@ public class UserManagementController {
     public ResponseInfo findPassword(@RequestBody Map<String, Object> requestMap) {
         ResponseInfo response = new ResponseInfo();
         // 获取参数
-        String phoneNumber = requestMap.get("phoneNumber").toString();
-        String serial = requestMap.get("serial").toString();
+        int userId = (int) requestMap.get("userId");
+        int deviceId = (int) requestMap.get("deviceId");
 
         // 非空校验
-        response = checkPhoneAndSerial(phoneNumber, serial);
-        if (response.getCode() == CODE_ERROR) {
-            return response;
+        if (userId != 0 && deviceId != 0) {
+            //直接将userId和deviceId作为参数，传入删除方法，逻辑删除用户设备，并返回删除个数
+            int delNum = userDeviceRelateService.delUserDevice(userId, deviceId);
+            response.setCode(CODE_SUCCESS);
+            response.setMessage(delNum + "user's  devices were deleted successful!");
+        } else {
+            response.setCode(CODE_ERROR);
+            response.setMessage("delete device info can't be null!");
         }
-
-        // 把值set到实体类中，供查找数据使用
-        VUser vUser = new VUser();
-        vUser.setPhoneNumber(phoneNumber);
-        Device device = new Device();
-        device.setSerial(serial);
-        device.setIsValid('1');
-
-        //查找vUser和deviceId
-        vUser = userService.queryUser(vUser);
-        List<Device> deviceList = deviceService.getDeviceByCodition(device);
-        //查找deviceId  tips:因为serial是确定的，所以此处只会找到一个deviceId
-        int deviceId = 0;
-        for (Device deviceTemp : deviceList) {
-            deviceId = deviceTemp.getDeviceId();
-        }
-
-        //把所有要传入参数set到实体类中，准备调用接口
-        UserDeviceRelate udr = new UserDeviceRelate();
-        udr.setUserId(vUser.getUserID());
-        udr.setDeviceId(deviceId);
-        udr.setIsValid('0');
-
-        //逻辑删除用户设备，并返回删除个数
-        int delNum = userDeviceRelateService.delUserDevice(udr);
-
-        response.setCode(CODE_SUCCESS);
-        response.setMessage(delNum + "user's  devices were deleted successful!");
-
         return response;
     }
 
@@ -265,6 +241,4 @@ public class UserManagementController {
 
         return response;
     }
-
-
 }

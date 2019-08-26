@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * @author liutianwen
@@ -36,19 +39,14 @@ public class UserDeviceRelateService {
 		}
 	}
 
-	// 逻辑删除用户
-	@Transactional
-	public Integer delUserDevice(UserDeviceRelate udr) {
-		Integer num=0;
-		try {
-		num=	userDeviceRelateDao.delUserDevice(udr);
-		}catch (Exception e){
-			log.error("删除用户设备错误！");
-			log.error(e.toString());
-			e.printStackTrace();
-		}
 
-		return num;
+	//删除该用户下的指定deviceId的设备
+	@Transactional
+	public Integer delUserDevice(int userId, int deviceId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("deviceId", deviceId);
+		return userDeviceRelateDao.delUserDevice(param);
 	}
 
 	//	根据deviceId找到对应的user
