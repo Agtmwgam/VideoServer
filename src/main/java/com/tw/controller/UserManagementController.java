@@ -1,7 +1,5 @@
 package com.tw.controller;
 
-import com.tw.convert.Vuser2UserDTOConvert;
-import com.tw.dto.UserAndDeviceSerialDTO;
 import com.tw.dto.UserDeviceDTO;
 import com.tw.entity.Device;
 import com.tw.entity.UserDeviceRelate;
@@ -172,7 +170,7 @@ public class UserManagementController {
         int delNum = userDeviceRelateService.delUserDevice(udr);
 
         response.setCode(CODE_SUCCESS);
-        response.setMessage(delNum + "user's  devices were deleted successfull!");
+        response.setMessage(delNum + "user's  devices were deleted successful!");
 
         return response;
     }

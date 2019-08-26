@@ -63,6 +63,13 @@ public class DeviceController {
     @Transactional
     public ResponseInfo addDevice(@RequestBody Device device) {
         ResponseInfo responseInfo = new ResponseInfo();
+        //判断必要的信息是否为空
+        if (StringUtils.isEmpty(device.getSerial()) || StringUtils.isEmpty(device.getDeviceVerifyCode()) || StringUtils.isEmpty(device.getDeviceType()) || StringUtils.isEmpty(device.getSoftVersion()) || StringUtils.isEmpty(device.getProductDate())) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device impostant information couldn't be null!");
+            return responseInfo;
+        }
+
 
         //查询数据库中是否已经存在该设备，感觉设备号和验证码检测
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
@@ -348,9 +355,18 @@ public class DeviceController {
     @PostMapping("/modifyDeviceGroupName")
     public ResponseInfo modifyDeviceGroupName(@RequestBody DeviceGroup deviceGroup) {
         ResponseInfo response = new ResponseInfo();
+        String oldGroupName = deviceGroup.getDeviceGroupName();
         int groupId = deviceGroup.getDeviceGroupId();
         //如果可以操作（不是默认分组）
         if (devGroupService.isCanOperate(groupId)) {
+            //检验分组名是否已经存在
+            List<DeviceGroup> deviceList = devGroupService.getDevGroupByGroupName(oldGroupName);
+            //说明已经存在这个数据
+            if (deviceList != null && deviceList.size() > 0) {
+                response.setCode(ResponseInfo.CODE_ERROR);
+                response.setMessage("this groupName have already exists!");
+                return  response;
+            }
             int isUpdate = devGroupService.updateDevGroup(deviceGroup);
             if (isUpdate > 0) {
                 response.setCode(ResponseInfo.CODE_SUCCESS);
