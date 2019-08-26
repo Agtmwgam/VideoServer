@@ -83,4 +83,8 @@ public class RootDeviceGroupService {
         param.put("defaultGroupName", ConstantParam.DEFAULT_GROUP_NAME);
         return rootDeviceGroupDao.checkIsDefaultGroup(param);
     }
+
+    public RootDeviceGroup getRootDeviceGroupById(int rootDeviceGroupId) {
+        return rootDeviceGroupDao.getRootDeviceGroupById(rootDeviceGroupId);
+    }
 }

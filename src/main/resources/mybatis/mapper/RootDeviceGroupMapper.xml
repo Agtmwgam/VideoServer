@@ -128,4 +128,17 @@
     <select id="checkIsDefaultGroup" parameterType="java.util.Map" resultType="boolean">
         <![CDATA[ select count(id) from rootDeviceGroup where id = #{id} and rootDeviceGroupName = #{defaultGroupName} and isValid = #{isValid} ]]>
     </select>
+
+
+    <!-- 根据id获得数据 -->
+    <select id="getRootDeviceGroupById" parameterType="int" resultType="com.tw.entity.RootDeviceGroup">
+        SELECT
+            a.*
+        FROM
+            rootDeviceGroup a
+        WHERE
+            a.isValid = 'a'
+        AND
+            a.id = #{rootDeviceGroupId}
+    </select>
 </mapper>

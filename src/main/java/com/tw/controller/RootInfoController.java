@@ -3,6 +3,7 @@ package com.tw.controller;
 import com.tw.dto.UserRoleDTO;
 import com.tw.entity.RootDeviceGroup;
 import com.tw.entity.RootInfo;
+import com.tw.entity.common.ConstantParam;
 import com.tw.service.RootDeviceGroupService;
 import com.tw.service.RootInfoService;
 import com.tw.util.ResponseInfo;
@@ -19,8 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tw.util.ResponseInfo.CODE_ERROR;
-import static com.tw.util.ResponseInfo.CODE_SUCCESS;
+import static com.tw.util.ResponseInfo.*;
 
 
 /**
@@ -162,13 +162,21 @@ public class RootInfoController {
         Map<String, Object> data = new HashMap<>();
         responseInfo.setData(data);
         int id = rootDeviceGroup.getId();
-        //检查要删除的是否是默认分组
-        Boolean isDefaultGroup = rootDeviceGroupService.checkIsDefaultGroup(id);
-        if (isDefaultGroup) {
+
+        RootDeviceGroup rootDeviceGroup1 = rootDeviceGroupService.getRootDeviceGroupById(id);
+        if (rootDeviceGroup == null) {
+            responseInfo.setCode(CODE_ERROR);
+            responseInfo.setMessage("data error!");
+            return responseInfo;
+        }
+
+        //如果是默认分组即返回错误信息
+        if (rootDeviceGroup1.getRootDeviceGroupName().equals(ConstantParam.DEFAULT_GROUP_NAME)) {
             responseInfo.setCode(CODE_ERROR);
             responseInfo.setMessage("you can't delete default group");
             return responseInfo;
         }
+
         //如果分不为空就执行删除
         if (rootDeviceGroup != null) {
             int isDelete = rootDeviceGroupService.deleteRootGroup(rootDeviceGroup);
@@ -234,6 +242,22 @@ public class RootInfoController {
         ResponseInfo responseInfo = new ResponseInfo();
         Map<String, Object> data = new HashMap<>();
         responseInfo.setData(data);
+
+        //判断是否是默认分组
+        RootDeviceGroup rootDeviceGroup = rootDeviceGroupService.getRootDeviceGroupById(rootDeviceGroupId);
+        //数据为空时，返回错误信息
+        if (rootDeviceGroup == null) {
+            responseInfo.setCode(CODE_ERROR);
+            responseInfo.setMessage("data error!");
+            return responseInfo;
+        }
+        //如果修改的是默认分组，则不予修改，返回信息
+        if (rootDeviceGroup.getRootDeviceGroupName().equals(ConstantParam.DEFAULT_GROUP_NAME)) {
+            responseInfo.setCode(CODE_ERROR);
+            responseInfo.setMessage("you can't change the default group info!");
+            return responseInfo;
+        }
+
         //判断修改的组名是否在列表中已经存在,如果已经存在就返回
         Boolean isExistGroup = rootDeviceGroupService.checkExistGroup(newDeviceGroupName);
         if (isExistGroup) {
