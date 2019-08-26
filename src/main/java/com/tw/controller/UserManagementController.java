@@ -142,8 +142,14 @@ public class UserManagementController {
         if (userId != 0 && deviceId != 0) {
             //直接将userId和deviceId作为参数，传入删除方法，逻辑删除用户设备，并返回删除个数
             int delNum = userDeviceRelateService.delUserDevice(userId, deviceId);
-            response.setCode(CODE_SUCCESS);
-            response.setMessage(delNum + "user's  devices were deleted successful!");
+            if (delNum > 0) {
+                response.setCode(CODE_SUCCESS);
+                response.setMessage(delNum + "user's  devices were deleted successful!");
+            } else {
+                response.setCode(CODE_ERROR);
+                response.setMessage("delete user's device failed!");
+                return response;
+            }
         } else {
             response.setCode(CODE_ERROR);
             response.setMessage("delete device info can't be null!");
