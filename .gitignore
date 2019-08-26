@@ -35,3 +35,5 @@ Thumbs.db
 MANIFEST.MF
 application*
 *Test
+
+application-prd.properties

@@ -202,11 +202,11 @@ public class LoginController {
             }
             response.setData(isRootMap);
             response.setCode(CODE_SUCCESS);
-            response.setMessage(phoneNumber + " registered success!");
+            response.setMessage(phoneNumber + " login success!");
         } else {
             logger.warn("======短信校验失败");
             response.setCode(CODE_ERROR);
-            response.setMessage(phoneNumber + " registered failed!");
+            response.setMessage(phoneNumber + " login failed!");
         }
         return response;
     }
