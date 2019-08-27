@@ -621,6 +621,7 @@ public class DeviceController {
                     responseInfo.setMessage("add deviceGroupRelate failed!");
                 }
             }
+            return responseInfo;
         } else {
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("check the serial and deviceVeifyCode please!");
