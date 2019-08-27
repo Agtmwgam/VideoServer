@@ -104,7 +104,8 @@ public class DeviceService {
                 Integer deviceId=tempdevice.getDeviceId();
                 user = userDeviceRelateDao.getUserByDeviceID(deviceId);
                 if(user==null){
-                    continue;
+                    user=new VUser();
+                    user.setNickName(ConstantParam.NO_USER);
                 }
                 deviceAndUserNameDTO = Device2DeviceAndUserNameDTOConvert.convert(tempdevice);
                 deviceAndUserNameDTO.setNickName(user.getNickName());

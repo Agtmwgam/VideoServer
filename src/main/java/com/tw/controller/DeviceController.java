@@ -54,7 +54,7 @@ public class DeviceController {
 
     /**
      * @Author: John
-     * @Description: 插入device设备信息（录入设备）
+     * @Description: 插入device设备信息（管理员录入设备）
      * @Date: 2019/8/5 22:39
      * @param: device
      * @return:
@@ -71,7 +71,7 @@ public class DeviceController {
         }
 
 
-        //查询数据库中是否已经存在该设备，感觉设备号和验证码检测
+        //查询数据库中是否已经存在该设备，设备号和验证码检测
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
         if (deviceList != null && deviceList.size() > 0) {
             logger.warn("设备 " + device.getSerial() + " 已经存在！");
@@ -116,8 +116,8 @@ public class DeviceController {
     }
 
     /**
-     * @Author: John
-     * @Description: 删除device设备信息
+     * @Author: John  & liutianwen
+     * @Description: 普通用户删除设备
      * @Date: 2019/8/5 22:40
      * @param: deviceId
      * @return:
@@ -428,7 +428,7 @@ public class DeviceController {
 
     /**
      * @Author: John
-     * @Description: 删除组和设备的关联关系
+     * @Description: 删除组和设备的关联关系(用户删除设备)
      * @Date: 2019/8/17 22:45
      * @param: 组和设备关联关系对象
      * @return: responseInfo 标准返回类

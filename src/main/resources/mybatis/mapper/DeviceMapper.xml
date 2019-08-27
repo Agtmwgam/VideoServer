@@ -109,27 +109,27 @@
         *
         FROM
         device
-        WHERE
-        1=1
+        <where>
+        isValid='1'
         <if test="deviceId != 0">
             AND deviceId = #{deviceId}
         </if>
-        <if test="deviceName != null ">
+        <if test="deviceName != null and deviceName!=''">
             AND deviceName = #{deviceName}
         </if>
-        <if test="serial != null ">
+        <if test="serial != null and serial!='' ">
             AND serial = #{serial}
         </if>
-        <if test="deviceVerifyCode != null ">
+        <if test="deviceVerifyCode != null and deviceVerifyCode!=''">
             AND deviceVerifyCode = #{deviceVerifyCode}
         </if>
-        <if test="deviceType != null ">
+        <if test="deviceType != null and deviceType!=''">
             AND deviceType = #{deviceType}
         </if>
-        <if test="softVersion != null ">
+        <if test="softVersion != null and softVersion!=''">
             AND softVersion = #{softVersion}
         </if>
-        <if test="productDate != null ">
+        <if test="productDate != null and productDate!=''">
             AND productDate = #{productDate}
         </if>
         <if test="deviceStatus != '\0' ">
@@ -138,12 +138,13 @@
         <if test="isOnline != '\0' ">
             AND isOnline = #{isOnline}
         </if>
-        <if test="ipAddress != null ">
+        <if test="ipAddress != null and ipAddress!=''">
             AND ipAddress = #{ipAddress}
         </if>
         <if test="isValid != '\0' ">
             AND isValid = #{isValid}
         </if>
+        </where>
     </select>
 
 
@@ -288,24 +289,15 @@
         a.deviceType,
         a.softVersion,
         a.productDate,
-        max(b.isValid) as deviceStatus,
+        a.deviceStatus,
         a.isOnline,
         a.ipAddress,
         a.newBeatTime,
         a.oldBeatTime,
         a.isValid
-
         FROM
         device a
-        LEFT JOIN
-        deviceGroupRelate b
-        ON
-        b.deviceId = a.deviceId
-        GROUP BY
-        a.deviceId
-        HAVING
-        1=1
-        AND
+        WHERE
         a.isValid = '1'
         <if test="serial != null and serial != ''">
             AND a.serial like "%"#{serial}"%"
