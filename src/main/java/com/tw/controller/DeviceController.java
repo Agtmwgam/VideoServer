@@ -610,7 +610,7 @@ public class DeviceController {
             //如果已经存在关联关系
             if (deviceGroupRelateService.isLinkGroup(deviceId)) {
                 responseInfo.setCode(ResponseInfo.CODE_ERROR);
-                responseInfo.setMessage("it's already have this connect!");
+                responseInfo.setMessage("这个设备已经被用户绑定！");
             } else {
                 int isAdd = deviceGroupRelateService.addDeviceGroupRelate(deviceGroupRelate);
                 if (isAdd > 0) {
