@@ -230,7 +230,7 @@ public class DeviceController {
      * @param: device
      * @return:
      */
-    @GetMapping("/getDeviceByCondition")
+    @RequestMapping("/getDeviceByCondition")
     public ResponseInfo getDeviceByCodition(Device device, @RequestParam(value = "pageNo") int pageNo,
                                             @RequestParam(value = "pageSize") int pageSize) {
         ResponseInfo response = new ResponseInfo();
