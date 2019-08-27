@@ -38,5 +38,5 @@ public class ConstantParam {
 
 //   页面展示字段
     public static final String MY_DEVICE_GROUP = "我的分组";
-    public static final String NO_USER = "当前无所属用户";
+    public static final String NO_USER = "无";
 }
