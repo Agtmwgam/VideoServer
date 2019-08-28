@@ -36,6 +36,7 @@
             isValid = '1'
     </update>
 
+
     <!-- 根据groupId拿到分组名 -->
     <select id="getGroupNameByCondition" parameterType="int" resultType="java.lang.String">
         SELECT
@@ -43,8 +44,6 @@
         FROM
             rootDeviceGroup a
         WHERE
-            a.deviceId = 0
-        AND
             a.rootDeviceGroupId = #{newGroupId}
         AND
             a.isValid = '1'
@@ -54,11 +53,13 @@
     <!-- 获得所有的设备分组 -->
     <select id="getAllRootDeviceGroup" resultType="com.tw.entity.RootDeviceGroup">
         SELECT
-            a.*
+            a.rootDeviceGroupId, a.rootDeviceGroupName
         FROM
             rootDeviceGroup a
         WHERE
             a.isValid = '1'
+        GROUP BY
+			a.rootDeviceGroupId, a.rootDeviceGroupName
     </select>
 
 
@@ -113,8 +114,6 @@
         WHERE
             rootDeviceGroupName = #{oldDeviceGroupName}
         AND
-            rootDeviceGroupId = #{rootDeviceGroupId}
-        AND
             isValid = '1'
     </update>
 
@@ -139,6 +138,21 @@
         WHERE
             a.isValid = '1'
         AND
-            a.id = #{rootDeviceGroupId}
+            a.id = #{id}
+    </select>
+
+
+    <!-- 那就groupId返回对象列表 -->
+    <select id="getObjByDeviceGroupId" parameterType="java.util.Map" resultType="com.tw.entity.RootDeviceGroup">
+        SELECT
+            a.*
+        FROM
+            rootDeviceGroup a
+        WHERE
+            a.rootDeviceGroupId = #{rootDeviceGroupId}
+        AND
+            a.rootDeviceGroupName = #{defaultGroupName}
+        AND
+            a.isValid = #{isValid}
     </select>
 </mapper>

@@ -559,11 +559,11 @@ public class DeviceController {
      * @param: isRoot
      * @return:
      */
-    @GetMapping("/getRootAllDevices")
+    @RequestMapping("/getRootAllDevices")
     public ResponseInfo getRootAllDevices(@RequestParam(value = "isRoot", required = true) boolean isRoot) {
         ResponseInfo responseInfo = new ResponseInfo();
         List<RootDeviceGroupDTO> rootDeviceGroupDTOList = new ArrayList<>();
-        //获得所有组，以及所有设备
+        //获得所有组，不重复
         List<RootDeviceGroup> rootDeviceGroups = rootDeviceGroupService.getAllRootDeviceGroup();
         for (RootDeviceGroup deviceGroup : rootDeviceGroups) {
             RootDeviceGroupDTO rootDeviceGroupDTO = new RootDeviceGroupDTO();
@@ -628,46 +628,4 @@ public class DeviceController {
         }
         return responseInfo;
     }
-
-
-//    public static void main(String[] args) throws UnsupportedEncodingException {
-//
-//        //假设原密码是这个：
-//        String testText = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-//        System.out.println("原密码是："+testText);
-//
-//        //用于拼接加密后的
-//        StringBuilder resultStr = new StringBuilder();
-//
-//        //转成十六进制：
-//        String orgHex = HEXUtil.encode(testText);
-//        System.out.println("原密码字符串转16进制"+ HEXUtil.encode(testText));
-//
-//        //假设报文的第三位随机数是(最大的一个数)
-//        int random = 9;
-//
-//        //对原本的每一个密文加上9
-//
-//        //将十六进制拆出来，每两个十六进制确定一个值
-//        ArrayList<String> allHex16 = HEXUtil.splitByBytes(orgHex, 2);
-//
-//
-//        //02、对每一个十六进制进行逆运算，减去random值
-//        for (String everyHex16 : allHex16) {
-//            //十六进制转十进制
-//            int tempC = Integer.valueOf(everyHex16, 16);
-//            //将加密前加的那个随机数减回去，得到加密前的报文的十进制
-//            int resultC = tempC + random;
-//            //再将得到的加密前的十进制转成十六进制
-//            String resultHex = Integer.toHexString(resultC);
-//            //加密后的十六进制是：
-//            System.out.println(everyHex16+"加密后的十六进制是:"+resultHex);
-//
-//            //添加到结果中
-//            resultStr.append(resultHex);
-//        }
-//        //加密后的十六进制是：
-//        System.out.println("加密后的十六进制resultStr:"+resultStr);
-//        System.out.println("============转回字符串："+HEXUtil.decode(resultStr.toString()));
-//    }
 }

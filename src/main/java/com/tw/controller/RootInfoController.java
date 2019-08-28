@@ -161,17 +161,12 @@ public class RootInfoController {
         ResponseInfo responseInfo = new ResponseInfo();
         Map<String, Object> data = new HashMap<>();
         responseInfo.setData(data);
-        int id = rootDeviceGroup.getId();
 
-        RootDeviceGroup rootDeviceGroup1 = rootDeviceGroupService.getRootDeviceGroupById(id);
-        if (rootDeviceGroup == null) {
-            responseInfo.setCode(CODE_ERROR);
-            responseInfo.setMessage("data error!");
-            return responseInfo;
-        }
+        int rootDeviceGroupId = rootDeviceGroup.getRootDeviceGroupId();
+        List<RootDeviceGroup> rootDeviceGroupList =rootDeviceGroupService.getObjByDeviceGroupId(rootDeviceGroupId, ConstantParam.DEFAULT_GROUP_NAME);
 
         //如果是默认分组即返回错误信息
-        if (rootDeviceGroup1.getRootDeviceGroupName().equals(ConstantParam.DEFAULT_GROUP_NAME)) {
+        if (rootDeviceGroupList != null && rootDeviceGroupList.size() > 0) {
             responseInfo.setCode(CODE_ERROR);
             responseInfo.setMessage("you can't delete default group");
             return responseInfo;
@@ -237,22 +232,22 @@ public class RootInfoController {
      */
     @PostMapping("/modifyRootDeviceGroupName")
     public ResponseInfo modifyRootDeviceGroupName(@RequestParam(value = "rootDeviceGroupId", required = true) int rootDeviceGroupId,
-                                          @RequestParam(value = "oldDeviceGroupName", required = true) String oldDeviceGroupName,
-                                          @RequestParam(value = "newDeviceGroupName",required = true) String newDeviceGroupName) {
+                                                  @RequestParam(value = "oldDeviceGroupName", required = true) String oldDeviceGroupName,
+                                                  @RequestParam(value = "newDeviceGroupName",required = true) String newDeviceGroupName) {
         ResponseInfo responseInfo = new ResponseInfo();
         Map<String, Object> data = new HashMap<>();
         responseInfo.setData(data);
 
         //判断是否是默认分组
-        RootDeviceGroup rootDeviceGroup = rootDeviceGroupService.getRootDeviceGroupById(rootDeviceGroupId);
+        List<RootDeviceGroup> rootDeviceGroups = rootDeviceGroupService.getObjByDeviceGroupId(rootDeviceGroupId, ConstantParam.DEFAULT_GROUP_NAME);
         //数据为空时，返回错误信息
-        if (rootDeviceGroup == null) {
+        if (rootDeviceGroups == null) {
             responseInfo.setCode(CODE_ERROR);
             responseInfo.setMessage("data error!");
             return responseInfo;
         }
         //如果修改的是默认分组，则不予修改，返回信息
-        if (rootDeviceGroup.getRootDeviceGroupName().equals(ConstantParam.DEFAULT_GROUP_NAME)) {
+        if (rootDeviceGroups != null && rootDeviceGroups.size() > 0) {
             responseInfo.setCode(CODE_ERROR);
             responseInfo.setMessage("you can't change the default group info!");
             return responseInfo;
@@ -265,7 +260,7 @@ public class RootInfoController {
             responseInfo.setMessage("new groupName is already exist in list!");
             return  responseInfo;
         }
-        int isUpdate = rootDeviceGroupService.modifyRootDeviceGroupName(rootDeviceGroupId, oldDeviceGroupName,newDeviceGroupName);
+        int isUpdate = rootDeviceGroupService.modifyRootDeviceGroupName(oldDeviceGroupName, newDeviceGroupName);
         if (isUpdate > 0) {
             responseInfo.setCode(CODE_SUCCESS);
             responseInfo.setMessage("modify groupName success!");

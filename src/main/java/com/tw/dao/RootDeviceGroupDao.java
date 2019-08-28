@@ -30,5 +30,7 @@ public interface RootDeviceGroupDao {
 
     Boolean checkIsDefaultGroup(Map<String, Object> param);
 
-    RootDeviceGroup getRootDeviceGroupById(int rootDeviceGroupId);
+    RootDeviceGroup getRootDeviceGroupById(int id);
+
+    List<RootDeviceGroup> getObjByDeviceGroupId(Map<String, Object> rootDeviceGroupId);
 }

@@ -61,9 +61,8 @@ public class RootDeviceGroupService {
         return rootDeviceGroupDao.deleteRootGroup(rootDeviceGroup);
     }
 
-    public int modifyRootDeviceGroupName(int rootDeviceGroupId, String oldDeviceGroupName, String newDeviceGroupName) {
+    public int modifyRootDeviceGroupName(String oldDeviceGroupName, String newDeviceGroupName) {
         Map<String, Object> param = new HashMap<>();
-        param.put("rootDeviceGroupId", rootDeviceGroupId);
         param.put("oldDeviceGroupName", oldDeviceGroupName);
         param.put("newDeviceGroupName", newDeviceGroupName);
         return rootDeviceGroupDao.modifyRootDeviceGroupName(param);
@@ -84,7 +83,15 @@ public class RootDeviceGroupService {
         return rootDeviceGroupDao.checkIsDefaultGroup(param);
     }
 
-    public RootDeviceGroup getRootDeviceGroupById(int rootDeviceGroupId) {
-        return rootDeviceGroupDao.getRootDeviceGroupById(rootDeviceGroupId);
+    public RootDeviceGroup getRootDeviceGroupById(int id) {
+        return rootDeviceGroupDao.getRootDeviceGroupById(id);
+    }
+
+    public List<RootDeviceGroup> getObjByDeviceGroupId(int rootDeviceGroupId, String defaultGroupName) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("rootDeviceGroupId", rootDeviceGroupId);
+        param.put("defaultGroupName", defaultGroupName);
+        param.put("isValid", ConstantParam.IS_VALID_YES);
+        return rootDeviceGroupDao.getObjByDeviceGroupId(param);
     }
 }
