@@ -137,7 +137,7 @@
         FROM
             rootDeviceGroup a
         WHERE
-            a.isValid = 'a'
+            a.isValid = '1'
         AND
             a.id = #{rootDeviceGroupId}
     </select>
