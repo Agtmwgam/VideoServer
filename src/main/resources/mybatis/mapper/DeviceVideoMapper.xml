@@ -47,6 +47,7 @@
         LEFT JOIN warningMessage b ON a.eventId=b.eventId
         WHERE
          a.serial = #{serial}
+        AND a.isValid='1'
         <if test="pageNo != null  and pageSize!=null ">
          LIMIT ${(pageNo-1)*pageSize},${pageSize};
         </if>
