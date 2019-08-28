@@ -53,15 +53,14 @@ public class ListenerLogAdaptor extends FileAlterationListenerAdaptor {
         String souceFileName = file.getName();
         String logFileName =souceFileName.substring(0,souceFileName.lastIndexOf("."));
         String[] param = logFileName.split("_");
-        if (param==null || param.length!=6){
+        if (param==null || param.length!=5){
             log.error("【日志】日志名称格式错误,文件:"+souceFileName);
         }else {
             String serial = param[0];
             String logNum = param[1];
             String ipAddress = param[2];
             String logName = param[3];
-            String logTimePre = param[4];
-            String logTimeSuf = param[5];
+            String logTimeSource = param[4];
 
             String logPath =file.getAbsolutePath().replace(ftpConfig.getBasePath(),"");
 
@@ -69,7 +68,7 @@ public class ListenerLogAdaptor extends FileAlterationListenerAdaptor {
             System.out.println("【日志】logNum:"+logNum);
             System.out.println("【日志】ipAddress:"+ipAddress);
             System.out.println("【日志】logName:"+logName);
-            System.out.println("【日志】logTime:"+logTimePre+" "+logTimeSuf);
+            System.out.println("【日志】logTime:"+logTimeSource);
             System.out.println("【日志】logPath:"+logPath);
 
 
@@ -78,8 +77,9 @@ public class ListenerLogAdaptor extends FileAlterationListenerAdaptor {
             logList.setLogName(logName);
             logList.setIpAddress(ipAddress);
             logList.setLogNum(logNum);
-            String[] dateStr1 = logTimePre.split("-");
-            String[] dateStr2 = logTimeSuf.split("-");
+            String[] dateTime = logTimeSource.split("T");
+            String[] dateStr1 = dateTime[0].split("-");
+            String[] dateStr2 = dateTime[1].split("-");
             Date logTime = new Date(Integer.valueOf(dateStr1[0])-1900,
                     Integer.valueOf(dateStr1[1])-1,
                     Integer.valueOf(dateStr1[2]),
