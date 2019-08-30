@@ -3,6 +3,7 @@ package com.tw.controller;
 
 import com.tw.dto.*;
 import com.tw.entity.*;
+import com.tw.entity.common.ConstantParam;
 import com.tw.service.*;
 import com.tw.util.ResponseInfo;
 import org.apache.commons.lang.StringUtils;
@@ -442,7 +443,7 @@ public class DeviceController {
         int isDelete = deviceGroupRelateService.deleteDeviceGroupRelate(deviceGroupRelate);
 //       如果成功删除，则把设备状态改为在库，并返回删除成功信息，反之返回失败信息
         if (isDelete > 0) {
-            deviceService.updateDeviceStatus(deviceId, '0');
+            deviceService.updateDeviceStatus(deviceId, ConstantParam.DEV_SAVE);
             responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
             responseInfo.setMessage("delete deviceGroupRelate success!");
         } else {
@@ -612,7 +613,9 @@ public class DeviceController {
                 responseInfo.setMessage("这个设备已经被用户绑定！");
             } else {
                 int isAdd = deviceGroupRelateService.addDeviceGroupRelate(deviceGroupRelate);
+                //如果加入成功则改变设备状态为交付，并返回成功信息，反之返回错误信息   -- by liutianwen
                 if (isAdd > 0) {
+                    deviceService.updateDeviceStatus(deviceId, ConstantParam.DEV_USE);
                     responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
                     responseInfo.setMessage("add deviceGroupRelate success!");
                 } else {

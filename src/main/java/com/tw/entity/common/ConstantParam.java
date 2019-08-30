@@ -19,8 +19,8 @@ public class ConstantParam {
 
 
     //设备在库状态
-    public static final char DEV_SAVE = '0';        //库存状态
-    public static final char DEV_USE = '1';         //出库状态
+    public static final char DEV_SAVE = '0';        //在库
+    public static final char DEV_USE = '1';         //交付
 
     //不能删除的默认分组的名称
     public static final String DEFAULT_GROUP_NAME = "我的分组";
