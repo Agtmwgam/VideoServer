@@ -365,7 +365,7 @@ public class DeviceController {
             if (deviceList != null && deviceList.size() > 0) {
                 response.setCode(ResponseInfo.CODE_ERROR);
                 response.setMessage("this groupName have already exists!");
-                return  response;
+                return response;
             }
             int isUpdate = devGroupService.updateDevGroup(deviceGroup);
             if (isUpdate > 0) {
@@ -427,7 +427,7 @@ public class DeviceController {
     }
 
     /**
-     * @Author: John
+     * @Author: John  & liutianwen
      * @Description: 删除组和设备的关联关系(用户删除设备)
      * @Date: 2019/8/17 22:45
      * @param: 组和设备关联关系对象
@@ -435,20 +435,19 @@ public class DeviceController {
      */
     @PostMapping("/deleteDeviceGroupRelate")
     public ResponseInfo deleteDeviceGroupRelate(@RequestBody DeviceGroupRelate deviceGroupRelate) {
-        int groupId = deviceGroupRelate.getGroupId();
+//        int groupId = deviceGroupRelate.getGroupId();
+        int deviceId = deviceGroupRelate.getDeviceId();
         ResponseInfo responseInfo = new ResponseInfo();
-        if (devGroupService.isCanOperate(groupId)) {
-            int isDelete = deviceGroupRelateService.deleteDeviceGroupRelate(deviceGroupRelate);
-            if (isDelete > 0) {
-                responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
-                responseInfo.setMessage("delete deviceGroupRelate success!");
-            } else {
-                responseInfo.setCode(ResponseInfo.CODE_ERROR);
-                responseInfo.setMessage("delete deviceGroupRelate failed!");
-            }
+//        删除设备和设备组关系
+        int isDelete = deviceGroupRelateService.deleteDeviceGroupRelate(deviceGroupRelate);
+//       如果成功删除，则把设备状态改为在库，并返回删除成功信息，反之返回失败信息
+        if (isDelete > 0) {
+            deviceService.updateDeviceStatus(deviceId, '0');
+            responseInfo.setCode(ResponseInfo.CODE_SUCCESS);
+            responseInfo.setMessage("delete deviceGroupRelate success!");
         } else {
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
-            responseInfo.setMessage("you can't operate the default group!");
+            responseInfo.setMessage("delete deviceGroupRelate failed!");
         }
         return responseInfo;
     }
@@ -482,7 +481,7 @@ public class DeviceController {
         deviceGroupRelate.setGroupId(groupId);
         //查询设备在哪个唯一分组下
         DeviceGroupRelate deviceGroupRelateDto = deviceGroupRelateService.getDeviceGroupRelate(deviceGroupRelate);
-        if(deviceGroupRelateDto==null){
+        if (deviceGroupRelateDto == null) {
             responseInfo.setMessage(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("设备不存在，请检查！");
         }
