@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @Author: zhuoshouyi
@@ -30,6 +30,10 @@ public class LogListController {
     // 全局统一时间格式化格式
     SimpleDateFormat FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    // 日期的正则表达式
+    final String DATE_REGULAR = "[0-9]{4}-[0-9]{2}-[0-9]{2} [0-2][0-9]:[0-6][0-9]:[0-6][0-9]";
+    Pattern IS_DATE_FORMAT = Pattern.compile(DATE_REGULAR);
+
     @Autowired
     LogListService logListService;
 
@@ -38,15 +42,14 @@ public class LogListController {
      * @return
      */
     @PostMapping("/logList")
-    public ResponseInfo logList(HttpServletRequest httpServletRequest,
-                                @RequestBody LogListForm logListForm){
+    public ResponseInfo logList(@RequestBody LogListForm logListForm){
 
         // 获取用户信息
 //        UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
 
         final String serial = logListForm.getSerial();
-        String startTime = logListForm.getStartTime();
-        String endTime = logListForm.getEndTime();
+        final String startTime = logListForm.getStartTime();
+        final String endTime = logListForm.getEndTime();
         final int pageNo = logListForm.getPageNo();
         final int pageSize = logListForm.getPageSize();
 
@@ -58,16 +61,31 @@ public class LogListController {
 
         ResponseInfo response = new ResponseInfo();
 
-        // 如果前端未传输时间进来,默认从1900-01-01到现在
-        if (startTime==null || startTime.length()==0) logListForm.setStartTime(startTime = "1900-01-01 00:00:00");
-        if (endTime==null || endTime.length()==0) logListForm.setEndTime(endTime = FMT.format(new Date()));
 
-        if (startTime.length()!=19 || endTime.length()!=19){
-            response.setCode(ResponseInfo.CODE_ERROR);
-            response.setMessage("startTime or endTime input error!");
-            response.setData(null);
-            return response;
+
+        // 先对开始日期进行空值判断
+        if (startTime!=null && !startTime.equals("")){
+            // 如果有日期传入,需要按照 2019-01-01 00:00:00 的19位规范传入
+            Matcher isStartValid = IS_DATE_FORMAT.matcher(startTime);
+            if (!isStartValid.matches()){
+                response.setCode(ResponseInfo.CODE_ERROR);
+                response.setMessage("startTime input error!");
+                return response;
+            }
         }
+
+        // 先对结束日期进行空值判断
+        if (endTime!=null && !endTime.equals("")){
+
+            // 如果有日期传入,需要按照 2019-01-01 00:00:00 的19位规范传入
+            Matcher isEndValid = IS_DATE_FORMAT.matcher(endTime);
+            if (!isEndValid.matches()){
+                response.setCode(ResponseInfo.CODE_ERROR);
+                response.setMessage("endTime input error!");
+                return response;
+            }
+        }
+
 
         // 根据 serial 查询设备日志
         List<LogList> logLists = logListService.getListBySerialPage(logListForm);
@@ -85,7 +103,6 @@ public class LogListController {
         } else {
             response.setCode(ResponseInfo.CODE_ERROR);
             response.setMessage("getListBySerialPage failed!");
-            response.setData(logLists);
         }
 
         return response;

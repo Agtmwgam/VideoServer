@@ -9,18 +9,48 @@
         insert into logList(serial,logNum,ipAddress,logName,logTime,logPath) values(#{serial},#{logNum},#{ipAddress},#{logName},#{logTime},#{logPath})
     </insert>
 
-    <!-- 根据 serial 查询心跳信息 -->
+    <!-- 根据 serial 查询日志信息 -->
     <select id="getLogListBySerialPage" parameterType="java.util.Map"  resultType="com.tw.entity.LogList">
-        select *
-        from logList
-        where serial=#{serial} and isValid='1' and (logTime BETWEEN #{startTime} and #{endTime})
+        SELECT
+          *
+        FROM
+          logList
+        <where>
+            isValid='1'
+            <if test="serial != null">
+                AND serial=#{serial}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                AND logTime &gt; #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND logTime &lt; #{endTime}
+            </if>
+        </where>
         order by logTime desc
         limit ${start}, ${pageSize}
     </select>
 
     <!--查询总数-->
     <select id="getTotalBySerial" parameterType="java.util.Map"  resultType="java.lang.Integer">
-        select count(*) from logList where serial=#{serial} and isValid='1' order by logTime desc limit ${start}, ${pageSize}
+        select
+            COALESCE(count(*), 0)
+        FROM
+            logList
+        <where>
+            isValid='1'
+            <if test="serial != null">
+                AND serial=#{serial}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                AND logTime &gt; #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND logTime &lt; #{endTime}
+            </if>
+        </where>
+        order by logTime desc
+        limit ${start}, ${pageSize}
     </select>
 
 </mapper>

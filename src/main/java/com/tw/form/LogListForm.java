@@ -18,8 +18,8 @@ public class LogListForm {
 
     private String endTime;
 
-    private Integer pageNo = 1;
+    private Integer pageNo;
 
-    private Integer pageSize = 15;
+    private Integer pageSize;
 
 }
