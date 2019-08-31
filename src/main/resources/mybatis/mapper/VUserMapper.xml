@@ -123,16 +123,16 @@
 		from
 			vUser
 		<where>
+			isValid='1'
 			<if test="phoneNumber !=null and phoneNumber !=''">
-				phoneNumber LIKE '%${phoneNumber}%'
+				and phoneNumber LIKE '%${phoneNumber}%'
 			</if>
 			<if test="userID !=null and userID!=''">
-				userID =#{userID}
+				and userID =#{userID}
 			</if>
 			<if test="nickName!=null and nickName!=''">
 				and nickName=#{nickName}
 			</if>
-			and isValid='1'
 		</where>
 	</select>
 
