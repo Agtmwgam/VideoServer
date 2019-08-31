@@ -59,8 +59,8 @@ public class LogListController {
         ResponseInfo response = new ResponseInfo();
 
         // 如果前端未传输时间进来,默认从1900-01-01到现在
-        if (startTime.length()==0) logListForm.setStartTime(startTime = "1900-01-01 00:00:00");
-        if (endTime.length()==0) logListForm.setEndTime(endTime = FMT.format(new Date()));
+        if (startTime==null || startTime.length()==0) logListForm.setStartTime(startTime = "1900-01-01 00:00:00");
+        if (endTime==null || endTime.length()==0) logListForm.setEndTime(endTime = FMT.format(new Date()));
 
         if (startTime.length()!=19 || endTime.length()!=19){
             response.setCode(ResponseInfo.CODE_ERROR);
