@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,6 +26,9 @@ import java.util.List;
 public class LogListController {
 
     private static Logger log = Logger.getLogger(LogListController.class);
+
+    // 全局统一时间格式化格式
+    SimpleDateFormat FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     LogListService logListService;
@@ -40,8 +45,8 @@ public class LogListController {
 //        UserRoleDTO userRoleDTO = UserAuthentication.authentication(httpServletRequest);
 
         final String serial = logListForm.getSerial();
-        final String startTime = logListForm.getStartTime();
-        final String endTime = logListForm.getEndTime();
+        String startTime = logListForm.getStartTime();
+        String endTime = logListForm.getEndTime();
         final int pageNo = logListForm.getPageNo();
         final int pageSize = logListForm.getPageSize();
 
@@ -53,14 +58,19 @@ public class LogListController {
 
         ResponseInfo response = new ResponseInfo();
 
-        // 根据 serial 查询设备日志
-        List<LogList> logLists = logListService.getListBySerialPage(logListForm);
+        // 如果前端未传输时间进来,默认从1900-01-01到现在
+        if (startTime.length()==0) logListForm.setStartTime(startTime = "1900-01-01 00:00:00");
+        if (endTime.length()==0) logListForm.setEndTime(endTime = FMT.format(new Date()));
 
         if (startTime.length()!=19 || endTime.length()!=19){
             response.setCode(ResponseInfo.CODE_ERROR);
             response.setMessage("startTime or endTime input error!");
-            response.setData(logLists);
+            response.setData(null);
+            return response;
         }
+
+        // 根据 serial 查询设备日志
+        List<LogList> logLists = logListService.getListBySerialPage(logListForm);
 
         // 查询总数 total
         Integer total = logListService.getTotalBySerial(logListForm);
