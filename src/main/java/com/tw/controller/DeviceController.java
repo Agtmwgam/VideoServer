@@ -63,6 +63,8 @@ public class DeviceController {
     @PostMapping("/addDevice")
     @Transactional
     public ResponseInfo addDevice(@RequestBody Device device) {
+        //去掉序列号前后的空格
+        device.setSerial(device.getSerial().trim());
         ResponseInfo responseInfo = new ResponseInfo();
 //        参数校验                --by liutianwen
         responseInfo= checkAddDeviceArgs(device);
@@ -73,7 +75,8 @@ public class DeviceController {
 
         //查询数据库中是否已经存在该设备，设备号和验证码检测
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
-        if (deviceList != null && deviceList.size() > 0) {
+        List<Device> deviceList1 = deviceService.getDeviceBySerial(device.getSerial());
+        if (deviceList1 != null && deviceList1.size() > 0) {
             logger.warn("设备 " + device.getSerial() + " 已经存在！");
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("device already exists！");
@@ -86,15 +89,13 @@ public class DeviceController {
         }
 
         int isAdd = deviceService.addDevice(device);
+        int deviceId = device.getDeviceId();
         Integer isAddRootDeviceGroup = 0;
 //        录入设备加入管理员默认分组  --by liutianwen
 //       判断是否成功录入
         if (isAdd == 1) {
             //取出deviceID,并把设备放入管理员默认分组中
-            deviceList = deviceService.getDeviceByCodition(device);
-            for (Device device1 : deviceList) {
-                isAddRootDeviceGroup = rootInfoService.addDeviceToDefaultRootDeviceGroup(device1.getDeviceId());
-            }
+            isAddRootDeviceGroup = rootInfoService.addDeviceToDefaultRootDeviceGroup(deviceId);
         } else {
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("device add fail！");

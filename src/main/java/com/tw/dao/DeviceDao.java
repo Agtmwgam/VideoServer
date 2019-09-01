@@ -26,7 +26,7 @@ public interface DeviceDao {
 
     Device getDeviceById(Map<String, Object> param);
 
-    Device getDeviceBySerial(String serial);
+    List<Device> getDeviceBySerial(String serial);
 
     List<Device> getDeviceByCoditionPage(Map<String, Object> param);
 

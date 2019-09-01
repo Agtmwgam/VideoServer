@@ -33,4 +33,10 @@ public interface RootDeviceGroupDao {
     RootDeviceGroup getRootDeviceGroupById(int id);
 
     List<RootDeviceGroup> getObjByDeviceGroupId(Map<String, Object> rootDeviceGroupId);
+
+    int getDefaultGroupId(Map<String, Object> param);
+
+    int moveToDefaultGroup(Map<String, Object> param);
+
+    int delRootDevice(Map<String, Object> param);
 }

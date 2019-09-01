@@ -8,6 +8,7 @@ import com.tw.entity.Device;
 import com.tw.entity.UserDeviceRelate;
 import com.tw.entity.VUser;
 import com.tw.entity.common.ConstantParam;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -167,5 +168,10 @@ public class DeviceService {
         param.put("deviceId", deviceId);
         param.put("status", statuesCode);
         return deviceDao.updateDeviceStatus(param);
+    }
+
+    public List<Device> getDeviceBySerial(String serial) {
+        return deviceDao.getDeviceBySerial(serial);
+
     }
 }

@@ -4,6 +4,7 @@ import com.tw.dao.RootDeviceGroupDao;
 import com.tw.entity.Device;
 import com.tw.entity.RootDeviceGroup;
 import com.tw.entity.common.ConstantParam;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -93,5 +94,31 @@ public class RootDeviceGroupService {
         param.put("defaultGroupName", defaultGroupName);
         param.put("isValid", ConstantParam.IS_VALID_YES);
         return rootDeviceGroupDao.getObjByDeviceGroupId(param);
+    }
+
+
+    public int getDefaultGroupId() {
+        Map<String, Object> param = new HashMap<>();
+        param.put("isValid", ConstantParam.IS_VALID_YES);
+        param.put("defaultGroupName", ConstantParam.DEFAULT_GROUP_NAME);
+        return rootDeviceGroupDao.getDefaultGroupId(param);
+    }
+
+    public int moveToDefaultGroup(int rootDeviceGroupId, int defaultGroupId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("isValid", ConstantParam.IS_VALID_YES);
+        param.put("oldGroupId", rootDeviceGroupId);
+        param.put("defaultGroupId", defaultGroupId);
+        param.put("defaultGroupName", ConstantParam.DEFAULT_GROUP_NAME);
+        param.put("isValid", ConstantParam.IS_VALID_YES);
+        return rootDeviceGroupDao.moveToDefaultGroup(param);
+    }
+
+    public int delRootDevice(int deviceId, int rootDeviceGroupId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("isValid", ConstantParam.IS_VALID_YES);
+        param.put("deviceId", deviceId);
+        param.put("rootDeviceGroupId", rootDeviceGroupId);
+        return rootDeviceGroupDao.delRootDevice(param);
     }
 }
