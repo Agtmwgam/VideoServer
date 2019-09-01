@@ -54,7 +54,7 @@ public class DeviceController {
 
 
     /**
-     * @Author: John
+     * @Author: John  &   liutianwen
      * @Description: 插入device设备信息（管理员录入设备）
      * @Date: 2019/8/5 22:39
      * @param: device
@@ -64,17 +64,10 @@ public class DeviceController {
     @Transactional
     public ResponseInfo addDevice(@RequestBody Device device) {
         ResponseInfo responseInfo = new ResponseInfo();
-        //判断必要的信息是否为空
-        if (StringUtils.isEmpty(device.getSerial()) || StringUtils.isEmpty(device.getDeviceVerifyCode()) || StringUtils.isEmpty(device.getDeviceType()) || StringUtils.isEmpty(device.getSoftVersion()) || StringUtils.isEmpty(device.getProductDate())) {
-            responseInfo.setCode(ResponseInfo.CODE_ERROR);
-            responseInfo.setMessage("device impostant information couldn't be null!");
-            return responseInfo;
-        }
-        String productDate=device.getProductDate();
-        if(!productDate.matches(ConstantParam.VERIFYDATE)){
-            responseInfo.setCode(ResponseInfo.CODE_ERROR);
-            responseInfo.setMessage("productDate is not correct!");
-            return responseInfo;
+//        参数校验                --by liutianwen
+        responseInfo= checkAddDeviceArgs(device);
+        if(responseInfo.getCode()==ResponseInfo.CODE_ERROR){
+            return  responseInfo;
         }
 
 
@@ -121,6 +114,59 @@ public class DeviceController {
         }
         return responseInfo;
     }
+
+
+    /**
+     * @Author:   liutianwen
+     * @Description: 管理员录入设备 参数校验
+     * @Date: 2019/8/5 22:39
+     * @param: device
+     * @return:
+     */
+    public ResponseInfo checkAddDeviceArgs(Device device){
+        ResponseInfo responseInfo = new ResponseInfo();
+        //判断必要传入信息是否为空
+        if (StringUtils.isEmpty(device.getSerial())) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device Serial couldn't be null!");
+            return responseInfo;
+        }
+
+        if(StringUtils.isEmpty(device.getDeviceVerifyCode())) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device DeviceVerifyCode couldn't be null!");
+            return responseInfo;
+        }
+
+        if(StringUtils.isEmpty(device.getDeviceType())) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device DeviceType couldn't be null!");
+            return responseInfo;
+        }
+
+        if(StringUtils.isEmpty(device.getSoftVersion())) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device SoftVersion couldn't be null!");
+            return responseInfo;
+        }
+
+        if (StringUtils.isEmpty(device.getProductDate())) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device ProductDate couldn't be null!");
+            return responseInfo;
+        }
+
+//       设备生产日期格式校验
+        String productDate=device.getProductDate();
+        if(!productDate.matches(ConstantParam.VERIFYDATE)){
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("productDate format is not correct!");
+            return responseInfo;
+        }
+
+        return responseInfo;
+    }
+
 
     /**
      * @Author: John  & liutianwen
