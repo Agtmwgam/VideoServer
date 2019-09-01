@@ -74,7 +74,7 @@ public class DeviceController {
 
 
         //查询数据库中是否已经存在该设备，设备号和验证码检测
-        List<Device> deviceList = deviceService.getDeviceByCodition(device);
+//        List<Device> deviceList = deviceService.getDeviceByCodition(device);
         List<Device> deviceList1 = deviceService.getDeviceBySerial(device.getSerial());
         if (deviceList1 != null && deviceList1.size() > 0) {
             logger.warn("设备 " + device.getSerial() + " 已经存在！");
