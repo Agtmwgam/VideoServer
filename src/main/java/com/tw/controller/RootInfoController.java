@@ -163,14 +163,6 @@ public class RootInfoController {
         responseInfo.setData(data);
 
         int rootDeviceGroupId = rootDeviceGroup.getRootDeviceGroupId();
-        List<RootDeviceGroup> rootDeviceGroupList =rootDeviceGroupService.getObjByDeviceGroupId(rootDeviceGroupId, ConstantParam.DEFAULT_GROUP_NAME);
-
-        //如果是默认分组即返回错误信息
-        if (rootDeviceGroupList != null && rootDeviceGroupList.size() > 0) {
-            responseInfo.setCode(CODE_ERROR);
-            responseInfo.setMessage("you can't delete default group");
-            return responseInfo;
-        }
 
         //如果分不为空就执行删除
         if (rootDeviceGroup != null) {

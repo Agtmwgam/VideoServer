@@ -30,6 +30,8 @@ public class ConstantParam {
     public static final String VERIFYPASSWORD = "(?!^(\\d+|[a-zA-Z]+|[~!@#$%^&*?]+)$)^[\\w~!@#$%^&*?]{8,20}$";
     //    手机号验证                                                                           --by liutianwen
     public static final String VERIFYPHONENUMBER = "^[1][3,4,5,6,7,8][0-9]{9}$";
+    //    日期验证
+    public static final String VERIFYDATE = "^[1][3,4,5,6,7,8][0-9]{9}$";
 
     //    页面提示信息
     //    验证码不能为空

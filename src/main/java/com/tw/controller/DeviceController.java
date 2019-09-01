@@ -71,6 +71,12 @@ public class DeviceController {
             return responseInfo;
         }
 
+        if(device.getProductDate().matches(ConstantParam.VERIFYDATE)){
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("productDate is not correct!");
+            return responseInfo;
+        }
+
 
         //查询数据库中是否已经存在该设备，设备号和验证码检测
         List<Device> deviceList = deviceService.getDeviceByCodition(device);
