@@ -70,8 +70,8 @@ public class DeviceController {
             responseInfo.setMessage("device impostant information couldn't be null!");
             return responseInfo;
         }
-
-        if(device.getProductDate().matches(ConstantParam.VERIFYDATE)){
+        String productDate=device.getProductDate();
+        if(!productDate.matches(ConstantParam.VERIFYDATE)){
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("productDate is not correct!");
             return responseInfo;
