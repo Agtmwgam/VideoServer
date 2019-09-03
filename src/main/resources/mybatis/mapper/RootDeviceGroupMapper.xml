@@ -155,4 +155,48 @@
         AND
             a.isValid = #{isValid}
     </select>
+
+
+    <!-- 获得root的默认分组的id -->
+    <select id="getDefaultGroupId" parameterType="java.util.Map" resultType="int">
+        SELECT
+            max(a.rootDeviceGroupId)
+        FROM
+            rootDeviceGroup a
+        WHERE
+            a.rootDeviceGroupName = #{defaultGroupName}
+        AND
+            a.isValid = #{isValid}
+    </select>
+
+
+    <!-- 移动设备到默认分组 -->
+    <update id="moveToDefaultGroup" parameterType="java.util.Map">
+        UPDATE
+            rootDeviceGroup a
+        SET
+            a.rootDeviceGroupId = #{defaultGroupId},
+            a.rootDeviceGroupName = #{defaultGroupName}
+        WHERE
+            a.rootDeviceGroupId = #{oldGroupId}
+        AND
+            a.isValid = #{isValid}
+        AND
+            a.deviceId != 0
+    </update>
+
+
+    <!-- 删除设备和root组的关联关系 -->
+    <update id="delRootDevice" parameterType="java.util.Map">
+        UPDATE
+            rootDeviceGroup a
+        SET
+            a.isValid = '0'
+        WHERE
+            a.deviceId = #{deviceId}
+        AND
+            a.rootDeviceGroupId = #{rootDeviceGroupId}
+        AND
+            a.isValid = #{isValid}
+    </update>
 </mapper>

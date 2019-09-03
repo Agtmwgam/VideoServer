@@ -4,6 +4,7 @@ import com.tw.dto.UserRoleDTO;
 import com.tw.entity.RootDeviceGroup;
 import com.tw.entity.RootInfo;
 import com.tw.entity.common.ConstantParam;
+import com.tw.service.DeviceService;
 import com.tw.service.RootDeviceGroupService;
 import com.tw.service.RootInfoService;
 import com.tw.util.ResponseInfo;
@@ -36,6 +37,9 @@ public class RootInfoController {
 
     @Autowired
     private RootInfoService rootInfoService;
+
+    @Autowired
+    private DeviceService deviceService;
 
     @Autowired
     private RootDeviceGroupService rootDeviceGroupService;
@@ -162,9 +166,36 @@ public class RootInfoController {
         Map<String, Object> data = new HashMap<>();
         responseInfo.setData(data);
 
+        int deviceId = rootDeviceGroup.getDeviceId();
         int rootDeviceGroupId = rootDeviceGroup.getRootDeviceGroupId();
-        List<RootDeviceGroup> rootDeviceGroupList =rootDeviceGroupService.getObjByDeviceGroupId(rootDeviceGroupId, ConstantParam.DEFAULT_GROUP_NAME);
+        //如果分组id为空，则返回错误提示
+        if (rootDeviceGroupId == 0) {
+            responseInfo.setCode(CODE_ERROR);
+            responseInfo.setMessage("rootDeviceGroupId can't not be null!");
+            return responseInfo;
+        }
 
+        //如果设备id不为空，就是删除设备
+        if (deviceId > 0) {
+            int delDevice = deviceService.deleteDevice(deviceId);
+            if (delDevice > 0) {
+                int delDeviceGroup = rootDeviceGroupService.delRootDevice(deviceId, rootDeviceGroupId);
+                if (delDeviceGroup > 0) {
+                    responseInfo.setCode(CODE_SUCCESS);
+                    responseInfo.setMessage("delete device success!");
+                } else {
+                    responseInfo.setCode(CODE_ERROR);
+                    responseInfo.setMessage("delete device failed!");
+                }
+            } else {
+                responseInfo.setCode(CODE_ERROR);
+                responseInfo.setMessage("delete device failed!");
+            }
+            return responseInfo;
+        }
+
+        //判断是否是默认分组
+        List<RootDeviceGroup> rootDeviceGroupList =rootDeviceGroupService.getObjByDeviceGroupId(rootDeviceGroupId, ConstantParam.DEFAULT_GROUP_NAME);
         //如果是默认分组即返回错误信息
         if (rootDeviceGroupList != null && rootDeviceGroupList.size() > 0) {
             responseInfo.setCode(CODE_ERROR);
@@ -172,8 +203,12 @@ public class RootInfoController {
             return responseInfo;
         }
 
-        //如果分不为空就执行删除
+        //如果分组不为空，把原本的设备移动到默认分组中，然后执行删除，
         if (rootDeviceGroup != null) {
+            int defaultGroupId = rootDeviceGroupService.getDefaultGroupId();
+            int isMoveGroupCount = rootDeviceGroupService.moveToDefaultGroup(rootDeviceGroupId, defaultGroupId);
+            logger.info("======移动设备到默认分组的成功数量："+isMoveGroupCount);
+            //删除分组
             int isDelete = rootDeviceGroupService.deleteRootGroup(rootDeviceGroup);
             if (isDelete > 0) {
                 responseInfo.setCode(CODE_SUCCESS);
@@ -182,6 +217,7 @@ public class RootInfoController {
                 responseInfo.setCode(CODE_ERROR);
                 responseInfo.setMessage("delete rootDeviceGroup failed!");
             }
+            return responseInfo;
         } else {
             responseInfo.setCode(CODE_ERROR);
             responseInfo.setMessage("rootDeviceGroup can't not be null!");

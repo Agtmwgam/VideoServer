@@ -4,7 +4,7 @@
 <mapper namespace="com.tw.dao.DeviceDao">
 
     <!-- 新增设备 -->
-    <insert id="addDevice" parameterType="com.tw.entity.Device">
+    <insert id="addDevice" parameterType="com.tw.entity.Device" useGeneratedKeys="true" keyProperty="deviceId">
         INSERT INTO
             device
             (deviceName, serial, deviceVerifyCode, deviceType, softVersion, productDate)
@@ -55,6 +55,19 @@
             deviceId = #{deviceId}
         AND
             isValid = #{isValid}
+    </select>
+
+
+    <!-- 根据序列号获得设备列表 -->
+    <select id="getDeviceBySerial" parameterType="java.lang.String" resultType="com.tw.entity.Device">
+        SELECT
+            *
+        FROM
+            device
+        WHERE
+            serial = #{seiral}
+        AND
+            isValid = '1'
     </select>
 
 

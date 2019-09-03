@@ -54,7 +54,7 @@ public class DeviceController {
 
 
     /**
-     * @Author: John
+     * @Author: John  &   liutianwen
      * @Description: 插入device设备信息（管理员录入设备）
      * @Date: 2019/8/5 22:39
      * @param: device
@@ -63,18 +63,20 @@ public class DeviceController {
     @PostMapping("/addDevice")
     @Transactional
     public ResponseInfo addDevice(@RequestBody Device device) {
+        //去掉序列号前后的空格
+        device.setSerial(device.getSerial().trim());
         ResponseInfo responseInfo = new ResponseInfo();
-        //判断必要的信息是否为空
-        if (StringUtils.isEmpty(device.getSerial()) || StringUtils.isEmpty(device.getDeviceVerifyCode()) || StringUtils.isEmpty(device.getDeviceType()) || StringUtils.isEmpty(device.getSoftVersion()) || StringUtils.isEmpty(device.getProductDate())) {
-            responseInfo.setCode(ResponseInfo.CODE_ERROR);
-            responseInfo.setMessage("device impostant information couldn't be null!");
-            return responseInfo;
+//        参数校验                --by liutianwen
+        responseInfo= checkAddDeviceArgs(device);
+        if(responseInfo.getCode()==ResponseInfo.CODE_ERROR){
+            return  responseInfo;
         }
 
 
         //查询数据库中是否已经存在该设备，设备号和验证码检测
-        List<Device> deviceList = deviceService.getDeviceByCodition(device);
-        if (deviceList != null && deviceList.size() > 0) {
+//        List<Device> deviceList = deviceService.getDeviceByCodition(device);
+        List<Device> deviceList1 = deviceService.getDeviceBySerial(device.getSerial());
+        if (deviceList1 != null && deviceList1.size() > 0) {
             logger.warn("设备 " + device.getSerial() + " 已经存在！");
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("device already exists！");
@@ -87,15 +89,13 @@ public class DeviceController {
         }
 
         int isAdd = deviceService.addDevice(device);
+        int deviceId = device.getDeviceId();
         Integer isAddRootDeviceGroup = 0;
 //        录入设备加入管理员默认分组  --by liutianwen
 //       判断是否成功录入
         if (isAdd == 1) {
             //取出deviceID,并把设备放入管理员默认分组中
-            deviceList = deviceService.getDeviceByCodition(device);
-            for (Device device1 : deviceList) {
-                isAddRootDeviceGroup = rootInfoService.addDeviceToDefaultRootDeviceGroup(device1.getDeviceId());
-            }
+            isAddRootDeviceGroup = rootInfoService.addDeviceToDefaultRootDeviceGroup(deviceId);
         } else {
             responseInfo.setCode(ResponseInfo.CODE_ERROR);
             responseInfo.setMessage("device add fail！");
@@ -115,6 +115,59 @@ public class DeviceController {
         }
         return responseInfo;
     }
+
+
+    /**
+     * @Author:   liutianwen
+     * @Description: 管理员录入设备 参数校验
+     * @Date: 2019/8/5 22:39
+     * @param: device
+     * @return:
+     */
+    public ResponseInfo checkAddDeviceArgs(Device device){
+        ResponseInfo responseInfo = new ResponseInfo();
+        //判断必要传入信息是否为空
+        if (StringUtils.isEmpty(device.getSerial())) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device Serial couldn't be null!");
+            return responseInfo;
+        }
+
+        if(StringUtils.isEmpty(device.getDeviceVerifyCode())) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device DeviceVerifyCode couldn't be null!");
+            return responseInfo;
+        }
+
+        if(StringUtils.isEmpty(device.getDeviceType())) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device DeviceType couldn't be null!");
+            return responseInfo;
+        }
+
+        if(StringUtils.isEmpty(device.getSoftVersion())) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device SoftVersion couldn't be null!");
+            return responseInfo;
+        }
+
+        if (StringUtils.isEmpty(device.getProductDate())) {
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("device ProductDate couldn't be null!");
+            return responseInfo;
+        }
+
+//       设备生产日期格式校验
+        String productDate=device.getProductDate();
+        if(!productDate.matches(ConstantParam.VERIFYDATE)){
+            responseInfo.setCode(ResponseInfo.CODE_ERROR);
+            responseInfo.setMessage("productDate format is not correct!");
+            return responseInfo;
+        }
+
+        return responseInfo;
+    }
+
 
     /**
      * @Author: John  & liutianwen
