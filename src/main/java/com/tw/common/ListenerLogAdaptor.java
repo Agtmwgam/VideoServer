@@ -26,8 +26,6 @@ public class ListenerLogAdaptor extends FileAlterationListenerAdaptor {
 
     private static Logger log = Logger.getLogger(ListenerLogAdaptor.class);
 
-    @Autowired
-    private FtpConfig ftpConfig;
 
     /**
      * 业务
@@ -62,7 +60,7 @@ public class ListenerLogAdaptor extends FileAlterationListenerAdaptor {
             String logName = param[3];
             String logTimeSource = param[4];
 
-            String logPath =file.getAbsolutePath().replace(ftpConfig.getBasePath(),"");
+            String logPath =file.getAbsolutePath().replace("/home/ftp123","");
 
             System.out.println("【日志】serial:"+serial);
             System.out.println("【日志】logNum:"+logNum);

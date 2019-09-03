@@ -38,8 +38,6 @@ public class RunVideoServer {
 	@Autowired
 	private ListenerLogAdaptor listenerLogAdaptor;
 
-	@Autowired
-	private FtpConfig ftpConfig;
 
 
 	public static void main(String[] args) {
@@ -72,9 +70,9 @@ public class RunVideoServer {
 		// 设置监控目录,监听FTP服务器的视频存放路径
 		//String videoDir = "D:\\testVideo";//本机测试用
 		//String pictureDir = "D:\\testPicture";//本机测试用
-        String videoDir = ftpConfig.getBasePath()+ftpConfig.getVideoPath();//正式环境
-        String pictureDir = ftpConfig.getBasePath()+ftpConfig.getPicturePath();//正式环境
-		String logDir = ftpConfig.getBasePath()+ftpConfig.getLogsPath();//正式环境
+        String videoDir = "/home/ftp123/video";//正式环境
+        String pictureDir ="/home/ftp123/picture";//正式环境
+		String logDir = "/home/ftp123/logs";//正式环境
 
 		// 设置扫描间隔
 		long interval = TimeUnit.SECONDS.toMillis(5);

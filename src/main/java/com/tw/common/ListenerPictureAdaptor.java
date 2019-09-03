@@ -25,9 +25,6 @@ public class ListenerPictureAdaptor extends FileAlterationListenerAdaptor {
 
     private static Logger log = Logger.getLogger(ListenerPictureAdaptor.class);
 
-    @Autowired
-    private FtpConfig ftpConfig;
-
     /**
      * 业务
      **/
@@ -54,7 +51,7 @@ public class ListenerPictureAdaptor extends FileAlterationListenerAdaptor {
         String[] str = eventId.split("_");
         String serial = str[0];
         String densityPictureName = myFileName;
-        String densityPicturePath =file.getAbsolutePath().replace(ftpConfig.getBasePath(),"");;
+        String densityPicturePath =file.getAbsolutePath().replace("/home/ftp123","");;
         String fileType="1";
         System.out.println("====ListenerPictureAdaptor:onFileCreate【文件创建】监控处理开始。文件名为：" + file);
         System.out.println("serial:"+serial);

@@ -23,9 +23,6 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
 
     private static Logger log = Logger.getLogger(ListenerVideoAdaptor.class);
 
-    @Autowired
-    private FtpConfig ftpConfig;
-
     /**
      * 业务
      **/
@@ -53,7 +50,7 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
         String serial = str[0];
         String warningTime =  str[1];
         String warningVideoName = myFileName;
-        String warningVideoPath =file.getAbsolutePath().replace(ftpConfig.getBasePath(),"");;
+        String warningVideoPath =file.getAbsolutePath().replace("/home/ftp123","");;
 
         System.out.println("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理开始。文件名为：" + file);
         System.out.println("eventId:"+eventId);
