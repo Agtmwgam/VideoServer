@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.File;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  * @Author: zhuoshouyi
@@ -26,6 +27,8 @@ public class ListenerLogAdaptor extends FileAlterationListenerAdaptor {
 
     private static Logger log = Logger.getLogger(ListenerLogAdaptor.class);
 
+    // 全局统一时间格式化格式
+    SimpleDateFormat FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 业务
