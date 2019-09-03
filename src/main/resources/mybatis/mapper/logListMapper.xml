@@ -17,7 +17,7 @@
           logList
         <where>
             isValid='1'
-            <if test="serial != null">
+            <if test="serial != null and serial != ''">
                 AND serial=#{serial}
             </if>
             <if test="startTime != null and startTime != ''">
@@ -34,12 +34,12 @@
     <!--查询总数-->
     <select id="getTotalBySerial" parameterType="java.util.Map"  resultType="java.lang.Integer">
         select
-            COALESCE(count(*), 0)
+            count(*)
         FROM
             logList
         <where>
             isValid='1'
-            <if test="serial != null">
+            <if test="serial != null and serial != ''">
                 AND serial=#{serial}
             </if>
             <if test="startTime != null and startTime != ''">
@@ -50,7 +50,6 @@
             </if>
         </where>
         order by logTime desc
-        limit ${start}, ${pageSize}
     </select>
 
 </mapper>

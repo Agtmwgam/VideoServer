@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.File;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  * @Author: zhuoshouyi
@@ -26,8 +27,8 @@ public class ListenerLogAdaptor extends FileAlterationListenerAdaptor {
 
     private static Logger log = Logger.getLogger(ListenerLogAdaptor.class);
 
-    @Autowired
-    private FtpConfig ftpConfig;
+    // 全局统一时间格式化格式
+    SimpleDateFormat FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 业务
@@ -62,7 +63,7 @@ public class ListenerLogAdaptor extends FileAlterationListenerAdaptor {
             String logName = param[3];
             String logTimeSource = param[4];
 
-            String logPath =file.getAbsolutePath().replace(ftpConfig.getBasePath(),"");
+            String logPath =file.getAbsolutePath().replace("/home/ftp123","");
 
             System.out.println("【日志】serial:"+serial);
             System.out.println("【日志】logNum:"+logNum);
