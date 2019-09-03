@@ -48,9 +48,11 @@
         WHERE
          a.serial = #{serial}
         AND a.isValid='1'
+        order by a.createTime desc
         <if test="pageNo != null  and pageSize!=null ">
          LIMIT ${(pageNo-1)*pageSize},${pageSize};
         </if>
+
     </select>
 
 
