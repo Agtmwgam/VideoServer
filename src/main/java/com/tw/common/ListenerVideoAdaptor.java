@@ -1,6 +1,7 @@
 package com.tw.common;
 
 import com.tw.config.FtpConfig;
+import com.tw.convert.String2DateConvert;
 import com.tw.entity.DeviceVideo;
 import com.tw.entity.common.ConstantParam;
 import com.tw.service.DeviceVideoService;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.File;
+import java.text.SimpleDateFormat;
+
 /**
  * @Author: lushiqin
  * @Description:
@@ -22,6 +25,10 @@ import java.io.File;
 public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
 
     private static Logger log = Logger.getLogger(ListenerVideoAdaptor.class);
+
+    // 全局统一时间格式化格式
+    SimpleDateFormat FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
     /**
      * 业务
@@ -49,6 +56,10 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
         String[] str = eventId.split("_");
         String serial = str[0];
         String warningTime =  str[1];
+        if(warningTime!=null){
+            warningTime=FMT.format(String2DateConvert.convert(warningTime));
+        }
+
         String warningVideoName = myFileName;
         String warningVideoPath =file.getAbsolutePath().replace("/home/ftp123","");;
 

@@ -31,7 +31,7 @@
         a.serial,
         a.warningVideoName,
         a.warningVideoPath,
-        date_format(b.mesDate, '%Y-%m-%d %H:%i:%S')  as warningTime,
+        a.warningTime,
         a.fileType,
         a.warningPictureLittle,
         a.warningPictureBig,
