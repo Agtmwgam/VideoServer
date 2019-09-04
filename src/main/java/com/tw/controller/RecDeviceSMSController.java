@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -30,6 +31,10 @@ public class RecDeviceSMSController {
 
     // 全局统一时间格式化格式
     SimpleDateFormat FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    // 心跳返回日期格式
+    SimpleDateFormat FMT_BEAT_F = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat FMT_BEAT_L = new SimpleDateFormat("HHmmss");
 
     @Autowired
     RecDeviceSMSService service;
@@ -147,7 +152,7 @@ public class RecDeviceSMSController {
 
         // 返回值
         final String NOLOGIN = "response: " + FRAME + "#" + SERIAL + "#notlogin";
-        final String SUCCESS = "response: " + FRAME + "#" + MESNO + "#" + SERIAL + "#OK";
+        final String SUCCESS = "response: " + FRAME + "#" + MESNO + "#" + FMT_BEAT_F.format(new Date())+"T"+FMT_BEAT_L.format(new Date()) + "#" + SERIAL + "#OK";
         final String FAILD = "response: " + FRAME + "#"+ MESNO + "#" + SERIAL + "#ERROR";
 
         // 3.先把messge里面的内容解析成bean方便调用
