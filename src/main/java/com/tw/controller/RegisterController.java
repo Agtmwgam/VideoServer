@@ -67,16 +67,18 @@ public class RegisterController {
     @Transactional
         public ResponseInfo createUser(@RequestBody Map<String,Object> requestMap) {
         ResponseInfo response=new ResponseInfo();
-        VUser user=new VUser();
-        user.setPhoneNumber(requestMap.get("phoneNumber").toString());
-        user.setPassword(requestMap.get("password").toString());
-        user.setNickName(requestMap.get("nickName").toString());
 
-//       检查用户注册信息(手机号，密码，验证码)是否正常
+        //       检查用户注册信息(手机号，密码，验证码)是否正常
         response = checkUserInfo(requestMap);
         if (response.getCode() == CODE_ERROR) {
             return response;
         }
+
+        //用户实体信息
+        VUser user=new VUser();
+        user.setPhoneNumber(requestMap.get("phoneNumber").toString());
+        user.setPassword(requestMap.get("password").toString());
+        user.setNickName(requestMap.get("nickName").toString());
 
         //创建用户
         int isAdd = userService.creatUser(user);
@@ -125,10 +127,20 @@ public class RegisterController {
         String phoneNumber = requestMap.get("phoneNumber").toString();
         //用户注册密码
         String password = requestMap.get("password").toString();
+//        用户名
+        String nickName = requestMap.get("nickName").toString();
+
         //手机号码是否正规范
 //        Boolean isRightPhone = false;
         //密码是否规范
         Boolean isRightPassword = false;
+
+        // 用户名是否为空
+        if (StringUtils.isBlank(nickName)) {
+            response.setCode(CODE_ERROR);
+            response.setMessage("The nickName can not be empty!");
+            return response;
+        }
 
         //手机号码校验
 //        手机号是否为空
