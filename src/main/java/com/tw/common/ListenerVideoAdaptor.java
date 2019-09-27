@@ -1,14 +1,13 @@
 package com.tw.common;
 
-import com.tw.config.FtpConfig;
 import com.tw.convert.String2DateConvert;
 import com.tw.entity.DeviceVideo;
 import com.tw.entity.common.ConstantParam;
 import com.tw.service.DeviceVideoService;
+import com.tw.util.VideoFormatConvertUtil;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.File;
@@ -29,6 +28,7 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
     // 全局统一时间格式化格式
     SimpleDateFormat FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    VideoFormatConvertUtil fileUtil=new VideoFormatConvertUtil();
 
     /**
      * 业务
@@ -41,7 +41,7 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
      **/
     @Override
     public void onDirectoryCreate(File directory) {
-        System.out.println("创建新目录");
+        log.info("创建新目录");
     }
 
     /**
@@ -63,21 +63,30 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
         String warningVideoName = myFileName;
         String warningVideoPath =file.getAbsolutePath().replace("/home/ftp123","");;
 
-        System.out.println("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理开始。文件名为：" + file);
-        System.out.println("eventId:"+eventId);
-        System.out.println("serial:"+serial);
-        System.out.println("warningTime:"+warningTime);
-        System.out.println("warningVideoName:"+warningVideoName);
-        System.out.println("file.getPath():"+file.getPath());
-        System.out.println("file.getAbsolutePath():"+file.getAbsolutePath());
-        System.out.println("file.getParent():"+(file.getParent()));
+        log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理开始。文件名为：" + file);
+        log.info("eventId:"+eventId);
+        log.info("serial:"+serial);
+        log.info("warningTime:"+warningTime);
+        log.info("warningVideoName:"+warningVideoName);
+        log.info("file.getPath():"+file.getPath());
+        log.info("file.getAbsolutePath():"+file.getAbsolutePath());
+        log.info("file.getParent():"+(file.getParent()));
 
 
         DeviceVideo video=new DeviceVideo(serial, eventId, warningVideoName,warningVideoPath,warningTime);
         video.setIsValid(ConstantParam.IS_VALID_YES);
         deviceVideoService.AddVideo(video);
         log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理结束=====" );
-        System.out.println("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理结束=====" );
+        log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理结束=====" );
+
+        String inputfile=file.getAbsolutePath();
+        try {
+            fileUtil.frameRecord(inputfile,inputfile);
+        }catch (Exception e){
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换出错====" );
+        }
+
+
     }
 
 
@@ -89,7 +98,7 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
     @Override
     public void onDirectoryChange(File directory) {
         log.info("====ListenerVideoAdaptor【目录修改】======"+directory.getName() );
-        System.out.println("目录修改");
+        log.info("目录修改");
     }
 
     /**
@@ -98,7 +107,7 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
     @Override
     public void onDirectoryDelete(File directory) {
         log.info("====ListenerVideoAdaptor【目录删除】======"+directory.getName() );
-        System.out.println("目录删除");
+        log.info("目录删除");
     }
 
     /**
@@ -107,7 +116,7 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
     @Override
     public void onFileChange(File file) {
         log.info("====ListenerVideoAdaptor【文件修改】======"+file.getAbsolutePath() );
-        System.out.println("文件修改");
+        log.info("文件修改");
     }
 
     /**
@@ -116,7 +125,7 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
     @Override
     public void onFileDelete(File file) {
         log.info("====ListenerVideoAdaptor【删除文件】======"+file.getAbsolutePath() );
-        System.out.println("删除文件：" + file);
+        log.info("删除文件：" + file);
     }
 
     /**
