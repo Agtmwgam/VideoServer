@@ -1,5 +1,6 @@
 package com.tw.common;
 
+import com.tw.config.FtpConfig;
 import com.tw.convert.String2DateConvert;
 import com.tw.entity.DeviceVideo;
 import com.tw.entity.common.ConstantParam;
@@ -8,6 +9,7 @@ import com.tw.util.VideoFormatConvertUtil;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.File;
@@ -82,6 +84,9 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
         String inputfile=file.getAbsolutePath();
         try {
             fileUtil.frameRecord(inputfile,inputfile);
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功" );
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功inputfile" +inputfile);
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功outputfile"+inputfile );
         }catch (Exception e){
             log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换出错====" );
         }
@@ -117,6 +122,17 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
     public void onFileChange(File file) {
         log.info("====ListenerVideoAdaptor【文件修改】======"+file.getAbsolutePath() );
         log.info("文件修改");
+
+        String inputfile=file.getAbsolutePath();
+        try {
+            fileUtil.frameRecord(inputfile,inputfile);
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功" );
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功inputfile" +inputfile);
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功outputfile"+inputfile );
+        }catch (Exception e){
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换出错====" );
+        }
+
     }
 
     /**
