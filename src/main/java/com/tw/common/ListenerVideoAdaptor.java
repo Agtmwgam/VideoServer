@@ -48,6 +48,9 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
 
     /**
      * 文件创建
+     * tips:传入视频名同evenetID,示例规定格式为 T42683512_2018-1-29T0-10-1，
+     * T42683512 为srial，2018-1-29为warningTime，warningVideoName 为 T42683512_2018-1-29T0-10-1.mp4
+     * warningVideoPath 为文件的绝对路径去掉/home/ftp123
      **/
     @Override
     public void onFileCreate(File file) {
@@ -89,11 +92,9 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
             log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功outputfile"+inputfile );
         }catch (Exception e){
             log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换出错====" );
+            log.info(e.toString());
         }
-
-
     }
-
 
 
 
@@ -126,11 +127,12 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
         String inputfile=file.getAbsolutePath();
         try {
             fileUtil.frameRecord(inputfile,inputfile);
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功" );
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功inputfile" +inputfile);
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功outputfile"+inputfile );
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件修改】文件转换成功" );
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件修改】文件转换成功inputfile" +inputfile);
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件修改】文件转换成功outputfile"+inputfile );
         }catch (Exception e){
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换出错====" );
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件修改】文件转换出错====" );
+            log.info(e.toString());
         }
 
     }
