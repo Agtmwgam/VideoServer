@@ -41,7 +41,6 @@ public class VideoFormatConvertUtil {
         return transResault;
     }
 
-    @Synchronized
     private static int recordByFrame(FFmpegFrameGrabber grabber, FFmpegFrameRecorder recorder,String inputfilePath)
             throws Exception, org.bytedeco.javacv.FrameRecorder.Exception {
         //0表示不需要转换，1表示成功转换

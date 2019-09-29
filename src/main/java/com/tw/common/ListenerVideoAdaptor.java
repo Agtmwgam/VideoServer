@@ -55,8 +55,6 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
      * 如果本地测试需要把路径下中的/ 换成\\
      **/
     @Override
-    @Synchronized
-    @Transactional
     public void onFileCreate(File file) {
         log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理开始。文件名为：" + file);
 
