@@ -15,7 +15,7 @@ public class VideoFormatConvertUtil {
 
     private static boolean isStart = true;
 
-    public void frameRecord(String inputFile, String outputFile)
+    public int frameRecord(String inputFile, String outputFile)
             throws Exception, org.bytedeco.javacv.FrameRecorder.Exception {
         // 获取视频源
         FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(inputFile);
@@ -30,7 +30,8 @@ public class VideoFormatConvertUtil {
 
         //编码格式
         recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264); //avcodec.AV_CODEC_ID_H264  //AV_CODEC_ID_MPEG4
-        recordByFrame(grabber, recorder);
+        int transResault =recordByFrame(grabber, recorder);
+        return transResault;
     }
 
     private static int recordByFrame(FFmpegFrameGrabber grabber, FFmpegFrameRecorder recorder)

@@ -50,6 +50,7 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
      * tips:传入视频名同evenetID,示例规定格式为 T42683512_2018-1-29T0-10-1，
      * T42683512 为srial，2018-1-29为warningTime，warningVideoName 为 T42683512_2018-1-29T0-10-1.mp4
      * warningVideoPath 为文件的绝对路径去掉/home/ftp123
+     * 如果本地测试需要把路径下中的/ 换成\\
      **/
     @Override
     public void onFileCreate(File file) {
@@ -85,23 +86,20 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
 
             DeviceVideo video = new DeviceVideo(serial, eventId, warningVideoName, warningVideoPath, warningTime);
             video.setIsValid(ConstantParam.IS_VALID_YES);
-            //  文件入库
-            deviceVideoService.AddVideo(video);
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理结束=====");
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理结束=====");
 
 
             //创建transform文件夹
-            String dirPath = inputfile.substring(0, inputfile.lastIndexOf("\\")) + "\\transform";
+            String dirPath = inputfile.substring(0, inputfile.lastIndexOf("/")) + "/transform";
             File dirFile = new File(dirPath);
             if (!dirFile.exists()) {
                 dirFile.mkdirs();
             }
 
+            int transResault =-1;
             //视频转换输出路径
-            String outputfile = dirPath + inputfile.substring(inputfile.lastIndexOf("\\"), inputfile.length());
+            String outputfile = dirPath + inputfile.substring(inputfile.lastIndexOf("/"), inputfile.length());
             try {
-                fileUtil.frameRecord(inputfile, outputfile);
+                transResault = fileUtil.frameRecord(inputfile, outputfile);
                 log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功");
                 log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功inputfile:" + inputfile);
                 log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功outputfile:" + outputfile);
@@ -109,6 +107,17 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
                 log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换出错====");
                 log.info(e.toString());
             }
+
+            //如果转换过一次，则换成转换过后的地址
+            if(transResault==1){
+                video.setWarningVideoPath(outputfile);
+            }
+
+            //  文件入库
+            deviceVideoService.AddVideo(video);
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理结束=====");
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理结束=====");
+
         }
     }
 
