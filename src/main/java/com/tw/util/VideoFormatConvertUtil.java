@@ -1,9 +1,11 @@
 package com.tw.util;
 
+import org.apache.log4j.Logger;
 import org.bytedeco.javacpp.avcodec;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameRecorder;
 
 /**
  * @Classname videoFormatConvertUtil
@@ -13,10 +15,13 @@ import org.bytedeco.javacv.Frame;
  */
 public class VideoFormatConvertUtil {
 
+    //   日志
+    private static Logger log = Logger.getLogger(VideoFormatConvertUtil.class);
+
     private static boolean isStart = true;
 
     public int frameRecord(String inputFile, String outputFile)
-            throws Exception, org.bytedeco.javacv.FrameRecorder.Exception {
+            throws Exception, FrameRecorder.Exception {
         // 获取视频源
         FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(inputFile);
         grabber.setOption("rtsp_transport", "tcp");
@@ -30,11 +35,12 @@ public class VideoFormatConvertUtil {
 
         //编码格式
         recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264); //avcodec.AV_CODEC_ID_H264  //AV_CODEC_ID_MPEG4
-        int transResault =recordByFrame(grabber, recorder);
+
+        int transResault =recordByFrame(grabber, recorder,inputFile);
         return transResault;
     }
 
-    private static int recordByFrame(FFmpegFrameGrabber grabber, FFmpegFrameRecorder recorder)
+    private static int recordByFrame(FFmpegFrameGrabber grabber, FFmpegFrameRecorder recorder,String inputfilePath)
             throws Exception, org.bytedeco.javacv.FrameRecorder.Exception {
         //0表示不需要转换，1表示成功转换
         int transResault = 0;
@@ -66,7 +72,11 @@ public class VideoFormatConvertUtil {
                 }
                 transResault=1;
             }
-        } finally {
+        } catch (Exception e){
+            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换失败，原文件地址:" + inputfilePath);
+            log.error(e.getMessage());
+        }
+        finally {
             if (grabber != null) {
                 grabber.stop();
             }

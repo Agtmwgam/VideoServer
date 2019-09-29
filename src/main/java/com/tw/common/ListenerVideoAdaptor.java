@@ -72,9 +72,8 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
 
             String warningVideoName = myFileName;
             String warningVideoPath = file.getAbsolutePath().replace(ConstantParam.FTP_PATH, "");
-            ;
 
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理开始。文件名为：" + file);
+//           打印LOG日志
             log.info("eventId:" + eventId);
             log.info("serial:" + serial);
             log.info("warningTime:" + warningTime);
@@ -100,17 +99,22 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
             String outputfile = dirPath + inputfile.substring(inputfile.lastIndexOf("/"), inputfile.length());
             try {
                 transResault = fileUtil.frameRecord(inputfile, outputfile);
-                log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功");
-                log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功inputfile:" + inputfile);
-                log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功outputfile:" + outputfile);
             } catch (Exception e) {
                 log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换出错====");
                 log.info(e.toString());
             }
 
-            //如果转换过一次，则换成转换过后的地址
+            //如果没有转换，则数据库引用原有视频地址
+            if(transResault==0) {
+                log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件没有转换，原文件:" + inputfile);
+            }
+
+            //如果视频转换过，则数据库中引用转换过后的地址
             if(transResault==1){
-                video.setWarningVideoPath(outputfile);
+                String transformVideoPath = outputfile.replace(ConstantParam.FTP_PATH, "");
+                video.setWarningVideoPath(transformVideoPath);
+                log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功，原文件地址:" + inputfile);
+                log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功，转换后地址:" + outputfile);
             }
 
             //  文件入库
@@ -147,18 +151,6 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
     public void onFileChange(File file) {
         log.info("====ListenerVideoAdaptor【文件修改】======" + file.getAbsolutePath());
         log.info("文件修改");
-
-        String inputfile = file.getAbsolutePath();
-        try {
-            fileUtil.frameRecord(inputfile, inputfile);
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件修改】文件转换成功");
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件修改】文件转换成功inputfile:" + inputfile);
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件修改】文件转换成功outputfile:" + inputfile);
-        } catch (Exception e) {
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件修改】文件转换出错====");
-            log.info(e.toString());
-        }
-
     }
 
     /**
