@@ -48,6 +48,8 @@ public class VideoFormatConvertUtil {
             grabber.start();
             //如果视频格式为hev1，则转换成h.264格式
             if (grabber.getVideoCodec() == avcodec.AV_CODEC_ID_HEVC) {
+                log.info("====VideoFormatConvertUtil.recordByFrame【文件转换】监测到HEVC格式视频文件，原文件地址:" + inputfilePath);
+                log.info("====VideoFormatConvertUtil.recordByFrame【文件转换】正在将原文件从HEVC格式转换为h.264格式");
                 //速度、码率经过多次测试，此处需要降低为原来3倍，才可支持正常转换
                 recorder.setFrameRate(10);
                 recorder.setVideoBitrate(1000000);
@@ -73,7 +75,7 @@ public class VideoFormatConvertUtil {
                 transResault=1;
             }
         } catch (Exception e){
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换失败，原文件地址:" + inputfilePath);
+            log.info("====VideoFormatConvertUtil.recordByFrame【文件转换】文件转换失败，原文件地址:" + inputfilePath);
             log.error(e.getMessage());
         }
         finally {
