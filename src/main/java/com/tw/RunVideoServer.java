@@ -80,7 +80,7 @@ public class RunVideoServer {
 		// 匹配目录
 		IOFileFilter directories = FileFilterUtils.and(FileFilterUtils.directoryFileFilter(), HiddenFileFilter.VISIBLE);
 
-		// 匹配txt后缀文件
+		// 匹配.mp4后缀文件
 		IOFileFilter files = FileFilterUtils.and(FileFilterUtils.fileFileFilter(),
 				FileFilterUtils.suffixFileFilter(".mp4"));
 

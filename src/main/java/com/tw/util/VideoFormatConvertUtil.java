@@ -33,8 +33,10 @@ public class VideoFormatConvertUtil {
         recordByFrame(grabber, recorder);
     }
 
-    private static void recordByFrame(FFmpegFrameGrabber grabber, FFmpegFrameRecorder recorder)
+    private static int recordByFrame(FFmpegFrameGrabber grabber, FFmpegFrameRecorder recorder)
             throws Exception, org.bytedeco.javacv.FrameRecorder.Exception {
+        //0表示不需要转换，1表示成功转换
+        int transResault = 0;
         try {// 建议在线程中使用该方法
             grabber.start();
             //如果视频格式为hev1，则转换成h.264格式
@@ -58,10 +60,10 @@ public class VideoFormatConvertUtil {
                         break;
                     } else {
                         recorder.record(frame);
-                        //TODO your work
                     }
                     //canvas.showImage(grabber.grab());//获取摄像头图像并放到窗口上显示， 这里的Frame frame=grabber.grab(); frame是一帧视频图像
                 }
+                transResault=1;
             }
         } finally {
             if (grabber != null) {
@@ -71,6 +73,7 @@ public class VideoFormatConvertUtil {
                 recorder.stop();
             }
         }
+        return transResault;
     }
 }
 
