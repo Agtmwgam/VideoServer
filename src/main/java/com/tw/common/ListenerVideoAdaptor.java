@@ -88,6 +88,9 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
 
 
             //创建transform文件夹
+            //本地测试用
+//            String dirPath = inputfile.substring(0, inputfile.lastIndexOf("\\")) + "\\transform";
+            // 服务器用
             String dirPath = inputfile.substring(0, inputfile.lastIndexOf("/")) + "/transform";
             File dirFile = new File(dirPath);
             if (!dirFile.exists()) {
@@ -96,6 +99,9 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
 
             int transResault =-1;
             //视频转换输出路径
+//            本地测试用
+//            String outputfile = dirPath + inputfile.substring(inputfile.lastIndexOf("\\"), inputfile.length());
+//            服务器用
             String outputfile = dirPath + inputfile.substring(inputfile.lastIndexOf("/"), inputfile.length());
             try {
                 transResault = fileUtil.frameRecord(inputfile, outputfile);
