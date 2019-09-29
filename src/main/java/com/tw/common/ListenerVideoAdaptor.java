@@ -118,8 +118,14 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
             }
 
             //  文件入库
-            deviceVideoService.AddVideo(video);
-            log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理结束=====");
+            try {
+                deviceVideoService.AddVideo(video);
+                log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件入库成功=====");
+            }catch (Exception e){
+                log.error("====ListenerVideoAdaptor:onFileCreate【文件创建】文件入库失败=====");
+                log.error(e.getMessage());
+            }
+
             log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】监控处理结束=====");
 
         }
