@@ -117,10 +117,12 @@ public class ListenerVideoAdaptor extends FileAlterationListenerAdaptor {
                 log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件转换成功，转换后地址:" + outputfile);
             }
 
-            //  文件入库
+            //  如果转换过程没有问题，则文件入库
             try {
-                deviceVideoService.AddVideo(video);
-                log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件入库成功=====");
+                if(transResault!=-1){
+                    deviceVideoService.AddVideo(video);
+                    log.info("====ListenerVideoAdaptor:onFileCreate【文件创建】文件入库成功=====");
+                }
             }catch (Exception e){
                 log.error("====ListenerVideoAdaptor:onFileCreate【文件创建】文件入库失败=====");
                 log.error(e.getMessage());

@@ -77,6 +77,7 @@ public class VideoFormatConvertUtil {
         } catch (Exception e){
             log.info("====VideoFormatConvertUtil.recordByFrame【文件转换】文件转换失败，原文件地址:" + inputfilePath);
             log.error(e.getMessage());
+            transResault= -1;
         }
         finally {
             if (grabber != null) {
